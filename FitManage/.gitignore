@@ -1,0 +1,55 @@
+# Archivos de Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de build de Visual Studio
+[Bb]in/
+[Oo]bj/
+Debug/
+Release/
+x64/
+x86/
+
+# Archivos de dependencias
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Archivos de configuración de Rider o VS Code (opcional)
+.idea/
+.vscode/
+
+# Archivos de pruebas
+TestResults/
+*.coverage
+*.coveragexml
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+*.swp
+
+# Archivos de NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+
+# Otros
+*.dbmdl
+*.psess
+*.vsp
+*.pdb
+
+# Secretos o archivos de configuración local
+appsettings.Development.json
+secrets.json
