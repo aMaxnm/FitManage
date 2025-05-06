@@ -1,3 +1,5 @@
+ï»¿
+@@ -1,55 +0,0 @@
 # Archivos de Visual Studio
 .vs/
 *.user
@@ -19,7 +21,7 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 
-# Archivos de configuración de Rider o VS Code (opcional)
+# Archivos de configuraciï¿½n de Rider o VS Code (opcional)
 .idea/
 .vscode/
 
@@ -50,6 +52,6 @@ TestResults/
 *.vsp
 *.pdb
 
-# Secretos o archivos de configuración local
+# Secretos o archivos de configuraciï¿½n local
 appsettings.Development.json
 secrets.json
