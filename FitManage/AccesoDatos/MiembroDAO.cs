@@ -14,7 +14,7 @@ namespace AccesoDatos
     {
         private string connectionString = "server=localhost;user=root;password=root;database=fitmanage";
 
-        // 🔹 Obtener todos los miembros
+        //  Obtener todos los miembros
         public List<Miembro> ObtenerMiembros()
         {
             List<Miembro> listaMiembros = new List<Miembro>();
