@@ -54,3 +54,15 @@ C:\Users\Edgar\source\repos\FitManage\Presentacion\bin\Debug\Recursos\photoretak
 C:\Users\Edgar\source\repos\FitManage\Presentacion\bin\Debug\Recursos\upload.png
 C:\Users\Edgar\source\repos\FitManage\Presentacion\bin\Debug\Recursos\regresar.png
 C:\Users\Edgar\source\repos\FitManage\Presentacion\bin\Debug\Recursos\cobrar.png
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Recursos\cobrar.png
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Recursos\photo.png
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Recursos\photoretake.png
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Recursos\regresar.png
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Recursos\upload.png
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge.dll
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge.Video.dll
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge.xml
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge.Video.xml
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\obj\Debug\Presenta.BC77CD05.Up2Date

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using Entidades;
+using Entidad;
 
 
 namespace AccesoDatos
@@ -29,7 +29,7 @@ namespace AccesoDatos
                 {
                     while (reader.Read())
                     {
-                        listaMiembros.Add(new Miembro
+                        /*listaMiembros.Add(new Miembro
                         {
                             IdMiembro = reader.GetInt32("idMiembro"),
                             IdMembresia = reader.GetInt32("idMembresia"),
@@ -42,7 +42,7 @@ namespace AccesoDatos
                             FechaInicio = reader.GetDateTime("fechaInicio"),
                             FechaFin = reader.GetDateTime("fechaFin"),
                             Fotografia = reader["fotografia"] as byte[]  // Para manejar imágenes
-                        });
+                        });*/
                     }
                 }
             }
@@ -59,7 +59,7 @@ namespace AccesoDatos
 
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idMembresia", miembro.IdMembresia);
+                  /*  command.Parameters.AddWithValue("@idMembresia", miembro.IdMembresia);
                     command.Parameters.AddWithValue("@nombres", miembro.Nombres);
                     command.Parameters.AddWithValue("@apellidoPaterno", miembro.ApellidoPaterno);
                     command.Parameters.AddWithValue("@apellidoMaterno", miembro.ApellidoMaterno);
@@ -70,7 +70,7 @@ namespace AccesoDatos
                     command.Parameters.AddWithValue("@fechaFin", miembro.FechaFin);
                     command.Parameters.AddWithValue("@fotografia", miembro.Fotografia);
 
-                    command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();*/
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace AccesoDatos
 
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idMiembro", miembro.IdMiembro);
+                   /* command.Parameters.AddWithValue("@idMiembro", miembro.IdMiembro);
                     command.Parameters.AddWithValue("@idMembresia", miembro.IdMembresia);
                     command.Parameters.AddWithValue("@nombres", miembro.Nombres);
                     command.Parameters.AddWithValue("@apellidoPaterno", miembro.ApellidoPaterno);
@@ -97,7 +97,7 @@ namespace AccesoDatos
                     command.Parameters.AddWithValue("@fechaFin", miembro.FechaFin);
                     command.Parameters.AddWithValue("@fotografia", miembro.Fotografia);
 
-                    command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();*/
                 }
             }
         }
