@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Presentación;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,6 +22,7 @@ namespace Presentacion
         Font fuenteRace =  new Font("Race Sport", 15, FontStyle.Bold);
         Button entradaBtn, consultaMiembroBtn, registroClienteBtn, ventaBtn, inventarioBtn;
         LinkLabel cerrarSesionLbl = new LinkLabel();
+        PanelManager panelManager;
 
         //panel desplegable con botones
         Panel subBotonesPanel = new Panel();
@@ -32,6 +34,10 @@ namespace Presentacion
             InitializeComponent();
             InicializarComponentes();
             SubBotones();
+            panelManager = new PanelManager(mainPanel);
+            Panel panelRegistro = panelManager.CrearPanel("Registro", Color.DarkGray);
+            registroClienteBtn.Click += (s, e) => panelManager.MostrarPanel(panelRegistro);
+
         }
         private void InicializarComponentes()
         {
