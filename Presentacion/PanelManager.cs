@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using AForge.Video;
-using AForge.Video.DirectShow;
+using Presentacion;
 
 namespace Presentación
 {
@@ -12,14 +10,10 @@ namespace Presentación
     {
         private Panel panelConsulta;
         private readonly Panel mainPanel;
-        PictureBox fotoPanel = new PictureBox();
-        ComboBox dispositivos = new ComboBox();
+        public static PictureBox fotoMiembroPct = new PictureBox();
+        public static ComboBox dispositivosCombo = new ComboBox();
         Button abrirCamara = new Button();
-        TextBox nombreTxt, apePaternoTxt, apeMaternoTxt, telefonoTxt;
-        private string Ruta = "C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos";
-        private bool hayDispositivos;
-        private FilterInfoCollection misDispositivos;
-        private VideoCaptureDevice miCamara;
+        public static TextBox nombreTxt, apePaternoTxt, apeMaternoTxt, telefonoTxt;
 
         public PanelManager(Panel mainPanel)
         {
@@ -161,20 +155,20 @@ namespace Presentación
             membresiaCombo.Items.Add("Mensual");
 
             //Panel para la foto
-            fotoPanel.SizeMode = PictureBoxSizeMode.StretchImage;
-            fotoPanel.Size = new Size(300, 350);
-            fotoPanel.Location = new Point(750, 180);
-            fotoPanel.BorderStyle = BorderStyle.FixedSingle;
+            fotoMiembroPct.SizeMode = PictureBoxSizeMode.StretchImage;
+            fotoMiembroPct.Size = new Size(300, 350);
+            fotoMiembroPct.Location = new Point(750, 180);
+            fotoMiembroPct.BorderStyle = BorderStyle.FixedSingle;
 
             //ComboBox para selección de camara
-            dispositivos.Location = new Point(750, 150);
-            dispositivos.Size = new Size(fotoPanel.Width*2/3 - 5, 30);
-            abrirCamara.Location = new Point(dispositivos.Location.X + dispositivos.Width+5, 145);
-            abrirCamara.Size = new Size(fotoPanel.Width/3 , 30);
+            dispositivosCombo.Location = new Point(750, 150);
+            dispositivosCombo.Size = new Size(fotoMiembroPct.Width*2/3 - 5, 30);
+            abrirCamara.Location = new Point(dispositivosCombo.Location.X + dispositivosCombo.Width+5, 145);
+            abrirCamara.Size = new Size(fotoMiembroPct.Width/3 , 30);
             abrirCamara.BackColor = Color.White;
             abrirCamara.Text = "Seleccionar";
-            CargarDispositivos();
-            abrirCamara.Click += AbrirCamara_Click;
+            Fotografia.CargarDispositivos();
+            abrirCamara.Click += Fotografia.AbrirCamara_Click;
 
             //Botones para el formulario
             tomarBtn = new Button();
@@ -187,7 +181,7 @@ namespace Presentación
             tomarBtn.Size = new Size(80, 50);
             tomarBtn.Cursor = Cursors.Hand;
             tomarBtn.FlatAppearance.BorderSize = 0;
-            tomarBtn.Click += TomarBtn_Click;
+            tomarBtn.Click += Fotografia.TomarBtn_Click;
 
             retomarBtn = new Button();
             retomarBtn.BackgroundImage = Image.FromFile("Recursos/photoretake.png");
@@ -199,7 +193,7 @@ namespace Presentación
             retomarBtn.Size = new Size(80, 50);
             retomarBtn.Cursor = Cursors.Hand;
             retomarBtn.FlatAppearance.BorderSize = 0;
-            retomarBtn.Click += RetomarBtn_Click;
+            retomarBtn.Click += Fotografia.RetomarBtn_Click;
 
             importarBtn = new Button();
             importarBtn.BackgroundImage = Image.FromFile("Recursos/upload.png");
@@ -211,7 +205,7 @@ namespace Presentación
             importarBtn.Size = new Size(80, 50);
             importarBtn.Cursor = Cursors.Hand;
             importarBtn.FlatAppearance.BorderSize = 0;
-            importarBtn.Click += ImportarBtn_Click;
+            importarBtn.Click += Fotografia.ImportarBtn_Click;
 
             registrarBtn = new Button();
             registrarBtn.Text = "Registrar";
@@ -270,7 +264,7 @@ namespace Presentación
             nuevoPanel.Controls.Add(apeMaternoTxt);
             nuevoPanel.Controls.Add(telefonoTxt);
             nuevoPanel.Controls.Add(membresiaCombo);
-            nuevoPanel.Controls.Add(fotoPanel);
+            nuevoPanel.Controls.Add(fotoMiembroPct);
             nuevoPanel.Controls.Add(tomarBtn);
             nuevoPanel.Controls.Add(retomarBtn);
             nuevoPanel.Controls.Add(importarBtn);
@@ -279,105 +273,12 @@ namespace Presentación
             nuevoPanel.Controls.Add(regresarBtn);
             nuevoPanel.Controls.Add(flechaBtn);
             nuevoPanel.Controls.Add(cobrarBtn);
-            nuevoPanel.Controls.Add(dispositivos);
+            nuevoPanel.Controls.Add(dispositivosCombo);
             nuevoPanel.Controls.Add(abrirCamara);
 
             return nuevoPanel;
         }
-
-        public void CargarDispositivos()
-        {
-            misDispositivos = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (misDispositivos.Count > 0){
-                hayDispositivos = true;
-                for(int i = 0; i < misDispositivos.Count; i++)
-                {
-                    dispositivos.Items.Add(misDispositivos[i].Name.ToString());
-                    dispositivos.Text = misDispositivos[0].Name.ToString(); 
-                }
-            }
-            else {
-                hayDispositivos = false;
-            }
-        }
-
-        public void AbrirCamara_Click(object sender, EventArgs e)
-        {
-            // Buscar la resolución deseada
-            int i = dispositivos.SelectedIndex;
-            string nombreVideo = misDispositivos[i].MonikerString;
-            miCamara = new VideoCaptureDevice(nombreVideo);
-            miCamara.NewFrame += new NewFrameEventHandler(Capturando);
-            miCamara.Start();         
-        }
-
-        public void Capturando(object sender, NewFrameEventArgs eventArgs)
-        {
-            Bitmap foto = (Bitmap)eventArgs.Frame.Clone();
-            fotoPanel.Image = foto;
-        }
-
-        public void CerrarCamara()
-        {
-            if (miCamara != null && miCamara.IsRunning)
-            {
-                miCamara.SignalToStop();
-                miCamara = null;
-            }
-        }
-        public void TomarBtn_Click(object sender, EventArgs e) 
-        {
-            string nombre = nombreTxt.Text;
-            if (miCamara != null && miCamara.IsRunning)
-            {
-                
-                fotoPanel.Image = fotoPanel.Image;
-                string rutaCompleta = Path.Combine(Ruta, $"{nombre}.jpg");
-                fotoPanel.Image.Save(rutaCompleta, ImageFormat.Jpeg);
-                CerrarCamara();
-            }
-        }
-        public void RetomarBtn_Click(object sender, EventArgs e)
-        {
-            int i = dispositivos.SelectedIndex;
-            string nombreVideo = misDispositivos[i].MonikerString;
-            miCamara = new VideoCaptureDevice(nombreVideo);
-            miCamara.NewFrame += new NewFrameEventHandler(Capturando);
-            miCamara.Start();
-        }
-        public void ImportarBtn_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.Filter = "Archivos JPG (*.jpg)|*.jpg|Archivos PNG (*.png)|*.png";
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    string imageLocation = dialog.FileName;
-                    string nombre = nombreTxt.Text.Trim();
-                    using (Image imagen = Image.FromFile(imageLocation))
-                    {
-                        // Mostrarla en el panel
-                        fotoPanel.Image = (Image)imagen.Clone();
-
-                        // Guardarla en la ruta
-                        string rutaCompleta = Path.Combine(Ruta, $"{nombre}.jpg");
-
-                        // Asegúrate de que la carpeta existe
-                        if (!Directory.Exists(Ruta))
-                            Directory.CreateDirectory(Ruta);
-
-                        imagen.Save(rutaCompleta, ImageFormat.Jpeg);
-                    }
-
-                    MessageBox.Show("Imagen importada y guardada exitosamente.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
+        
         public void MostrarPanel(Panel panel)
         {
             if (panelConsulta != null)

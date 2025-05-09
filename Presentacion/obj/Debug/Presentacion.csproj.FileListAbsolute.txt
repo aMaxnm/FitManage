@@ -66,3 +66,5 @@ C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge
 C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge.Video.xml
 C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\AForge.Video.DirectShow.xml
 C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\obj\Debug\Presenta.BC77CD05.Up2Date
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Negocio.dll
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Negocio.pdb
