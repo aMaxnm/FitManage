@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PanelManager.cs" />
+    <Compile Include="VentanaCobrar.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="VentanaPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>

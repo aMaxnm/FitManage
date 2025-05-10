@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Presentacion;
+using System.Drawing;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Forms;
 
@@ -196,7 +197,7 @@ namespace Presentación
 
             regresarBtn = new Button();
             regresarBtn.Text = "Regresar";
-            regresarBtn.BackColor = Color.DarkGray;
+            regresarBtn.BackColor = Color.WhiteSmoke;
             regresarBtn.Font = new Font("Race Sport", 16);
             regresarBtn.Location = new Point(60, 730);
             regresarBtn.Size = new Size(200, 35);
@@ -209,7 +210,7 @@ namespace Presentación
             flechaBtn.Location = new Point(27, 733);
             flechaBtn.Size = new Size(30, 35);
             flechaBtn.BackgroundImageLayout = ImageLayout.Stretch;
-            flechaBtn.BackColor = Color.DarkGray;
+            flechaBtn.BackColor = Color.WhiteSmoke;
             flechaBtn.FlatStyle = FlatStyle.Flat;
             flechaBtn.ImageAlign = ContentAlignment.MiddleCenter;
             flechaBtn.Cursor = Cursors.Hand;
@@ -229,7 +230,8 @@ namespace Presentación
             //Muestra el panel de cobro al hacer click
             cobrarBtn.Click += (s, e) =>
             {
-                CobroPanel();
+                VentanaCobrar ventanaCobrar = new VentanaCobrar();
+                ventanaCobrar.Show();
             };
 
             //Agregar componentes a la interfaz
@@ -260,128 +262,6 @@ namespace Presentación
             return nuevoPanel;
         }
 
-        //Método para crear el panel de cobro
-        public void CobroPanel()
-        {
-            panelConsulta.Visible = false; // Oculta el panel anterior
-            Panel cobroP = new Panel();
-            cobroP.Name = "Cobro";
-            cobroP.Location = new Point(550, 200);
-            cobroP.Size = new Size(700, 400);
-            cobroP.BackColor = Color.DarkGray;
-            cobroP.Visible = true;
-            cobroP.BorderStyle = BorderStyle.FixedSingle;
-            mainPanel.Controls.Add(cobroP); // Agrega el nuevo panel al mainPanel
-            cobroP.BringToFront();
-
-            //Labels necesarias para el panel de cobro
-            Label membresiaLbl, mesLbl, costoLbl, recibidoLbl, cambioLbl;
-            //TextBoxs necesarias para el panel de cobro
-            TextBox costoTxt, recibidoTxt, cambioTxt;
-            //Botones necesarios para el panel de cobro
-            Button confirmarBtn, cancelarBtn;
-
-
-            //Configuracion de las labels
-            membresiaLbl = new Label();
-            membresiaLbl.Text = "MEMBRESIA:";
-            membresiaLbl.Font = new Font("Tahoma", 19);
-            membresiaLbl.ForeColor = Color.Black;
-            membresiaLbl.Location = new Point(230, 30);
-            membresiaLbl.AutoSize = true;
-
-            mesLbl = new Label();
-            mesLbl.Text = "MES";
-            mesLbl.Font = new Font("Tahoma", 19);
-            mesLbl.ForeColor = Color.Black;
-            mesLbl.Location = new Point(390, 30);
-            mesLbl.AutoSize = true;
-
-            costoLbl = new Label();
-            costoLbl.Text = "COSTO";
-            costoLbl.Font = new Font("Tahoma", 19);
-            costoLbl.ForeColor = Color.Black;
-            costoLbl.Location = new Point(200, 110);
-            costoLbl.AutoSize = true;
-
-            recibidoLbl = new Label();
-            recibidoLbl.Text = "EFECTIVO RECIBIDO";
-            recibidoLbl.Font = new Font("Tahoma", 19);
-            recibidoLbl.ForeColor = Color.Black;
-            recibidoLbl.Location = new Point(40, 175);
-            recibidoLbl.AutoSize = true;
-
-            cambioLbl = new Label();
-            cambioLbl.Text = "CAMBIO";
-            cambioLbl.Font = new Font("Tahoma", 19);
-            cambioLbl.ForeColor = Color.Black;
-            cambioLbl.Location = new Point(190, 240);
-            cambioLbl.AutoSize = true;
-
-            //Configuracion para los TextBoxs
-            costoTxt = new TextBox();
-            costoTxt.Location = new Point(300, 112);
-            costoTxt.Size = new Size(200, 30);
-            costoTxt.Font = new Font("Tahoma", 14);
-            costoTxt.ForeColor = Color.Black;
-            costoTxt.BorderStyle = BorderStyle.FixedSingle;
-            //costoTxt.ReadOnly = true;
-
-            recibidoTxt = new TextBox();
-            recibidoTxt.Location = new Point(300, 175);
-            recibidoTxt.Size = new Size(200, 30);
-            recibidoTxt.Font = new Font("Tahoma", 14);
-            recibidoTxt.ForeColor = Color.Black;
-            recibidoTxt.BorderStyle = BorderStyle.FixedSingle;
-
-            cambioTxt = new TextBox();
-            cambioTxt.Location = new Point(300, 242);
-            cambioTxt.Size = new Size(200, 30);
-            cambioTxt.Font = new Font("Tahoma", 14);
-            cambioTxt.ForeColor = Color.Black;
-            cambioTxt.BorderStyle = BorderStyle.FixedSingle;
-
-            //Configuracion de los botones
-            confirmarBtn = new Button();
-            confirmarBtn.Text = "CONFIRMAR";
-            confirmarBtn.Font = new Font("Tahoma", 14, FontStyle.Bold);
-            confirmarBtn.ForeColor = Color.White;
-            confirmarBtn.Location = new Point(390, 320);
-            confirmarBtn.Size = new Size(160, 40);
-            confirmarBtn.BackColor = Color.DarkGreen; //ForestGreen
-            confirmarBtn.FlatStyle = FlatStyle.Flat;
-            confirmarBtn.FlatAppearance.BorderSize = 0;
-            confirmarBtn.Cursor = Cursors.Hand;
-
-            cancelarBtn = new Button();
-            cancelarBtn.Text = "CANCELAR";
-            cancelarBtn.Font = new Font("Tahoma", 14, FontStyle.Bold);
-            cancelarBtn.ForeColor = Color.White;
-            cancelarBtn.Location = new Point(150, 320);
-            cancelarBtn.Size = new Size(160, 40);
-            cancelarBtn.BackColor = Color.DarkRed; //ForestGreen
-            cancelarBtn.FlatStyle = FlatStyle.Flat;
-            cancelarBtn.FlatAppearance.BorderSize = 0;
-            cancelarBtn.Cursor = Cursors.Hand;
-            cancelarBtn.Click += (s, e) =>
-            {
-                // Regresar al panel anterior
-                MostrarPanel(panelConsulta);
-                cobroP.Visible = false;
-            };
-           
-            //Se agregan los componentes al panel
-            cobroP.Controls.Add(membresiaLbl);
-            cobroP.Controls.Add(mesLbl);
-            cobroP.Controls.Add(costoLbl);
-            cobroP.Controls.Add(recibidoLbl);
-            cobroP.Controls.Add(cambioLbl);
-            cobroP.Controls.Add(costoTxt);
-            cobroP.Controls.Add(recibidoTxt);
-            cobroP.Controls.Add(cambioTxt);
-            cobroP.Controls.Add(confirmarBtn);
-            cobroP.Controls.Add(cancelarBtn);
-        }
 
         public void MostrarPanel(Panel panel)
         {
