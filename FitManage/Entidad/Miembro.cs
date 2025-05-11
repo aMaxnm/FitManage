@@ -10,13 +10,13 @@ namespace Entidad
     {
         public int IdMiembro { get; set; }
         public int IdMembresia { get; set; }
-        public string Nombre { get; set; }
+        public string Nombres { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
         public DateTime FechaNacimiento { get; set; }
-        public string NumeroCelular { get; set; }
+        public string NumeroTelefono { get; set; }
         public DateTime FechaRegistro { get; set; }
         public DateTime FechaVencimiento { get; set; }
-        public byte[] Foto { get; set; }
+        public byte[] Fotografia { get; set; }
     }
 }

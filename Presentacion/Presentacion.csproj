@@ -55,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsultaMiembro.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Fotografia.cs" />
     <Compile Include="PanelManager.cs" />
     <Compile Include="VentanaPrincipal.cs">
@@ -133,6 +136,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FitManage\Entidad\Entidad.csproj">
+      <Project>{58ac2262-f15f-4b30-8c49-abf1d032f730}</Project>
+      <Name>Entidad</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FitManage\Negocio\Negocio.csproj">
       <Project>{96eb3a08-93c6-45dc-bfff-c2b2e224c6ca}</Project>
       <Name>Negocio</Name>
