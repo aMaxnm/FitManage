@@ -1,13 +1,14 @@
 using System;
 using AccesoDatos;
-using Entidades;
+using Entidad;
 
 namespace Negocio
 {
     public class AgregarMiembro
     {
         private MiembroDAO miembroDAO;
-
+        static Random rand = new Random();
+        static int numero = rand.Next(1, 601) + 100; 
         public AgregarMiembro()
         {
             miembroDAO = new MiembroDAO();
@@ -21,16 +22,13 @@ namespace Negocio
             string apellidoMaterno,
             DateTime fechaNacimiento,
             string numeroTelefono,
-            DateTime fechaInicio,
-            DateTime fechaFin,
+            DateTime FechaRegistro,
             byte[] fotografia)
         {
             
             if (!ValidarDatos.ValidarTexto(nombres) ||
                 !ValidarDatos.ValidarTexto(apellidoPaterno) ||
-                !ValidarDatos.ValidarTexto(apellidoMaterno) ||
-                !ValidarDatos.ValidarTexto(numeroTelefono) ||
-                !ValidarDatos.ValidarTexto(fechaNacimiento))
+                !ValidarDatos.ValidarTexto(apellidoMaterno))
             {
                 Console.WriteLine("Alguno de los espacios esta en blanco");
                 return false;
@@ -48,7 +46,7 @@ namespace Negocio
                 return false;
             }
 
-            if (!ValidarDatos.ValidarFecha(fechaInicio) || !ValidarDatos.ValidarFecha(fechaFin))
+            /*if (!ValidarDatos.ValidarFecha(fechaInicio) || !ValidarDatos.ValidarFecha(fechaFin))
             {
                 Console.WriteLine("Fechas de inicio o fin inválidas.");
                 return false;
@@ -58,38 +56,48 @@ namespace Negocio
             {
                 Console.WriteLine("La fecha de fin debe ser posterior a la fecha de inicio.");
                 return false;
-            }
+            }*/
 
-            if (fotografia == null || fotografia.Length == 0)
+            /*if (fotografia == null || fotografia.Length == 0)
             {
                 Console.WriteLine("Debe cargar una imagen válida.");
                 return false;
-            }
+            }*/
 
             //Crear objeto Miembro
-            Miembro nuevoMiembro = new Miembro
+            MembresiaDAO embresiaSeleccionada = new MembresiaDAO();
+            Membresia mem = embresiaSeleccionada.ObtenerMembresiaPorId(idMembresia); // Método para obtener la membresía
+            if (mem == null)
             {
+                Console.WriteLine("Error: No se encontró la membresía con el ID: " + idMembresia);
+                return false;
+            }
+
+            Miembro nuevoMiembro = new Miembro()
+            {
+                IdMiembro = numero,
                 IdMembresia = idMembresia,
-                Nombres = nombres,
+                Nombre = nombres,
                 ApellidoPaterno = apellidoPaterno,
                 ApellidoMaterno = apellidoMaterno,
                 FechaNacimiento = fechaNacimiento,
-                NumeroTelefono = numeroTelefono,
-                FechaRegistro = DateTime.Now, // se genera automáticamente
-                FechaInicio = fechaInicio,
-                FechaFin = fechaFin,
-                Fotografia = fotografia
+                NumeroCelular = numeroTelefono,
+                FechaRegistro = DateTime.Now, // Se genera automáticamente
+                FechaVencimiento = FechaRegistro.AddDays(mem.Duracion), // Accede correctamente a la duración
+                Foto = fotografia
             };
 
             //Guardar en la base de datos
             try
             {
                 miembroDAO.AgregarMiembro(nuevoMiembro);
+                Console.WriteLine("Registro exitoso.");
                 return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error al registrar el miembro: " + ex.Message);
+                Console.WriteLine("Detalles: " + ex.StackTrace); // Para ver dónde ocurre el error
                 return false;
             }
         }

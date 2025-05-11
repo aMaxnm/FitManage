@@ -20,10 +20,10 @@ namespace Negocio
 
             public static bool ValidarFecha(DateTime fechaSeleccionada)
             {
-                return fechaSeleccionada.Date >= DateTime.Now.Date;
+                return fechaSeleccionada.Date <= DateTime.Now.Date; // Debe ser hoy o anterior
             }
 
-            public static bool ValidarImagen(object imagen)
+        public static bool ValidarImagen(object imagen)
             {
                 return imagen != null;
             }
