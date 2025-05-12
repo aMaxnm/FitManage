@@ -58,6 +58,9 @@
     <Compile Include="ConsultaMiembro.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EditarMembresiaPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Fotografia.cs" />
     <Compile Include="PanelManager.cs" />
     <Compile Include="VentanaPrincipal.cs">

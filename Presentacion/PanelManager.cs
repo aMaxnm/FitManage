@@ -229,7 +229,7 @@ namespace Presentación
             registrarBtn.FlatStyle = FlatStyle.Flat;
             registrarBtn.Cursor = Cursors.Hand;
             registrarBtn.FlatAppearance.BorderSize = 0;
-            AgregarMiembro servicio = new AgregarMiembro();
+            MiembroServicio servicio = new MiembroServicio();
             DateTime FechaRegistro = DateTime.Now.Date;
           
             registrarBtn.Click += (s, e) =>
@@ -350,7 +350,7 @@ namespace Presentación
             MembresiaServicio memCombo = new MembresiaServicio();
             List<Membresia> membresias = memCombo.ObtenerMembresias();
 
-            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo_membresia = "Seleccionar membresía", Precio = 0 });
+            membresias.Insert(0, new Membresia { Id = 0, Tipo = "Seleccionar membresía", Precio = 0 });
 
             // Modificar lo que se muestra en el ComboBox
             membresiaCombo.DataSource = membresias;

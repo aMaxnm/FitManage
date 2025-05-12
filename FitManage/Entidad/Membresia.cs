@@ -18,7 +18,7 @@ namespace Entidad
 
         public string DescripcionCompleta
         {
-            get { return $"{Tipo_membresia} - ${Precio}"; }
+            get { return $"{Tipo} - ${Precio}"; }
         }
     }
 }
