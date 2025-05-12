@@ -261,7 +261,10 @@ namespace Presentación
         public void MostrarPanel(Panel panel)
         {
             if (panelConsulta != null)
-                panelConsulta.Visible = false; // Oculta el panel anterior
+                {
+                    panelConsulta.Visible = false;
+                    mainPanel.Controls.Remove(panelConsulta);
+                } // Oculta el panel anterior
 
             panelConsulta = panel;
             panelConsulta.Visible = true; // Muestra el nuevo panel

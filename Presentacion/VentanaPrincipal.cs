@@ -37,6 +37,8 @@ namespace Presentacion
             panelManager = new PanelManager(mainPanel);
             Panel panelRegistro = panelManager.CrearPanel("Registro", Color.DarkGray);
             registroClienteBtn.Click += (s, e) => panelManager.MostrarPanel(panelRegistro);
+            EditarMembresiaPanel editarMembresiaPanel = new EditarMembresiaPanel();
+            tiposMembresiaBtn.Click += (s, e) => panelManager.MostrarPanel(editarMembresiaPanel);
 
         }
         private void InicializarComponentes()
