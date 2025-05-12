@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Negocio;
 using Presentacion;
+using Entidad;
 
 namespace Presentación
 {
@@ -13,11 +16,17 @@ namespace Presentación
         public static PictureBox fotoMiembroPct = new PictureBox();
         public static ComboBox dispositivosCombo = new ComboBox();
         Button abrirCamara = new Button();
+        ComboBox membresiaCombo = new ComboBox();
+        DateTimePicker fechaPicker = new DateTimePicker();
+        ErrorProvider errorProvider = new ErrorProvider(); // se utiliza para las validaciones de los campos de texto
+        Label fechaLbl = new Label();
         public static TextBox nombreTxt, apePaternoTxt, apeMaternoTxt, telefonoTxt;
+        Button registrarBtn = new Button();
 
         public PanelManager(Panel mainPanel)
         {
             this.mainPanel = mainPanel;
+            CargarMembresias();
         }
 
         public Panel CrearPanel(string nombre, Color colorFondo)
@@ -37,8 +46,8 @@ namespace Presentación
             nuevoPanel.Controls.Add(barraGris);
 
             //Labels necesarias para el formulario
-            Label tituloLbl, subtituloLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, fechaLbl, telefonoLbl, membresiaLbl, fotoLbl;
-            Button tomarBtn, retomarBtn, importarBtn, registrarBtn, regresarBtn,flechaBtn, cobrarBtn;
+            Label tituloLbl, subtituloLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, membresiaLbl, fotoLbl;
+            Button tomarBtn, retomarBtn, importarBtn, regresarBtn,flechaBtn, cobrarBtn;
 
             //Labels dentro de la barra gris oscuro
             tituloLbl = new Label();
@@ -79,7 +88,6 @@ namespace Presentación
             apeMaternoLbl.Location = new Point(35, 330);
             apeMaternoLbl.AutoSize = true;
 
-            fechaLbl = new Label();
             fechaLbl.Text = "Fecha de Nacimiento";
             fechaLbl.Font = new Font("Tahoma", 19, FontStyle.Bold);
             fechaLbl.ForeColor = Color.Black;
@@ -114,6 +122,9 @@ namespace Presentación
             nombreTxt.Font = new Font("Tahoma", 12);
             nombreTxt.ForeColor = Color.Black;
             nombreTxt.BorderStyle = BorderStyle.FixedSingle;
+            nombreTxt.CharacterCasing = CharacterCasing.Upper;
+            nombreTxt.TextChanged += new EventHandler(nombreTxt_TextChanged);
+            
 
             apePaternoTxt = new TextBox();
             apePaternoTxt.Location = new Point(37, 262);
@@ -121,6 +132,8 @@ namespace Presentación
             apePaternoTxt.Font = new Font("Tahoma", 12);
             apePaternoTxt.ForeColor = Color.Black;
             apePaternoTxt.BorderStyle = BorderStyle.FixedSingle;
+            apePaternoTxt.CharacterCasing = CharacterCasing.Upper;
+            apePaternoTxt.TextChanged += new EventHandler(apePaternoTxt_TextChanged);
 
             apeMaternoTxt = new TextBox();
             apeMaternoTxt.Location = new Point(37, 362);
@@ -128,14 +141,16 @@ namespace Presentación
             apeMaternoTxt.Font = new Font("Tahoma", 12);
             apeMaternoTxt.ForeColor = Color.Black;
             apeMaternoTxt.BorderStyle = BorderStyle.FixedSingle;
+            apeMaternoTxt.CharacterCasing = CharacterCasing.Upper;
+            apeMaternoTxt.TextChanged += new EventHandler(apeMaternoTxt_TextChanged);
 
             //DatePicker para la fecha de nacimiento
-            DateTimePicker fechaPicker = new DateTimePicker();
             fechaPicker.Format = DateTimePickerFormat.Short;
             fechaPicker.Location = new Point(37, 462);
             fechaPicker.Width = 360;
             fechaPicker.Font = new Font("Tahoma", 12);
             fechaPicker.ForeColor = Color.Black;
+            fechaPicker.ValueChanged += new EventHandler(fechaPicker_ValueChanged);
 
             telefonoTxt = new TextBox();
             telefonoTxt.Location = new Point(37, 562);
@@ -143,18 +158,16 @@ namespace Presentación
             telefonoTxt.Font = new Font("Tahoma", 12);
             telefonoTxt.ForeColor = Color.Black;
             telefonoTxt.BorderStyle = BorderStyle.FixedSingle;
+            telefonoTxt.TextChanged += new EventHandler(telefonoTxt_TextChanged);
 
             //ComboBox para el tipo de membresía
-            ComboBox membresiaCombo = new ComboBox();
             membresiaCombo.Location = new Point(37, 662);
             membresiaCombo.Size = new Size(290, 30);
             membresiaCombo.Font = new Font("Tahoma", 12);
             membresiaCombo.Text = "Seleccione una opción";
-            membresiaCombo.Items.Add("Dia");
-            membresiaCombo.Items.Add("Semanal");
-            membresiaCombo.Items.Add("Mensual");
 
             //Panel para la foto
+            fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
             fotoMiembroPct.SizeMode = PictureBoxSizeMode.StretchImage;
             fotoMiembroPct.Size = new Size(300, 350);
             fotoMiembroPct.Location = new Point(750, 180);
@@ -207,7 +220,6 @@ namespace Presentación
             importarBtn.FlatAppearance.BorderSize = 0;
             importarBtn.Click += Fotografia.ImportarBtn_Click;
 
-            registrarBtn = new Button();
             registrarBtn.Text = "Registrar";
             registrarBtn.BackColor = Color.DarkGreen; //ForestGreen
             registrarBtn.Font = new Font("Race Sport", 16, FontStyle.Bold);
@@ -217,6 +229,60 @@ namespace Presentación
             registrarBtn.FlatStyle = FlatStyle.Flat;
             registrarBtn.Cursor = Cursors.Hand;
             registrarBtn.FlatAppearance.BorderSize = 0;
+            AgregarMiembro servicio = new AgregarMiembro();
+            DateTime FechaRegistro = DateTime.Now.Date;
+          
+            registrarBtn.Click += (s, e) =>
+            {
+                nombreTxt.TextChanged -= nombreTxt_TextChanged;
+                apePaternoTxt.TextChanged -= apePaternoTxt_TextChanged;
+                apeMaternoTxt.TextChanged -= apeMaternoTxt_TextChanged;
+                telefonoTxt.TextChanged -= telefonoTxt_TextChanged;
+
+                byte[] LeerImagenComoBytes(string ruta)
+                {
+                    return File.ReadAllBytes(ruta);
+                }
+
+                // Uso:
+                byte[] imagenBytes = LeerImagenComoBytes($"C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos/{nombreTxt.Text}.jpg");
+                var idMembresia = (int)membresiaCombo.SelectedValue;
+                int idAsignado = servicio.RegistrarMiembro(
+                        idMembresia,
+                        nombreTxt.Text,
+                        apePaternoTxt.Text,
+                        apeMaternoTxt.Text,
+                        DateTime.Parse(fechaPicker.Text),
+                        telefonoTxt.Text,
+                        FechaRegistro,
+                        imagenBytes
+                    );
+
+                //Mostrar el ID retornado en un MessageBox
+                if (idAsignado > 0)
+                {
+                    MessageBox.Show($"Cliente registrado correctamente.\nID asignado: {idAsignado}", "Registro exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    nombreTxt.Text = "";
+                    apeMaternoTxt.Text = "";
+                    apePaternoTxt.Text = "";
+                    fechaPicker.Value = DateTime.Now;
+                    telefonoTxt.Text = "";
+                    fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
+                    nombreTxt.TextChanged += nombreTxt_TextChanged;
+                    apePaternoTxt.TextChanged += apePaternoTxt_TextChanged;
+                    apeMaternoTxt.TextChanged += apeMaternoTxt_TextChanged;
+                    telefonoTxt.TextChanged += telefonoTxt_TextChanged;
+                }
+                else if (idMembresia == -1)
+                {
+                    MessageBox.Show("Registro duplicado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Error en el registro.", "Campos faltantes.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            };
 
             regresarBtn = new Button();
             regresarBtn.Text = "Regresar";
@@ -278,18 +344,100 @@ namespace Presentación
 
             return nuevoPanel;
         }
-        
+
+        private void CargarMembresias()
+        {
+            MembresiaServicio memCombo = new MembresiaServicio();
+            List<Membresia> membresias = memCombo.ObtenerMembresias();
+
+            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo_membresia = "Seleccionar membresía", Precio = 0 });
+
+            // Modificar lo que se muestra en el ComboBox
+            membresiaCombo.DataSource = membresias;
+            membresiaCombo.DisplayMember = "DescripcionCompleta"; // Usamos una propiedad personalizada
+            membresiaCombo.ValueMember = "Id_membresia";
+        }
         public void MostrarPanel(Panel panel)
         {
             if (panelConsulta != null)
-                panelConsulta.Visible = false; // Oculta el panel anterior
+            {
+                panelConsulta.Visible = false;
+                mainPanel.Controls.Remove(panelConsulta);
+            } // Oculta el panel anterior
 
             panelConsulta = panel;
             panelConsulta.Visible = true; // Muestra el nuevo panel
             mainPanel.Controls.Add(panelConsulta); // Agrega el panel al mainPanel
             panelConsulta.BringToFront();
         }
-
+        private void nombreTxt_TextChanged(object sender, EventArgs e)
+        {
+            if (ValidarDatos.ValidarTexto(nombreTxt.Text))
+            {
+                nombreTxt.BackColor = Color.White; // Válido
+                registrarBtn.Enabled = true;
+            }
+            else
+            {
+                nombreTxt.BackColor = Color.LightPink; // Inválido
+                registrarBtn.Enabled = false;
+                
+            }
+        }
+        private void apePaternoTxt_TextChanged(object sender, EventArgs e)
+        {
+            if (ValidarDatos.ValidarTexto(apePaternoTxt.Text))
+            {
+                apePaternoTxt.BackColor = Color.White; // Válido
+                registrarBtn.Enabled = true;
+            }
+            else
+            {
+                apePaternoTxt.BackColor = Color.LightPink; // Inválido
+                registrarBtn.Enabled = false;
+            }
+        }
+        private void apeMaternoTxt_TextChanged(object sender, EventArgs e)
+        {
+            if (ValidarDatos.ValidarTexto(apeMaternoTxt.Text))
+            {
+                apeMaternoTxt.BackColor = Color.White; // Válido
+                registrarBtn.Enabled = true;
+            }
+            else
+            {
+                apeMaternoTxt.BackColor = Color.LightPink; // Inválido
+                registrarBtn.Enabled = false;
+            }
+        }
+        private void telefonoTxt_TextChanged(object sender, EventArgs e)
+        {
+            if (ValidarDatos.ValidarTelefono(telefonoTxt.Text))
+            {
+                telefonoTxt.BackColor = Color.White;
+                registrarBtn.Enabled = true;
+            }
+            else
+            {
+                telefonoTxt.BackColor = Color.LightPink;
+                registrarBtn.Enabled = false;
+            }
+        }
+        private void fechaPicker_ValueChanged(object sender, EventArgs e)
+        {
+            if (ValidarDatos.ValidarFecha(fechaPicker.Value))
+            {
+                fechaLbl.Text = "✔ Fecha válida";
+                fechaLbl.ForeColor = Color.Green;
+                registrarBtn.Enabled = true;
+            }
+            else
+            {
+                fechaLbl.Text = "✖ Fecha inválida";
+                fechaLbl.ForeColor = Color.Red;
+                registrarBtn.Enabled = false;
+            }
+        }
     }
 }
 

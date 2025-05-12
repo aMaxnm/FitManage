@@ -125,6 +125,9 @@
     <Content Include="Recursos\photoretake.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Recursos\placeholder.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Recursos\regresar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
