@@ -8,7 +8,7 @@ namespace AccesoDatos
     public class MiembroDAO
     {
 
-        private string connectionString = "server=localhost;port=8000;user=root;password=root;database=fitmanage;";
+        private string connectionString = "server=localhost;user=root;password=root;database=fitmanage;";
 
 
         // Obtener todos los miembros
@@ -122,39 +122,47 @@ namespace AccesoDatos
 
         public int AgregarMiembro(Miembro miembro)
         {
+            int idGenerado = -1;
             try
             {
                 using (var connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = "INSERT INTO fitmanage.miembro (Id_miembro, Id_membresia, Nombre, Ap_paterno, Ap_materno, Fecha_nacimiento, Num_celular, FechaRegistro, Fecha_vencimiento, Foto) " +
-                                   "VALUES (@Id_miembro, @Id_membresia, @Nombre, @Ap_paterno, @Ap_materno, @Fecha_nacimiento, @Num_celular, @FechaRegistro, @Fecha_vencimiento, @Foto);";
+                    string query = "INSERT INTO fitmanage.miembro (Id_membresia, Nombre, Ap_paterno, Ap_materno, Fecha_nacimiento, Num_celular, FechaRegistro, Fecha_vencimiento, Foto) " +
+                                   "VALUES (@Id_membresia, @Nombre, @Ap_paterno, @Ap_materno, @Fecha_nacimiento, @Num_celular, @FechaRegistro, @Fecha_vencimiento, @Foto);";
+
+                    string lastIdQuery = "SELECT LAST_INSERT_ID();";
 
                     using (var command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@Id_miembro", miembro.IdMiembro);
                         command.Parameters.AddWithValue("@Id_membresia", miembro.IdMembresia);
-                        command.Parameters.AddWithValue("@Nombre", miembro.Nombre);
+                        command.Parameters.AddWithValue("@Nombre", miembro.Nombres);
                         command.Parameters.AddWithValue("@Ap_paterno", miembro.ApellidoPaterno);
                         command.Parameters.AddWithValue("@Ap_materno", miembro.ApellidoMaterno);
                         command.Parameters.AddWithValue("@Fecha_nacimiento", miembro.FechaNacimiento);
-                        command.Parameters.AddWithValue("@Num_celular", miembro.NumeroCelular);
+                        command.Parameters.AddWithValue("@Num_celular", miembro.NumeroTelefono);
                         command.Parameters.AddWithValue("@FechaRegistro", miembro.FechaRegistro);
                         command.Parameters.AddWithValue("@Fecha_vencimiento", miembro.FechaVencimiento);
-                        command.Parameters.AddWithValue("@Foto", miembro.Foto);
+                        command.Parameters.AddWithValue("@Foto", miembro.Fotografia);
 
                         int filasAfectadas = command.ExecuteNonQuery();
                         if (filasAfectadas > 0)
                         {
-                            Console.WriteLine($"Miembro registrado correctamente con ID: {miembro.IdMiembro}");
-                            return miembro.IdMiembro; // 🔹 Retorna el ID generado
+                            using (var lastIdCommand = new MySqlCommand(lastIdQuery, connection))
+                            {
+                                idGenerado = Convert.ToInt32(lastIdCommand.ExecuteScalar());
+                            }
+
+                            Console.WriteLine($"Miembro registrado correctamente con ID: {idGenerado}");
+                            return idGenerado;
                         }
                         else
                         {
                             Console.WriteLine("Error: No se insertaron datos.");
-                            return -1; // 🔹 Retorna -1 en caso de error
+                            return -1;
                         }
                     }
+
                 }
             }
             catch (Exception ex)

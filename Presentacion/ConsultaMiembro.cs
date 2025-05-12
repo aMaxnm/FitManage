@@ -41,7 +41,7 @@ namespace Presentacion
             // Lista de miembros
             Dictionary<int, string> memDict = new Dictionary<int, string>
             {
-                 {1003, "Dia"},
+                {1003, "Dia"},
                 {1002, "Semanal"},
                 {1001, "Mensual"}
             };
@@ -76,6 +76,25 @@ namespace Presentacion
 
             //Datos Tarjeta
         }
+        public void CargarDatos()
+        {
+            // Aquí recargas los datos de la base de datos y los asignas al DataGridView
+            var miembros = MiembroServicio.ObtenerTodos(); // Ejemplo
+            Dictionary<int, string> memDict = new Dictionary<int, string>
+            {
+                {1003, "Dia"},
+                {1002, "Semanal"},
+                {1001, "Mensual"}
+            };
+            listaMiembro.DataSource = listaMiembros.Select(m => new
+            {
+                Nombre = m.Nombres,
+                Paterno = m.ApellidoPaterno,
+                Materno = m.ApellidoMaterno,
+                Membresía = memDict[m.IdMembresia],
+            }).ToList();
+        }
+
 
         private void ListaMiembro_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -135,8 +154,6 @@ namespace Presentacion
                 }
             }
         }
-
-
 
         private Label CrearLabel(string texto, int x, int y, int width)
         {
