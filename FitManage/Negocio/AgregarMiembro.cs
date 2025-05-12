@@ -65,14 +65,14 @@ namespace Negocio
             {
                 IdMiembro = numero,
                 IdMembresia = idMembresia,
-                Nombre = nombres,
+                Nombres = nombres,
                 ApellidoPaterno = apellidoPaterno,
                 ApellidoMaterno = apellidoMaterno,
                 FechaNacimiento = fechaNacimiento,
-                NumeroCelular = numeroTelefono,
+                NumeroTelefono = numeroTelefono,
                 FechaRegistro = DateTime.Now, // Se genera automáticamente
                 FechaVencimiento = FechaRegistro.AddDays(mem.Duracion), //Obtiene la duración de la membresia y la utiliza para generar la fecha de vencimiento
-                Foto = fotografia
+                Fotografia = fotografia
             };
             if (miembroDAO.MiembroExiste(nombres, apellidoPaterno, apellidoMaterno, numeroTelefono))
             {

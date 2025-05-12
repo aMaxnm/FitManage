@@ -313,8 +313,28 @@ namespace Presentación
             //Muestra el panel de cobro al hacer click
             cobrarBtn.Click += (s, e) =>
             {
-                VentanaCobrar ventanaCobrar = new VentanaCobrar();
-                ventanaCobrar.Show();
+                // Validar que el campo de membresía no esté vacío
+                //if (membresiaCombo.SelectedIndex == 0)
+                //{
+                //    MessageBox.Show("Por favor, seleccione una membresía.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    return;
+                //}else{
+
+                //    VentanaCobrar ventanaCobrar = new VentanaCobrar(); 
+                //    ventanaCobrar.Show();
+                //}
+                if (membresiaCombo.SelectedItem is Membresia membresiaSeleccionada && membresiaCombo.SelectedIndex != 0)
+                {
+                    var nombreMembresia = membresiaSeleccionada.Tipo_membresia;
+                    var precioMembresia = membresiaSeleccionada.Precio;
+
+                    var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia);
+                    ventanaCobrar.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Por favor, seleccione una membresía válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
 
             //Agregar componentes a la interfaz
@@ -343,6 +363,7 @@ namespace Presentación
             nuevoPanel.Controls.Add(cobrarBtn);
             nuevoPanel.Controls.Add(dispositivosCombo);
             nuevoPanel.Controls.Add(abrirCamara);
+
 
             return nuevoPanel;
         }

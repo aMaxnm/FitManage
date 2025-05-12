@@ -8,7 +8,7 @@ namespace AccesoDatos
     public class MiembroDAO
     {
 
-        private string connectionString = "server=localhost;port=8000;user=root;password=root;database=fitmanage;";
+        private string connectionString = "server=localhost;user=root;password=root;database=fitmanage;";
 
 
         // Obtener todos los miembros
@@ -134,14 +134,14 @@ namespace AccesoDatos
                     {
                         command.Parameters.AddWithValue("@Id_miembro", miembro.IdMiembro);
                         command.Parameters.AddWithValue("@Id_membresia", miembro.IdMembresia);
-                        command.Parameters.AddWithValue("@Nombre", miembro.Nombre);
+                        command.Parameters.AddWithValue("@Nombre", miembro.Nombres);
                         command.Parameters.AddWithValue("@Ap_paterno", miembro.ApellidoPaterno);
                         command.Parameters.AddWithValue("@Ap_materno", miembro.ApellidoMaterno);
                         command.Parameters.AddWithValue("@Fecha_nacimiento", miembro.FechaNacimiento);
-                        command.Parameters.AddWithValue("@Num_celular", miembro.NumeroCelular);
+                        command.Parameters.AddWithValue("@Num_celular", miembro.NumeroTelefono);
                         command.Parameters.AddWithValue("@FechaRegistro", miembro.FechaRegistro);
                         command.Parameters.AddWithValue("@Fecha_vencimiento", miembro.FechaVencimiento);
-                        command.Parameters.AddWithValue("@Foto", miembro.Foto);
+                        command.Parameters.AddWithValue("@Foto", miembro.Fotografia);
 
                         int filasAfectadas = command.ExecuteNonQuery();
                         if (filasAfectadas > 0)

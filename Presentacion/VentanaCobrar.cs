@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entidad;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Presentacion
 {
     internal class VentanaCobrar : Form
     {
-        public VentanaCobrar()
+        public VentanaCobrar(String nombreMembresia, Decimal precioMembresia)
         {
             this.Text = "Cobro";
             this.Size = new Size(700, 400);
@@ -34,7 +35,7 @@ namespace Presentacion
             membresiaLbl.AutoSize = true;
 
             mesLbl = new Label();
-            mesLbl.Text = "MES";
+            mesLbl.Text = nombreMembresia;
             mesLbl.Font = new Font("Tahoma", 19);
             mesLbl.ForeColor = Color.Black;
             mesLbl.Location = new Point(390, 30);
@@ -63,12 +64,13 @@ namespace Presentacion
 
             //Configuracion para los TextBoxs
             costoTxt = new TextBox();
+            costoTxt.Text = precioMembresia.ToString();
             costoTxt.Location = new Point(300, 112);
             costoTxt.Size = new Size(200, 30);
             costoTxt.Font = new Font("Tahoma", 14);
             costoTxt.ForeColor = Color.Black;
             costoTxt.BorderStyle = BorderStyle.FixedSingle;
-            //costoTxt.ReadOnly = true;
+            costoTxt.ReadOnly = true;
 
             recibidoTxt = new TextBox();
             recibidoTxt.Location = new Point(300, 175);

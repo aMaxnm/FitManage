@@ -16,7 +16,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM fitmanage.membresía";
+                string query = "SELECT * FROM fitmanage.membresia";
 
                 using (var command = new MySqlCommand(query, connection))
                 using (var reader = command.ExecuteReader())
@@ -26,7 +26,7 @@ namespace AccesoDatos
                         listaMembresias.Add(new Membresia
                         {
                             Id_membresia = reader.GetInt32("Id_membresia"),
-                            Duracion = reader.GetInt32("Duración"),
+                            Duracion = reader.GetInt32("Duracion"),
                             Precio = reader.GetDecimal("Precio"),
                             Tipo_membresia = reader.GetString("Tipo_Membresia")
                         });
