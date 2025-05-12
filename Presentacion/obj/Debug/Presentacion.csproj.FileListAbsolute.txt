@@ -101,3 +101,4 @@ C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\K4os.H
 C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\obj\Debug\Presentacion.csproj.SuggestedBindingRedirects.cache
 C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\obj\Debug\Presentacion.exe.config
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Recursos\placeholder.jpg

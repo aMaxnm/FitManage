@@ -28,7 +28,7 @@ namespace AccesoDatos
                             Id_membresia = reader.GetInt32("Id_membresia"),
                             Duracion = reader.GetInt32("Duración"),
                             Precio = reader.GetDecimal("Precio"),
-                            Tipo_Membresia = reader.GetString("Tipo_Membresia")
+                            Tipo_membresia = reader.GetString("Tipo_Membresia")
                         });
                     }
                 }
@@ -59,7 +59,7 @@ namespace AccesoDatos
                                 Id_membresia = reader.GetInt32("Id_membresia"),
                                 Duracion = reader.GetInt32("Duración"),
                                 Precio = reader.GetDecimal("Precio"),
-                                Tipo_Membresia = reader.GetString("Tipo_Membresia")
+                                Tipo_membresia = reader.GetString("Tipo_Membresia")
                             };
                         }
                     }

@@ -11,6 +11,12 @@ namespace Entidad
         public int Id_membresia { get; set; }
         public int Duracion { get; set; }
         public Decimal Precio { get; set; }
-        public string Tipo_Membresia { get; set; }
+        public string Tipo_membresia { get; set; }
+
+        public string DescripcionCompleta
+        {
+            get { return $"{Tipo_membresia} - ${Precio}"; }
+        }
     }
 }
+

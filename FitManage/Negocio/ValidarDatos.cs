@@ -10,12 +10,12 @@ namespace Negocio
     {
             public static bool ValidarTexto(string texto)
             {
-                return !string.IsNullOrWhiteSpace(texto) && System.Text.RegularExpressions.Regex.IsMatch(texto, "^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$");
+                return !string.IsNullOrEmpty(texto) && System.Text.RegularExpressions.Regex.IsMatch(texto, "^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$");
             }
 
             public static bool ValidarTelefono(string telefono)
             {
-                return !string.IsNullOrWhiteSpace(telefono) && System.Text.RegularExpressions.Regex.IsMatch(telefono, "^[0-9]+$");
+                return !string.IsNullOrEmpty(telefono) && System.Text.RegularExpressions.Regex.IsMatch(telefono, "^[0-9]+$");
             }
 
             public static bool ValidarFecha(DateTime fechaSeleccionada)

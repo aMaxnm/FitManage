@@ -15,7 +15,7 @@ namespace Negocio
         }
 
         //Falta hacer una validacion para la id
-        public bool RegistrarMiembro(
+        public int RegistrarMiembro(
             int idMembresia,
             string nombres,
             string apellidoPaterno,
@@ -31,46 +31,34 @@ namespace Negocio
                 !ValidarDatos.ValidarTexto(apellidoMaterno))
             {
                 Console.WriteLine("Alguno de los espacios esta en blanco");
-                return false;
+                return -1;
             }
 
             if (!ValidarDatos.ValidarTelefono(numeroTelefono))
             {
                 Console.WriteLine("Teléfono inválido.");
-                return false;
+                return -1;
             }
 
             if (fechaNacimiento >= DateTime.Now.Date)
             {
                 Console.WriteLine("La fecha de nacimiento no puede ser hoy ni futura.");
-                return false;
+                return -1;
             }
 
-            /*if (!ValidarDatos.ValidarFecha(fechaInicio) || !ValidarDatos.ValidarFecha(fechaFin))
-            {
-                Console.WriteLine("Fechas de inicio o fin inválidas.");
-                return false;
-            }
-
-            if (fechaFin <= fechaInicio)
-            {
-                Console.WriteLine("La fecha de fin debe ser posterior a la fecha de inicio.");
-                return false;
-            }*/
-
-            /*if (fotografia == null || fotografia.Length == 0)
+            if(fotografia == null || fotografia.Length == 0)
             {
                 Console.WriteLine("Debe cargar una imagen válida.");
-                return false;
-            }*/
+                return -1;
+            }
 
             //Crear objeto Miembro
-            MembresiaDAO embresiaSeleccionada = new MembresiaDAO();
-            Membresia mem = embresiaSeleccionada.ObtenerMembresiaPorId(idMembresia); // Método para obtener la membresía
+            MembresiaDAO membresiaSeleccionada = new MembresiaDAO();
+            Membresia mem = membresiaSeleccionada.ObtenerMembresiaPorId(idMembresia); // Método para obtener la membresía
             if (mem == null)
             {
                 Console.WriteLine("Error: No se encontró la membresía con el ID: " + idMembresia);
-                return false;
+                return -1;
             }
 
             Miembro nuevoMiembro = new Miembro()
@@ -83,22 +71,30 @@ namespace Negocio
                 FechaNacimiento = fechaNacimiento,
                 NumeroCelular = numeroTelefono,
                 FechaRegistro = DateTime.Now, // Se genera automáticamente
-                FechaVencimiento = FechaRegistro.AddDays(mem.Duracion), // Accede correctamente a la duración
+                FechaVencimiento = FechaRegistro.AddDays(mem.Duracion), //Obtiene la duración de la membresia y la utiliza para generar la fecha de vencimiento
                 Foto = fotografia
             };
-
-            //Guardar en la base de datos
-            try
+            if (miembroDAO.MiembroExiste(nombres, apellidoPaterno, apellidoMaterno, numeroTelefono))
             {
-                miembroDAO.AgregarMiembro(nuevoMiembro);
-                Console.WriteLine("Registro exitoso.");
-                return true;
+                Console.WriteLine("Miembro registrado");
+                return -1; // ?? No lo registra si ya existe
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Error al registrar el miembro: " + ex.Message);
-                Console.WriteLine("Detalles: " + ex.StackTrace); // Para ver dónde ocurre el error
-                return false;
+
+                //Guardar en la base de datos
+                try
+                {
+                    miembroDAO.AgregarMiembro(nuevoMiembro);
+                    Console.WriteLine("Registro exitoso.");
+                    return numero;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error al registrar el miembro: " + ex.Message);
+                    Console.WriteLine("Detalles: " + ex.StackTrace); // Para ver dónde ocurre el error
+                    return -1;
+                }
             }
         }
     }

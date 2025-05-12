@@ -19,9 +19,9 @@ namespace Presentación
         ComboBox membresiaCombo = new ComboBox();
         DateTimePicker fechaPicker = new DateTimePicker();
         ErrorProvider errorProvider = new ErrorProvider(); // se utiliza para las validaciones de los campos de texto
-        Label tituloLbl, subtituloLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, membresiaLbl, fotoLbl;
         Label fechaLbl = new Label();
         public static TextBox nombreTxt, apePaternoTxt, apeMaternoTxt, telefonoTxt;
+        Button registrarBtn = new Button();
 
         public PanelManager(Panel mainPanel)
         {
@@ -47,7 +47,7 @@ namespace Presentación
 
             //Labels necesarias para el formulario
             Label tituloLbl, subtituloLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, membresiaLbl, fotoLbl;
-            Button tomarBtn, retomarBtn, importarBtn, registrarBtn, regresarBtn,flechaBtn, cobrarBtn;
+            Button tomarBtn, retomarBtn, importarBtn, regresarBtn,flechaBtn, cobrarBtn;
 
             //Labels dentro de la barra gris oscuro
             tituloLbl = new Label();
@@ -122,7 +122,9 @@ namespace Presentación
             nombreTxt.Font = new Font("Tahoma", 12);
             nombreTxt.ForeColor = Color.Black;
             nombreTxt.BorderStyle = BorderStyle.FixedSingle;
+            nombreTxt.CharacterCasing = CharacterCasing.Upper;
             nombreTxt.TextChanged += new EventHandler(nombreTxt_TextChanged);
+            
 
             apePaternoTxt = new TextBox();
             apePaternoTxt.Location = new Point(37, 262);
@@ -130,6 +132,7 @@ namespace Presentación
             apePaternoTxt.Font = new Font("Tahoma", 12);
             apePaternoTxt.ForeColor = Color.Black;
             apePaternoTxt.BorderStyle = BorderStyle.FixedSingle;
+            apePaternoTxt.CharacterCasing = CharacterCasing.Upper;
             apePaternoTxt.TextChanged += new EventHandler(apePaternoTxt_TextChanged);
 
             apeMaternoTxt = new TextBox();
@@ -138,6 +141,7 @@ namespace Presentación
             apeMaternoTxt.Font = new Font("Tahoma", 12);
             apeMaternoTxt.ForeColor = Color.Black;
             apeMaternoTxt.BorderStyle = BorderStyle.FixedSingle;
+            apeMaternoTxt.CharacterCasing = CharacterCasing.Upper;
             apeMaternoTxt.TextChanged += new EventHandler(apeMaternoTxt_TextChanged);
 
             //DatePicker para la fecha de nacimiento
@@ -163,6 +167,7 @@ namespace Presentación
             membresiaCombo.Text = "Seleccione una opción";
 
             //Panel para la foto
+            fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
             fotoMiembroPct.SizeMode = PictureBoxSizeMode.StretchImage;
             fotoMiembroPct.Size = new Size(300, 350);
             fotoMiembroPct.Location = new Point(750, 180);
@@ -215,7 +220,6 @@ namespace Presentación
             importarBtn.FlatAppearance.BorderSize = 0;
             importarBtn.Click += Fotografia.ImportarBtn_Click;
 
-            registrarBtn = new Button();
             registrarBtn.Text = "Registrar";
             registrarBtn.BackColor = Color.DarkGreen; //ForestGreen
             registrarBtn.Font = new Font("Race Sport", 16, FontStyle.Bold);
@@ -227,9 +231,14 @@ namespace Presentación
             registrarBtn.FlatAppearance.BorderSize = 0;
             AgregarMiembro servicio = new AgregarMiembro();
             DateTime FechaRegistro = DateTime.Now.Date;
-
+          
             registrarBtn.Click += (s, e) =>
             {
+                nombreTxt.TextChanged -= nombreTxt_TextChanged;
+                apePaternoTxt.TextChanged -= apePaternoTxt_TextChanged;
+                apeMaternoTxt.TextChanged -= apeMaternoTxt_TextChanged;
+                telefonoTxt.TextChanged -= telefonoTxt_TextChanged;
+
                 byte[] LeerImagenComoBytes(string ruta)
                 {
                     return File.ReadAllBytes(ruta);
@@ -238,16 +247,41 @@ namespace Presentación
                 // Uso:
                 byte[] imagenBytes = LeerImagenComoBytes($"C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos/{nombreTxt.Text}.jpg");
                 var idMembresia = (int)membresiaCombo.SelectedValue;
-                servicio.RegistrarMiembro(
-                    idMembresia,
-                    nombreTxt.Text,
-                    apePaternoTxt.Text,
-                    apeMaternoTxt.Text,
-                    DateTime.Parse(fechaPicker.Text),
-                    telefonoTxt.Text,
-                    FechaRegistro,
-                    imagenBytes
-                );
+                int idAsignado = servicio.RegistrarMiembro(
+                        idMembresia,
+                        nombreTxt.Text,
+                        apePaternoTxt.Text,
+                        apeMaternoTxt.Text,
+                        DateTime.Parse(fechaPicker.Text),
+                        telefonoTxt.Text,
+                        FechaRegistro,
+                        imagenBytes
+                    );
+
+                //Mostrar el ID retornado en un MessageBox
+                if (idAsignado > 0)
+                {
+                    MessageBox.Show($"Cliente registrado correctamente.\nID asignado: {idAsignado}", "Registro exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    nombreTxt.Text = "";
+                    apeMaternoTxt.Text = "";
+                    apePaternoTxt.Text = "";
+                    fechaPicker.Value = DateTime.Now;
+                    telefonoTxt.Text = "";
+                    fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
+                    nombreTxt.TextChanged += nombreTxt_TextChanged;
+                    apePaternoTxt.TextChanged += apePaternoTxt_TextChanged;
+                    apeMaternoTxt.TextChanged += apeMaternoTxt_TextChanged;
+                    telefonoTxt.TextChanged += telefonoTxt_TextChanged;
+                }
+                else if (idMembresia == -1)
+                {
+                    MessageBox.Show("Registro duplicado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Error en el registro.", "Campos faltantes.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
             };
 
             regresarBtn = new Button();
@@ -316,8 +350,11 @@ namespace Presentación
             MembresiaServicio memCombo = new MembresiaServicio();
             List<Membresia> membresias = memCombo.ObtenerMembresias();
 
+            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo_membresia = "Seleccionar membresía", Precio = 0 });
+
+            // Modificar lo que se muestra en el ComboBox
             membresiaCombo.DataSource = membresias;
-            membresiaCombo.DisplayMember = "Tipo_Membresia";
+            membresiaCombo.DisplayMember = "DescripcionCompleta"; // Usamos una propiedad personalizada
             membresiaCombo.ValueMember = "Id_membresia";
         }
         public void MostrarPanel(Panel panel)
@@ -338,10 +375,13 @@ namespace Presentación
             if (ValidarDatos.ValidarTexto(nombreTxt.Text))
             {
                 nombreTxt.BackColor = Color.White; // Válido
+                registrarBtn.Enabled = true;
             }
             else
             {
                 nombreTxt.BackColor = Color.LightPink; // Inválido
+                registrarBtn.Enabled = false;
+                
             }
         }
         private void apePaternoTxt_TextChanged(object sender, EventArgs e)
@@ -349,10 +389,12 @@ namespace Presentación
             if (ValidarDatos.ValidarTexto(apePaternoTxt.Text))
             {
                 apePaternoTxt.BackColor = Color.White; // Válido
+                registrarBtn.Enabled = true;
             }
             else
             {
                 apePaternoTxt.BackColor = Color.LightPink; // Inválido
+                registrarBtn.Enabled = false;
             }
         }
         private void apeMaternoTxt_TextChanged(object sender, EventArgs e)
@@ -360,10 +402,12 @@ namespace Presentación
             if (ValidarDatos.ValidarTexto(apeMaternoTxt.Text))
             {
                 apeMaternoTxt.BackColor = Color.White; // Válido
+                registrarBtn.Enabled = true;
             }
             else
             {
                 apeMaternoTxt.BackColor = Color.LightPink; // Inválido
+                registrarBtn.Enabled = false;
             }
         }
         private void telefonoTxt_TextChanged(object sender, EventArgs e)
@@ -371,10 +415,12 @@ namespace Presentación
             if (ValidarDatos.ValidarTelefono(telefonoTxt.Text))
             {
                 telefonoTxt.BackColor = Color.White;
+                registrarBtn.Enabled = true;
             }
             else
             {
                 telefonoTxt.BackColor = Color.LightPink;
+                registrarBtn.Enabled = false;
             }
         }
         private void fechaPicker_ValueChanged(object sender, EventArgs e)
@@ -383,11 +429,13 @@ namespace Presentación
             {
                 fechaLbl.Text = "✔ Fecha válida";
                 fechaLbl.ForeColor = Color.Green;
+                registrarBtn.Enabled = true;
             }
             else
             {
                 fechaLbl.Text = "✖ Fecha inválida";
                 fechaLbl.ForeColor = Color.Red;
+                registrarBtn.Enabled = false;
             }
         }
     }

@@ -48,8 +48,8 @@ namespace AccesoDatos
             return listaMiembros;
         }
 
-        // 🔹 Agregar un nuevo miembro
-        public void AgregarMiembro(Miembro miembro)
+        // Agregar un nuevo miembro
+        /*public void AgregarMiembro(Miembro miembro)
         {
             try
             {
@@ -88,9 +88,84 @@ namespace AccesoDatos
                 Console.WriteLine("Error al insertar el miembro: " + ex.Message);
             }
 
+        }*/
+        //Método para verificar si el cliente ya existe antes de registrarlo
+        public bool MiembroExiste(string nombre, string apellidoPaterno, string apellidoMaterno, string telefono)
+        {
+            bool existe = false;
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT COUNT(*) FROM fitmanage.miembro WHERE Nombre = @Nombre AND Ap_paterno = @Ap_paterno AND Ap_materno = @Ap_materno AND Num_celular = @Num_celular";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Nombre", nombre);
+                        command.Parameters.AddWithValue("@Ap_paterno", apellidoPaterno);
+                        command.Parameters.AddWithValue("@Ap_materno", apellidoMaterno);
+                        command.Parameters.AddWithValue("@Num_celular", telefono);
+
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        existe = (count > 0); // Si `count > 0`, el cliente ya existe
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al verificar existencia del cliente: " + ex.Message);
+            }
+
+            return existe; //Retorna `true` si el cliente ya existe, `false` si no
         }
 
-        // 🔹 Actualizar información de un miembro
+        public int AgregarMiembro(Miembro miembro)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "INSERT INTO fitmanage.miembro (Id_miembro, Id_membresia, Nombre, Ap_paterno, Ap_materno, Fecha_nacimiento, Num_celular, FechaRegistro, Fecha_vencimiento, Foto) " +
+                                   "VALUES (@Id_miembro, @Id_membresia, @Nombre, @Ap_paterno, @Ap_materno, @Fecha_nacimiento, @Num_celular, @FechaRegistro, @Fecha_vencimiento, @Foto);";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id_miembro", miembro.IdMiembro);
+                        command.Parameters.AddWithValue("@Id_membresia", miembro.IdMembresia);
+                        command.Parameters.AddWithValue("@Nombre", miembro.Nombre);
+                        command.Parameters.AddWithValue("@Ap_paterno", miembro.ApellidoPaterno);
+                        command.Parameters.AddWithValue("@Ap_materno", miembro.ApellidoMaterno);
+                        command.Parameters.AddWithValue("@Fecha_nacimiento", miembro.FechaNacimiento);
+                        command.Parameters.AddWithValue("@Num_celular", miembro.NumeroCelular);
+                        command.Parameters.AddWithValue("@FechaRegistro", miembro.FechaRegistro);
+                        command.Parameters.AddWithValue("@Fecha_vencimiento", miembro.FechaVencimiento);
+                        command.Parameters.AddWithValue("@Foto", miembro.Foto);
+
+                        int filasAfectadas = command.ExecuteNonQuery();
+                        if (filasAfectadas > 0)
+                        {
+                            Console.WriteLine($"Miembro registrado correctamente con ID: {miembro.IdMiembro}");
+                            return miembro.IdMiembro; // 🔹 Retorna el ID generado
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: No se insertaron datos.");
+                            return -1; // 🔹 Retorna -1 en caso de error
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al insertar el miembro: " + ex.Message);
+                return -1; // Retorna -1 en caso de excepción
+            }
+        }
+
+        // Actualizar información de un miembro
         public void ModificarMiembro(Miembro miembro)
         {
             using (var connection = new MySqlConnection(connectionString))
