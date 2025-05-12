@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace Entidad
 {
+    //posiblemente esta roto
     public class Membresia
     {
-        public int Id_membresia { get; set; }
+        public string Tipo { get; set; }
+        public decimal Precio { get; set; }
+
+        public int Id { get; set; }
+
         public int Duracion { get; set; }
-        public Decimal Precio { get; set; }
-        public string Tipo_membresia { get; set; }
 
         public string DescripcionCompleta
         {
@@ -19,4 +22,3 @@ namespace Entidad
         }
     }
 }
-

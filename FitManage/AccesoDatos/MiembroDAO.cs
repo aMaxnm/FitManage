@@ -38,7 +38,6 @@ namespace AccesoDatos
                             FechaRegistro = reader.GetDateTime("FechaRegistro"),
                             FechaVencimiento = reader.GetDateTime("Fecha_Vencimiento"),
                             Fotografia = reader["Foto"] as byte[]
-
                         });
                     }
                 }
@@ -51,7 +50,6 @@ namespace AccesoDatos
         {
             try
             {
-
                 using (var connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
@@ -217,3 +215,4 @@ namespace AccesoDatos
         }
     }
 }
+

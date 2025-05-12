@@ -16,8 +16,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM fitmanage.membresía";
-
+                string query = "SELECT * FROM fitmanage.membresia";
                 using (var command = new MySqlCommand(query, connection))
                 using (var reader = command.ExecuteReader())
                 {
@@ -25,10 +24,9 @@ namespace AccesoDatos
                     {
                         listaMembresias.Add(new Membresia
                         {
-                            Id_membresia = reader.GetInt32("Id_membresia"),
-                            Duracion = reader.GetInt32("Duración"),
-                            Precio = reader.GetDecimal("Precio"),
-                            Tipo_membresia = reader.GetString("Tipo_Membresia")
+                            Id = reader.GetInt32("Id_membresia"),
+                            Tipo = reader.GetString("Tipo_Membresia"),
+                            Precio = reader.GetDecimal("Precio")
                         });
                     }
                 }
@@ -69,3 +67,33 @@ namespace AccesoDatos
         }
     }
 }
+
+            return listaMembresias;
+        }
+
+            public void EditarMembresia(Membresia mem) {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"UPDATE fitmanage.membresia 
+                             SET
+                             Precio = @precio, 
+                             Tipo_Membresia = @tipo 
+                         WHERE Id_membresia = @id";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", mem.Id);
+                        
+                        command.Parameters.AddWithValue("@precio", mem.Precio);
+                        command.Parameters.AddWithValue("@tipo", mem.Tipo);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+
+
+
+        }
+    }
