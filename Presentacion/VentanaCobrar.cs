@@ -85,6 +85,7 @@ namespace Presentacion
             cambioTxt.Font = new Font("Tahoma", 14);
             cambioTxt.ForeColor = Color.Black;
             cambioTxt.BorderStyle = BorderStyle.FixedSingle;
+            cambioTxt.ReadOnly = true;
 
             //Configuracion de los botones
             confirmarBtn = new Button();

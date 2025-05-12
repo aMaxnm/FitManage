@@ -313,16 +313,6 @@ namespace Presentación
             //Muestra el panel de cobro al hacer click
             cobrarBtn.Click += (s, e) =>
             {
-                // Validar que el campo de membresía no esté vacío
-                //if (membresiaCombo.SelectedIndex == 0)
-                //{
-                //    MessageBox.Show("Por favor, seleccione una membresía.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //    return;
-                //}else{
-
-                //    VentanaCobrar ventanaCobrar = new VentanaCobrar(); 
-                //    ventanaCobrar.Show();
-                //}
                 if (membresiaCombo.SelectedItem is Membresia membresiaSeleccionada && membresiaCombo.SelectedIndex != 0)
                 {
                     var nombreMembresia = membresiaSeleccionada.Tipo_membresia;
@@ -332,9 +322,7 @@ namespace Presentación
                     ventanaCobrar.Show();
                 }
                 else
-                {
                     MessageBox.Show("Por favor, seleccione una membresía válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
             };
 
             //Agregar componentes a la interfaz
