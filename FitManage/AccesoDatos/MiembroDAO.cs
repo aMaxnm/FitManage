@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using Entidades;
-
+using Entidad;
 
 namespace AccesoDatos
 {
     public class MiembroDAO
     {
-        private string connectionString = "server=localhost;user=root;password=root;database=fitmanage";
 
-        //  Obtener todos los miembros
+        private string connectionString = "server=localhost;port=8000;user=root;password=root;database=fitmanage;";
+
+
+        // Obtener todos los miembros
         public List<Miembro> ObtenerMiembros()
         {
             List<Miembro> listaMiembros = new List<Miembro>();
@@ -22,7 +19,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM Miembro";
+                string query = "SELECT * FROM fitmanage.miembro";
 
                 using (var command = new MySqlCommand(query, connection))
                 using (var reader = command.ExecuteReader())
@@ -31,17 +28,17 @@ namespace AccesoDatos
                     {
                         listaMiembros.Add(new Miembro
                         {
-                            IdMiembro = reader.GetInt32("idMiembro"),
-                            IdMembresia = reader.GetInt32("idMembresia"),
-                            Nombres = reader.GetString("nombres"),
-                            ApellidoPaterno = reader.GetString("apellidoPaterno"),
-                            ApellidoMaterno = reader.GetString("apellidoMaterno"),
-                            FechaNacimiento = reader.GetDateTime("fechaNacimiento"),
-                            NumeroTelefono = reader.GetString("numeroTelefono"),
-                            FechaRegistro = reader.GetDateTime("fechaRegistro"),
-                            FechaInicio = reader.GetDateTime("fechaInicio"),
-                            FechaFin = reader.GetDateTime("fechaFin"),
-                            Fotografia = reader["fotografia"] as byte[]  // Para manejar imágenes
+                            IdMiembro = reader.GetInt32("Id_miembro"),
+                            IdMembresia = reader.GetInt32("Id_membresia"),
+                            Nombres = reader.GetString("Nombre"),
+                            ApellidoPaterno = reader.GetString("Ap_paterno"),
+                            ApellidoMaterno = reader.GetString("Ap_materno"),
+                            FechaNacimiento = reader.GetDateTime("Fecha_nacimiento"),
+                            NumeroTelefono = reader.GetString("Num_celular"),
+                            FechaRegistro = reader.GetDateTime("FechaRegistro"),
+                            FechaVencimiento = reader.GetDateTime("Fecha_Vencimiento"),
+                            Fotografia = reader["Foto"] as byte[]
+
                         });
                     }
                 }
@@ -49,74 +46,174 @@ namespace AccesoDatos
             return listaMiembros;
         }
 
-        // 🔹 Agregar un nuevo miembro
-        public void AgregarMiembro(Miembro miembro)
+        // Agregar un nuevo miembro
+        /*public void AgregarMiembro(Miembro miembro)
         {
-            using (var connection = new MySqlConnection(connectionString))
+            try
             {
-                connection.Open();
-                string query = "INSERT INTO Miembro (idMembresia, nombres, apellidoPaterno, apellidoMaterno, fechaNacimiento, numeroTelefono, fechaRegistro, fechaInicio, fechaFin, fotografia) VALUES (@idMembresia, @nombres, @apellidoPaterno, @apellidoMaterno, @fechaNacimiento, @numeroTelefono, @fechaRegistro, @fechaInicio, @fechaFin, @fotografia)";
 
-                using (var command = new MySqlCommand(query, connection))
+                using (var connection = new MySqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue("@idMembresia", miembro.IdMembresia);
-                    command.Parameters.AddWithValue("@nombres", miembro.Nombres);
-                    command.Parameters.AddWithValue("@apellidoPaterno", miembro.ApellidoPaterno);
-                    command.Parameters.AddWithValue("@apellidoMaterno", miembro.ApellidoMaterno);
-                    command.Parameters.AddWithValue("@fechaNacimiento", miembro.FechaNacimiento);
-                    command.Parameters.AddWithValue("@numeroTelefono", miembro.NumeroTelefono);
-                    command.Parameters.AddWithValue("@fechaRegistro", miembro.FechaRegistro);
-                    command.Parameters.AddWithValue("@fechaInicio", miembro.FechaInicio);
-                    command.Parameters.AddWithValue("@fechaFin", miembro.FechaFin);
-                    command.Parameters.AddWithValue("@fotografia", miembro.Fotografia);
+                    connection.Open();
+                    string query = "INSERT INTO fitmanage.miembro (Id_miembro, Id_membresia, Nombre, Ap_paterno, Ap_materno, Fecha_nacimiento, Num_celular, FechaRegistro, Fecha_vencimiento, Foto) VALUES (@Id_miembro, @Id_membresia, @Nombre, @Ap_paterno, @Ap_materno, @Fecha_nacimiento, @Num_celular, @FechaRegistro, @Fecha_vencimiento, @Foto)";
 
-                    command.ExecuteNonQuery();
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id_miembro", miembro.IdMiembro);
+                        command.Parameters.AddWithValue("@Id_membresia", miembro.IdMembresia);
+                        command.Parameters.AddWithValue("@Nombre", miembro.Nombre);
+                        command.Parameters.AddWithValue("@Ap_paterno", miembro.ApellidoPaterno);
+                        command.Parameters.AddWithValue("@Ap_materno", miembro.ApellidoMaterno);
+                        command.Parameters.AddWithValue("@Fecha_nacimiento", miembro.FechaNacimiento);
+                        command.Parameters.AddWithValue("@Num_celular", miembro.NumeroCelular);
+                        command.Parameters.AddWithValue("@FechaRegistro", miembro.FechaRegistro);
+                        command.Parameters.AddWithValue("@Fecha_Vencimiento", miembro.FechaVencimiento);
+                        command.Parameters.AddWithValue("@Foto", miembro.Foto);
+
+                        int filasAfectadas = command.ExecuteNonQuery();
+                        if (filasAfectadas > 0)
+                        {
+                            Console.WriteLine("Miembro registrado correctamente.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: No se insertaron datos.");
+                        }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al insertar el miembro: " + ex.Message);
+            }
+
+        }*/
+        //Método para verificar si el cliente ya existe antes de registrarlo
+        public bool MiembroExiste(string nombre, string apellidoPaterno, string apellidoMaterno, string telefono)
+        {
+            bool existe = false;
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT COUNT(*) FROM fitmanage.miembro WHERE Nombre = @Nombre AND Ap_paterno = @Ap_paterno AND Ap_materno = @Ap_materno AND Num_celular = @Num_celular";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Nombre", nombre);
+                        command.Parameters.AddWithValue("@Ap_paterno", apellidoPaterno);
+                        command.Parameters.AddWithValue("@Ap_materno", apellidoMaterno);
+                        command.Parameters.AddWithValue("@Num_celular", telefono);
+
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        existe = (count > 0); // Si `count > 0`, el cliente ya existe
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al verificar existencia del cliente: " + ex.Message);
+            }
+
+            return existe; //Retorna `true` si el cliente ya existe, `false` si no
+        }
+
+        public int AgregarMiembro(Miembro miembro)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "INSERT INTO fitmanage.miembro (Id_miembro, Id_membresia, Nombre, Ap_paterno, Ap_materno, Fecha_nacimiento, Num_celular, FechaRegistro, Fecha_vencimiento, Foto) " +
+                                   "VALUES (@Id_miembro, @Id_membresia, @Nombre, @Ap_paterno, @Ap_materno, @Fecha_nacimiento, @Num_celular, @FechaRegistro, @Fecha_vencimiento, @Foto);";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id_miembro", miembro.IdMiembro);
+                        command.Parameters.AddWithValue("@Id_membresia", miembro.IdMembresia);
+                        command.Parameters.AddWithValue("@Nombre", miembro.Nombre);
+                        command.Parameters.AddWithValue("@Ap_paterno", miembro.ApellidoPaterno);
+                        command.Parameters.AddWithValue("@Ap_materno", miembro.ApellidoMaterno);
+                        command.Parameters.AddWithValue("@Fecha_nacimiento", miembro.FechaNacimiento);
+                        command.Parameters.AddWithValue("@Num_celular", miembro.NumeroCelular);
+                        command.Parameters.AddWithValue("@FechaRegistro", miembro.FechaRegistro);
+                        command.Parameters.AddWithValue("@Fecha_vencimiento", miembro.FechaVencimiento);
+                        command.Parameters.AddWithValue("@Foto", miembro.Foto);
+
+                        int filasAfectadas = command.ExecuteNonQuery();
+                        if (filasAfectadas > 0)
+                        {
+                            Console.WriteLine($"Miembro registrado correctamente con ID: {miembro.IdMiembro}");
+                            return miembro.IdMiembro; // 🔹 Retorna el ID generado
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: No se insertaron datos.");
+                            return -1; // 🔹 Retorna -1 en caso de error
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al insertar el miembro: " + ex.Message);
+                return -1; // Retorna -1 en caso de excepción
             }
         }
 
-        // 🔹 Actualizar información de un miembro
+
+        // Actualizar información de un miembro
         public void ModificarMiembro(Miembro miembro)
         {
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "UPDATE Miembro SET idMembresia = @idMembresia, nombres = @nombres, apellidoPaterno = @apellidoPaterno, apellidoMaterno = @apellidoMaterno, fechaNacimiento = @fechaNacimiento, numeroTelefono = @numeroTelefono, fechaRegistro = @fechaRegistro, fechaInicio = @fechaInicio, fechaFin = @fechaFin, fotografia = @fotografia WHERE idMiembro = @idMiembro";
+                string query = @"UPDATE Miembro SET 
+                    Id_membresia = @Id_membresia,
+                    Nombre = @Nombre,
+                    Ap_paterno = @Ap_paterno,
+                    Ap_materno = @Ap_materno,
+                    Fecha_nacimiento = @Fecha_nacimiento,
+                    Num_celular = @Num_celular,
+                    FechaRegistro = @FechaRegistro,
+                    Fecha_Vencimiento = @Fecha_Vencimiento,
+                    Foto = @Foto
+                    WHERE Id_miembro = @Id_miembro";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idMiembro", miembro.IdMiembro);
-                    command.Parameters.AddWithValue("@idMembresia", miembro.IdMembresia);
-                    command.Parameters.AddWithValue("@nombres", miembro.Nombres);
-                    command.Parameters.AddWithValue("@apellidoPaterno", miembro.ApellidoPaterno);
-                    command.Parameters.AddWithValue("@apellidoMaterno", miembro.ApellidoMaterno);
-                    command.Parameters.AddWithValue("@fechaNacimiento", miembro.FechaNacimiento);
-                    command.Parameters.AddWithValue("@numeroTelefono", miembro.NumeroTelefono);
-                    command.Parameters.AddWithValue("@fechaRegistro", miembro.FechaRegistro);
-                    command.Parameters.AddWithValue("@fechaInicio", miembro.FechaInicio);
-                    command.Parameters.AddWithValue("@fechaFin", miembro.FechaFin);
-                    command.Parameters.AddWithValue("@fotografia", miembro.Fotografia);
-
+                    command.Parameters.AddWithValue("@Id_miembro", miembro.IdMiembro);
+                    command.Parameters.AddWithValue("@Id_membresia", miembro.IdMembresia);
+                    command.Parameters.AddWithValue("@Nombre", miembro.Nombres);
+                    command.Parameters.AddWithValue("@Ap_paterno", miembro.ApellidoPaterno);
+                    command.Parameters.AddWithValue("@Ap_materno", miembro.ApellidoMaterno);
+                    command.Parameters.AddWithValue("@Fecha_nacimiento", miembro.FechaNacimiento);
+                    command.Parameters.AddWithValue("@Num_celular", miembro.NumeroTelefono);
+                    command.Parameters.AddWithValue("@FechaRegistro", miembro.FechaRegistro);
+                    command.Parameters.AddWithValue("@Fecha_Vencimiento", miembro.FechaVencimiento);
+                    command.Parameters.AddWithValue("@Foto", miembro.Fotografia);
                     command.ExecuteNonQuery();
                 }
             }
         }
 
-        // 🔹 Eliminar un miembro
+        // Eliminar un miembro
         public void EliminarMiembro(int idMiembro)
         {
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "DELETE FROM Miembro WHERE idMiembro = @idMiembro";
+                string query = "DELETE FROM Miembro WHERE Id_miembro = @Id_miembro";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idMiembro", idMiembro);
+                    command.Parameters.AddWithValue("@Id_miembro", idMiembro);
                     command.ExecuteNonQuery();
                 }
             }
         }
-
     }
 }

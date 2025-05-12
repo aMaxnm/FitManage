@@ -26,6 +26,12 @@ namespace Presentacion
 
         //panel desplegable con botones
         Panel subBotonesPanel = new Panel();
+
+        private void VentanaPrincipal_Load(object sender, EventArgs e)
+        {
+
+        }
+
         Button tiposMembresiaBtn, productosBtn, registroVentaBtn;
 
         public VentanaPrincipal()
@@ -35,9 +41,10 @@ namespace Presentacion
             InicializarComponentes();
             SubBotones();
             panelManager = new PanelManager(mainPanel);
-            Panel panelRegistro = panelManager.PanelRegistro("Registro", Color.WhiteSmoke);
+            ConsultaMiembro consultaMiembroPanel = new ConsultaMiembro();
+            Panel panelRegistro = panelManager.CrearPanel("Registro", Color.DarkGray);
             registroClienteBtn.Click += (s, e) => panelManager.MostrarPanel(panelRegistro);
-
+            consultaMiembroBtn.Click += (s, e) => panelManager.MostrarPanel(consultaMiembroPanel);
         }
         private void InicializarComponentes()
         {
