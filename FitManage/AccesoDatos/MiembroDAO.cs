@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using Entidad;
+using System.Data.SqlClient;
 
 namespace AccesoDatos
 {
@@ -213,6 +214,31 @@ namespace AccesoDatos
                 }
             }
         }
+
+        //Actualizar Datos
+        public void Actualizar(Miembro miembro)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                string query = @"UPDATE Miembro
+                         SET Nombre = @Nombres,
+                             Ap_paterno = @ApellidoPaterno,
+                             Ap_materno = @ApellidoMaterno,
+                             Num_celular = @NumeroTelefono
+                         WHERE Id_miembro = @IdMiembro";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Nombres", miembro.Nombres);
+                cmd.Parameters.AddWithValue("@ApellidoPaterno", miembro.ApellidoPaterno);
+                cmd.Parameters.AddWithValue("@ApellidoMaterno", miembro.ApellidoMaterno);
+                cmd.Parameters.AddWithValue("@NumeroTelefono", miembro.NumeroTelefono);
+                cmd.Parameters.AddWithValue("@IdMiembro", miembro.IdMiembro);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
     }
 }
 
