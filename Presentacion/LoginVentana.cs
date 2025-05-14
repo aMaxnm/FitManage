@@ -59,7 +59,7 @@ namespace Presentacion
             lblContraseña.Text = "Contraseña:";
             lblContraseña.ForeColor = Color.Black;
             lblContraseña.BackColor = Color.Transparent;
-            lblContraseña.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            lblContraseña.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             lblContraseña.Location = new Point(290, 300);
             lblContraseña.Size = new Size(90, 25);
             this.Controls.Add(lblContraseña);
@@ -75,8 +75,8 @@ namespace Presentacion
             lblMensaje = new Label();
             lblMensaje.ForeColor = Color.Black;
             lblMensaje.BackColor = Color.Transparent;
-            lblMensaje.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-            lblMensaje.Location = new Point(310, 380);
+            lblMensaje.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+            lblMensaje.Location = new Point(320, 380);
             lblMensaje.Size = new Size(250, 30);
             lblMensaje.Text = "";  // Vacío inicialmente
             this.Controls.Add(lblMensaje);
