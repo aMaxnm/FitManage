@@ -352,6 +352,69 @@ namespace Presentación
             nuevoPanel.Controls.Add(dispositivosCombo);
             nuevoPanel.Controls.Add(abrirCamara);
 
+            return nuevoPanel;
+        }
+
+        public Panel AccesoPanel()
+        {
+            Panel nuevoPanel = new Panel();
+            nuevoPanel.Name = "AccesoPanel";
+            nuevoPanel.BackgroundImage = Image.FromFile("Recursos/laminahomegym.png");
+            nuevoPanel.BackgroundImageLayout = ImageLayout.Stretch;
+            nuevoPanel.Location = new Point(500, 150);
+            nuevoPanel.Size = new Size(800, 400);
+            nuevoPanel.BackColor = Color.WhiteSmoke;
+
+            //Label de descripción
+            Label descripcionLbl = new Label();
+            descripcionLbl.Text = "         INTRODUCIR\n NUMERO DE ACCESO";
+            descripcionLbl.Font = new Font("Race Sport", 34, FontStyle.Bold);
+            descripcionLbl.ForeColor = Color.Black;
+            descripcionLbl.BackColor = Color.Transparent;
+            descripcionLbl.Location = new Point(70, 60);
+            descripcionLbl.AutoSize = true;
+
+            //TextBox para el número de acceso
+            TextBox accesoTxt = new TextBox();
+            accesoTxt.Location = new Point(200, 220);
+            accesoTxt.Size = new Size(400, 50);
+            accesoTxt.Font = new Font("Tahoma", 22);
+            accesoTxt.ForeColor = Color.Black;
+            accesoTxt.BorderStyle = BorderStyle.FixedSingle;
+            accesoTxt.TextChanged += (s, e) =>
+            {
+                if (ValidarDatos.ValidarSoloNumeros(accesoTxt.Text))
+                    accesoTxt.BackColor = Color.White; // Válido
+                else
+                    accesoTxt.BackColor = Color.LightPink; // Inválido
+            };
+
+            //Botón de acceso
+            Button accesoBtn = new Button();
+            accesoBtn.Text = "ACCEDER";
+            accesoBtn.Location = new Point(300, 300);
+            accesoBtn.Size = new Size(200, 40);
+            accesoBtn.Font = new Font("Race Sport", 18, FontStyle.Italic);
+            accesoBtn.BackColor = Color.Gray;
+            accesoBtn.ForeColor = Color.White;
+            accesoBtn.FlatStyle = FlatStyle.Flat;
+            accesoBtn.FlatAppearance.BorderSize = 0;
+            accesoBtn.Click += (s, e) =>
+            {
+                if (ValidarDatos.ValidarSoloNumeros(accesoTxt.Text))
+                {
+
+                }
+                else
+                {
+                    MessageBox.Show("Número de acceso inválido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
+
+
+            nuevoPanel.Controls.Add(descripcionLbl);
+            nuevoPanel.Controls.Add(accesoTxt);
+            nuevoPanel.Controls.Add(accesoBtn);
 
             return nuevoPanel;
         }

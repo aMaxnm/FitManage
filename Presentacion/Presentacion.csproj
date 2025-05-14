@@ -116,6 +116,9 @@
     <Content Include="Recursos\inventario.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Recursos\laminahomegym.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Recursos\logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

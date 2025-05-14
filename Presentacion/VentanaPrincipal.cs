@@ -43,8 +43,10 @@ namespace Presentacion
             panelManager = new PanelManager(mainPanel);
             ConsultaMiembro consultaMiembroPanel = new ConsultaMiembro();
             Panel panelRegistro = panelManager.PanelRegistro("Registro", Color.DarkGray);
+
             registroClienteBtn.Click += (s, e) => panelManager.MostrarPanel(panelRegistro);
             consultaMiembroBtn.Click += (s, e) => panelManager.MostrarPanel(consultaMiembroPanel);
+            entradaBtn.Click += (s, e) => panelManager.MostrarPanel(panelManager.AccesoPanel());
         }
         private void InicializarComponentes()
         {

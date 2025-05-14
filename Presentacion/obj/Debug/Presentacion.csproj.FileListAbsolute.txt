@@ -175,3 +175,4 @@ C:\Users\Edgar\source\repos\FitManage\Presentacion\bin\Debug\System.Numerics.Vec
 C:\Users\Edgar\source\repos\FitManage\Presentacion\obj\Debug\Presentacion.csproj.SuggestedBindingRedirects.cache
 C:\Users\Edgar\source\repos\FitManage\Presentacion\obj\Debug\Presentacion.exe.config
 C:\Users\Edgar\source\repos\FitManage\Presentacion\obj\Debug\Presenta.BC77CD05.Up2Date
+C:\Users\Edgar\source\repos\FitManage\Presentacion\bin\Debug\Recursos\laminahomegym.png
