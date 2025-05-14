@@ -62,6 +62,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Fotografia.cs" />
+    <Compile Include="LoginVentana.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PanelManager.cs" />
     <Compile Include="VentanaPrincipal.cs">
       <SubType>Form</SubType>
@@ -111,6 +114,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Recursos\fondoSide.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\login.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Recursos\inventario.png">
