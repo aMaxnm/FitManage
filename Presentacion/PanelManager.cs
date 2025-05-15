@@ -231,7 +231,7 @@ namespace Presentación
             registrarBtn.FlatAppearance.BorderSize = 0;
             MiembroServicio servicio = new MiembroServicio();
             DateTime FechaRegistro = DateTime.Now.Date;
-          
+
             registrarBtn.Click += (s, e) =>
             {
                 nombreTxt.TextChanged -= nombreTxt_TextChanged;
@@ -244,22 +244,41 @@ namespace Presentación
                     return File.ReadAllBytes(ruta);
                 }
 
-                // Uso:
                 byte[] imagenBytes = LeerImagenComoBytes($"C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos/{nombreTxt.Text}.jpg");
-                var idMembresia = (int)membresiaCombo.SelectedValue;
-                int idAsignado = servicio.RegistrarMiembro(
-                        idMembresia,
-                        nombreTxt.Text,
-                        apePaternoTxt.Text,
-                        apeMaternoTxt.Text,
-                        DateTime.Parse(fechaPicker.Text),
-                        telefonoTxt.Text,
-                        FechaRegistro,
-                        imagenBytes
-                    );
 
-                //Mostrar el ID retornado en un MessageBox
-                if (idAsignado > 0)
+                var idMembresia = (int)membresiaCombo.SelectedValue;
+                if (idMembresia == 0)
+                {
+                    registrarBtn.Enabled = false;
+                    return;
+                }
+
+                int idAsignado = servicio.RegistrarMiembro(
+                    idMembresia,
+                    nombreTxt.Text.Trim(),
+                    apePaternoTxt.Text.Trim(),
+                    apeMaternoTxt.Text.Trim(),
+                    DateTime.Parse(fechaPicker.Text),
+                    telefonoTxt.Text.Trim(),
+                    FechaRegistro,
+                    imagenBytes
+                );
+
+                if (idAsignado == -2)
+                {
+                    MessageBox.Show("Ya existe un miembro con esos datos.", "Registro duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    nombreTxt.Text = "";
+                    apeMaternoTxt.Text = "";
+                    apePaternoTxt.Text = "";
+                    fechaPicker.Value = DateTime.Now;
+                    telefonoTxt.Text = "";
+                    fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
+                }
+                else if (idAsignado == -1)
+                {
+                    MessageBox.Show("Ocurrió un error al registrar el miembro.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
                 {
                     MessageBox.Show($"Cliente registrado correctamente.\nID asignado: {idAsignado}", "Registro exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     nombreTxt.Text = "";
@@ -268,21 +287,15 @@ namespace Presentación
                     fechaPicker.Value = DateTime.Now;
                     telefonoTxt.Text = "";
                     fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
-                    nombreTxt.TextChanged += nombreTxt_TextChanged;
-                    apePaternoTxt.TextChanged += apePaternoTxt_TextChanged;
-                    apeMaternoTxt.TextChanged += apeMaternoTxt_TextChanged;
-                    telefonoTxt.TextChanged += telefonoTxt_TextChanged;
-                }
-                else if (idMembresia == -1)
-                {
-                    MessageBox.Show("Registro duplicado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show("Error en el registro.", "Campos faltantes.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+                nombreTxt.TextChanged += nombreTxt_TextChanged;
+                apePaternoTxt.TextChanged += apePaternoTxt_TextChanged;
+                apeMaternoTxt.TextChanged += apeMaternoTxt_TextChanged;
+                telefonoTxt.TextChanged += telefonoTxt_TextChanged;
+                fechaLbl.Text = "Fecha de nacimiento";
             };
+
 
             regresarBtn = new Button();
             regresarBtn.Text = "Regresar";
@@ -357,17 +370,18 @@ namespace Presentación
             membresiaCombo.DisplayMember = "DescripcionCompleta"; // Usamos una propiedad personalizada
             membresiaCombo.ValueMember = "Id_membresia";
         }
-        public void MostrarPanel(Panel panel)
+        public void MostrarPanel(Panel nuevoPanel)
         {
             if (panelConsulta != null)
             {
-                panelConsulta.Visible = false;
                 mainPanel.Controls.Remove(panelConsulta);
-            } // Oculta el panel anterior
+                panelConsulta.Controls.Remove(panelConsulta); // 🔸 Libera recursos y destruye el panel viejo
+                panelConsulta = null;
+            }
 
-            panelConsulta = panel;
-            panelConsulta.Visible = true; // Muestra el nuevo panel
-            mainPanel.Controls.Add(panelConsulta); // Agrega el panel al mainPanel
+            panelConsulta = nuevoPanel;
+            panelConsulta.Visible = true;
+            mainPanel.Controls.Add(panelConsulta);
             panelConsulta.BringToFront();
         }
         private void nombreTxt_TextChanged(object sender, EventArgs e)

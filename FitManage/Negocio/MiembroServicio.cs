@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AccesoDatos;
 using Entidad;
 namespace Negocio
@@ -17,14 +14,14 @@ namespace Negocio
         }
 
         public int RegistrarMiembro(
-     int idMembresia,
-     string nombres,
-     string apellidoPaterno,
-     string apellidoMaterno,
-     DateTime fechaNacimiento,
-     string numeroTelefono,
-     DateTime FechaRegistro,
-     byte[] fotografia)
+            int idMembresia,
+            string nombres,
+            string apellidoPaterno,
+            string apellidoMaterno,
+            DateTime fechaNacimiento,
+            string numeroTelefono,
+            DateTime FechaRegistro,
+            byte[] fotografia)
         {
 
             if (!ValidarDatos.ValidarTexto(nombres) ||

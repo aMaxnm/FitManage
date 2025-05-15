@@ -23,7 +23,6 @@ namespace Presentacion
             InicializarComponentes();
             this.BackColor = Color.WhiteSmoke;
         }
-
         private void InicializarComponentes()
         {
             this.Text = "Consulta de Miembros";
@@ -34,14 +33,14 @@ namespace Presentacion
             tituloMiembroLbl.Text = "MIEMBROS";
             tituloMiembroLbl.Font = new Font("Race Sport", 50, FontStyle.Bold);
             this.Controls.Add(tituloMiembroLbl);
-            tituloMiembroLbl.Location = new Point(800 , 10);
+            tituloMiembroLbl.Location = new Point(600, 10);
             tituloMiembroLbl.AutoSize = true;
-            tituloMiembroLbl.ForeColor = Color.Black;
+            tituloMiembroLbl.ForeColor = Color.Black;       
 
             // Lista de miembros
             Dictionary<int, string> memDict = new Dictionary<int, string>
             {
-                 {1003, "Dia"},
+                {1003, "Dia"},
                 {1002, "Semanal"},
                 {1001, "Mensual"}
             };
@@ -53,8 +52,8 @@ namespace Presentacion
                 Materno = m.ApellidoMaterno,
                 Membresía = memDict[m.IdMembresia],
             }).ToList();
-            listaMiembro.Location = new Point(400, 130);
-            listaMiembro.Size = new Size(1300, 200);
+            listaMiembro.Location = new Point(350, 130);
+            listaMiembro.Size = new Size(1000, 200);
             listaMiembro.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             listaMiembro.ReadOnly = true;
             listaMiembro.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -64,18 +63,39 @@ namespace Presentacion
             listaMiembro.RowTemplate.Height = 50;
             listaMiembro.ColumnHeadersHeight = 40;
             this.Controls.Add(listaMiembro);
-            
+
+
 
             // Tarjeta detalle
             tarjetaMiembro = new Panel();
-            tarjetaMiembro.Location = new Point(400, 400);
-            tarjetaMiembro.Size = new Size(1300, 550);
+            tarjetaMiembro.Location = new Point(350, 350);
+            tarjetaMiembro.Size = new Size(1000, 400);
             tarjetaMiembro.BorderStyle = BorderStyle.FixedSingle;
             tarjetaMiembro.Visible = false;
             this.Controls.Add(tarjetaMiembro);
 
+
             //Datos Tarjeta
         }
+        public void CargarDatos()
+        {
+            // Aquí recargas los datos de la base de datos y los asignas al DataGridView
+            var miembros = MiembroServicio.ObtenerTodos(); // Ejemplo
+            Dictionary<int, string> memDict = new Dictionary<int, string>
+            {
+                {1003, "Dia"},
+                {1002, "Semanal"},
+                {1001, "Mensual"}
+            };
+            listaMiembro.DataSource = listaMiembros.Select(m => new
+            {
+                Nombre = m.Nombres,
+                Paterno = m.ApellidoPaterno,
+                Materno = m.ApellidoMaterno,
+                Membresía = memDict[m.IdMembresia],
+            }).ToList();
+        }
+
 
         private void ListaMiembro_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -90,7 +110,7 @@ namespace Presentacion
 
                     // ----- FOTO -----
                     PictureBox foto = new PictureBox();
-                    foto.Size = new Size(500, 500);
+                    foto.Size = new Size(400, 400);
                     foto.Location = new Point(20, 20);
                     foto.SizeMode = PictureBoxSizeMode.StretchImage;
 
@@ -108,17 +128,17 @@ namespace Presentacion
                     tarjetaMiembro.Controls.Add(foto);
 
                     // ----- DATOS -----
-                    int baseX = 580; // posición a la derecha de la imagen
+                    int baseX = 450; // posición a la derecha de la imagen
                     int baseY = 20;
-                    int salto = 90;
+                    int salto = 65;
 
-                    tarjetaMiembro.Controls.Add(CrearLabel("ID:", baseX, baseY,55));
-                    tarjetaMiembro.Controls.Add(CrearLabel(miembro.IdMiembro.ToString(), baseX + 55, baseY,300));
+                    tarjetaMiembro.Controls.Add(CrearLabel("ID:", baseX, baseY, 55));
+                    tarjetaMiembro.Controls.Add(CrearLabel(miembro.IdMiembro.ToString(), baseX + 55, baseY, 300));
 
                     tarjetaMiembro.Controls.Add(CrearLabel("Nombre(s):", baseX, baseY += salto, 180));
                     tarjetaMiembro.Controls.Add(CrearLabel(miembro.Nombres, baseX + 175, baseY, 300));
 
-                    tarjetaMiembro.Controls.Add(CrearLabel("Apellido Paterno:", baseX, baseY += salto,265));
+                    tarjetaMiembro.Controls.Add(CrearLabel("Apellido Paterno:", baseX, baseY += salto, 265));
                     tarjetaMiembro.Controls.Add(CrearLabel(miembro.ApellidoPaterno, baseX + 265, baseY, 300));
 
                     tarjetaMiembro.Controls.Add(CrearLabel("Apellido Materno:", baseX, baseY += salto, 270));
@@ -136,8 +156,6 @@ namespace Presentacion
             }
         }
 
-
-
         private Label CrearLabel(string texto, int x, int y, int width)
         {
             return new Label
@@ -145,7 +163,7 @@ namespace Presentacion
                 Text = texto,
                 Location = new Point(x, y),
                 Size = new Size(width, 30),
-                Font = new Font("Futura", 22, FontStyle.Bold)
+                Font = new Font("Futura", 20, FontStyle.Bold)
             };
         }
     }
