@@ -487,7 +487,7 @@ namespace Presentación
         }
         private void telefonoTxt_TextChanged(object sender, EventArgs e)
         {
-            if (ValidarDatos.ValidarTelefono(telefonoTxt.Text))
+            if (ValidarDatos.ValidarSoloNumeros(telefonoTxt.Text))
             {
                 telefonoTxt.BackColor = Color.White;
                 registrarBtn.Enabled = true;
