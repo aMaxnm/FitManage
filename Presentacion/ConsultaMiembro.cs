@@ -114,6 +114,19 @@ namespace Presentacion
                     foto.Location = new Point(20, 20);
                     foto.SizeMode = PictureBoxSizeMode.StretchImage;
 
+
+                    // Botón editar (como Label clickeable)
+                    Label editarLbl = new Label();
+                    editarLbl.Text = "Editar";
+                    editarLbl.Font = new Font("Futura", 22, FontStyle.Underline);
+                    editarLbl.ForeColor = Color.Blue;
+                    editarLbl.AutoSize = true;
+                    editarLbl.Location = new Point(1100, 20);
+                    editarLbl.Cursor = Cursors.Hand;
+                    editarLbl.Click += (s, ev) => ActivarModoEdicion(miembro);
+                    tarjetaMiembro.Controls.Add(editarLbl);
+
+
                     if (miembro.Fotografia != null)
                     {
                         using (var ms = new System.IO.MemoryStream(miembro.Fotografia))
@@ -155,7 +168,103 @@ namespace Presentacion
                 }
             }
         }
+        //Edicion de Datos
+        private void ActivarModoEdicion(Miembro miembro)
+        {
+            tarjetaMiembro.Controls.Clear();
+            PictureBox foto = new PictureBox();
+            foto.Size = new Size(500, 500);
+            foto.Location = new Point(20, 20);
+            foto.SizeMode = PictureBoxSizeMode.StretchImage;
 
+            if (miembro.Fotografia != null)
+            {
+                using (var ms = new System.IO.MemoryStream(miembro.Fotografia))
+                {
+                    foto.Image = Image.FromStream(ms);
+                }
+            }
+
+            tarjetaMiembro.Controls.Add(foto);
+
+            int baseX = 580;
+            int baseY = 20;
+            int salto = 90;
+
+            tarjetaMiembro.Controls.Add(CrearLabel("ID:", baseX, baseY, 55));
+            tarjetaMiembro.Controls.Add(CrearLabel(miembro.IdMiembro.ToString(), baseX + 55, baseY, 300));
+
+            // TextBoxes editables
+            tarjetaMiembro.Controls.Add(CrearLabel("Nombre(s):", baseX, baseY += salto, 180));
+            TextBox nomTxt = CrearTextBox(miembro.Nombres, baseX + 175, baseY, 300);
+            tarjetaMiembro.Controls.Add(nomTxt);
+
+            tarjetaMiembro.Controls.Add(CrearLabel("Apellido Paterno:", baseX, baseY += salto, 265));
+            TextBox apePaternoTxt = CrearTextBox(miembro.ApellidoPaterno, baseX + 265, baseY, 300);
+            tarjetaMiembro.Controls.Add(apePaternoTxt);
+
+            tarjetaMiembro.Controls.Add(CrearLabel("Apellido Materno:", baseX, baseY += salto, 270));
+            TextBox apeMaternoTxt = CrearTextBox(miembro.ApellidoMaterno, baseX + 265, baseY, 300);
+            tarjetaMiembro.Controls.Add(apeMaternoTxt);
+
+            tarjetaMiembro.Controls.Add(CrearLabel("Teléfono:", baseX, baseY += salto, 148));
+            TextBox telefonoTxt = CrearTextBox(miembro.NumeroTelefono, baseX + 148, baseY, 300);
+            tarjetaMiembro.Controls.Add(telefonoTxt);
+
+            tarjetaMiembro.Controls.Add(CrearLabel("Fecha Nacimiento:", baseX, baseY += salto, 280));
+            tarjetaMiembro.Controls.Add(CrearLabel(miembro.FechaNacimiento.ToShortDateString(), baseX + 280, baseY, 300));
+
+            // Botón Guardar
+            Button btnGuardar = new Button();
+            btnGuardar.Text = "Guardar";
+            btnGuardar.Font = new Font("Race Sport", 16, FontStyle.Bold);
+            btnGuardar.Size = new Size(180, 50);
+            btnGuardar.Location = new Point(1100, 20);
+            btnGuardar.BackColor = Color.ForestGreen;
+            btnGuardar.ForeColor = Color.White;
+            btnGuardar.Click += (s, ev) =>
+            {
+                if (string.IsNullOrWhiteSpace(nomTxt.Text) || string.IsNullOrWhiteSpace(apePaternoTxt.Text) ||
+                    string.IsNullOrWhiteSpace(apeMaternoTxt.Text) || string.IsNullOrWhiteSpace(telefonoTxt.Text))
+                {
+                    MessageBox.Show("Por favor, rellene todos los campos.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                miembro.Nombres = nomTxt.Text.Trim();
+                miembro.ApellidoPaterno = apePaternoTxt.Text.Trim();
+                miembro.ApellidoMaterno = apeMaternoTxt.Text.Trim();
+                miembro.NumeroTelefono = telefonoTxt.Text.Trim();
+
+                MiembroServicio.Actualizar(miembro); // Asume que tienes un método Actualizar en MiembroServicio
+                MessageBox.Show("Datos actualizados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Recargar lista
+                listaMiembros = MiembroServicio.ObtenerTodos();
+                listaMiembro.DataSource = listaMiembros.Select(m => new
+                {
+                    Nombre = m.Nombres,
+                    Paterno = m.ApellidoPaterno,
+                    Materno = m.ApellidoMaterno,
+                    Membresía = m.IdMembresia, // Puedes mapearlo si es necesario
+                }).ToList();
+
+                tarjetaMiembro.Visible = false;
+            };
+
+            tarjetaMiembro.Controls.Add(btnGuardar);
+        }
+
+        private TextBox CrearTextBox(string texto, int x, int y, int width)
+        {
+            return new TextBox
+            {
+                Text = texto,
+                Location = new Point(x, y),
+                Size = new Size(width, 30),
+                Font = new Font("Futura", 18, FontStyle.Regular)
+            };
+        }
         private Label CrearLabel(string texto, int x, int y, int width)
         {
             return new Label
