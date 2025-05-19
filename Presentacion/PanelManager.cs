@@ -327,7 +327,7 @@ namespace Presentación
             {
                 if (membresiaCombo.SelectedItem is Membresia membresiaSeleccionada && membresiaCombo.SelectedIndex != 0)
                 {
-                    var nombreMembresia = membresiaSeleccionada.Tipo_membresia;
+                    var nombreMembresia = membresiaSeleccionada.Tipo;
                     var precioMembresia = membresiaSeleccionada.Precio;
 
                     var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia);
@@ -606,7 +606,7 @@ namespace Presentación
             List<Membresia> membresias = memCombo.ObtenerMembresias();
 
             // Agregar opción por defecto
-            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo_membresia = "Seleccionar membresía", Precio = 0 });
+            membresias.Insert(0, new Membresia { Id = 0, Tipo = "Seleccionar membresía", Precio = 0 });
 
             // Asignar propiedades al ComboBox recibido
             combo.DataSource = membresias;

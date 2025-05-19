@@ -62,10 +62,14 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Fotografia.cs" />
+    <Compile Include="loginPanel.cs" />
     <Compile Include="LoginVentana.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="PanelManager.cs" />
+    <Compile Include="VentanaCobrar.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="VentanaPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>

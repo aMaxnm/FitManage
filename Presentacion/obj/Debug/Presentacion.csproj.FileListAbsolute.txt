@@ -198,3 +198,5 @@ C:\Users\yulir\OneDrive\Documentos\GitHub\FitManage\Presentacion\bin\Debug\K4os.
 C:\Users\yulir\OneDrive\Documentos\GitHub\FitManage\Presentacion\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\yulir\OneDrive\Documentos\GitHub\FitManage\Presentacion\obj\Debug\Presenta.BC77CD05.Up2Date
 C:\Users\yulir\OneDrive\Documentos\GitHub\FitManage\Presentacion\bin\Debug\Recursos\login.PNG
+C:\Users\ramir\Documents\FitManage\Presentacion\bin\Debug\Recursos\login.PNG
+C:\Users\ramir\Documents\FitManage\Presentacion\bin\Debug\Recursos\placeholder.jpg
