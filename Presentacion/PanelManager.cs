@@ -447,7 +447,7 @@ namespace Presentación
             Label tituloLbl, idLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, nacimientoLbl, registroLbl ,vencimientoLbl, membresiaLbl, tipoMemLbl;
             Label estado = new Label();
             //Fotografia del cliente
-            PictureBox fotografia;
+            PictureBox fotografia = new PictureBox();
             //Botones necesarios para la ventana de cobro
             Button aceptarBtn;
 
@@ -523,13 +523,22 @@ namespace Presentación
             membresiaLbl.AutoSize = true;
             membresiaLbl.Font = new Font("Tahoma", 18);
 
-            ////Fotografía del cliente
-            //fotografia = new PictureBox();
-            ////fotografia.Image = ConvertirBytesAImagen(miembro.Fotografia);
-            //fotografia.SizeMode = PictureBoxSizeMode.StretchImage;
-            //fotografia.Size = new Size(300, 350);
-            //fotografia.Location = new Point(10, 120);
-            //fotografia.BorderStyle = BorderStyle.FixedSingle;
+            if (miembro.Fotografia != null)
+            {
+                using (var ms = new System.IO.MemoryStream(miembro.Fotografia))
+                {
+                    fotografia.Image = Image.FromStream(ms);
+                }
+            }
+            else
+            {
+                fotografia.Image = Image.FromFile("Recursos/placeholder.jpg");
+            }
+
+            fotografia.SizeMode = PictureBoxSizeMode.StretchImage;
+            fotografia.Size = new Size(280, 350);
+            fotografia.Location = new Point(300, 120);
+            fotografia.BorderStyle = BorderStyle.FixedSingle;
 
             //Botón de aceptar
             aceptarBtn = new Button();
@@ -605,7 +614,10 @@ namespace Presentación
                     var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia, miembro.IdMiembro);
                     ventanaCobrar.FormClosed += (a, E) =>
                     {
-                        // 🔹 Recargar contenido de `ClienteAcceso` después del pago
+                        Console.WriteLine("VentanaCobrar se cerró. Recargando ClienteAcceso...");
+
+                        //Recargar contenido de `ClienteAcceso` después del pago
+                        miembro = miembroServicio.ObtenerMiembroPorId(miembro.IdMiembro);
                         MostrarPanel(ClienteAcceso(miembro));
                     };
 
@@ -631,6 +643,7 @@ namespace Presentación
             nuevoPanel.Controls.Add(membresiaLbl);
             nuevoPanel.Controls.Add(estado);
             nuevoPanel.Controls.Add(aceptarBtn);
+            nuevoPanel.Controls.Add(fotografia);
             //nuevoPanel.Controls.Add(fotografia);
 
             return nuevoPanel;

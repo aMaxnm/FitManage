@@ -133,7 +133,7 @@ namespace Presentacion
                     miembro.RenovarMembresia(id, precioMembresia, nombreMembresia);
                     cambioTxt.Text = cambio.ToString("F2"); // Muestra el cambio con 2 decimales
                     MessageBox.Show("Pago realizado correctamente. Cambio: $" + cambioTxt.Text, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Dispose();
+                    this.Close();
                 }
             };
 
