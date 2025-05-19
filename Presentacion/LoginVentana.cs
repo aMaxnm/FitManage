@@ -94,7 +94,6 @@ namespace Presentacion
             btnLogin.Click += BtnLogin_Click;
             this.Controls.Add(btnLogin);
         }
-
         private void BtnLogin_Click(object sender, EventArgs e)
         {
             string usuario = txtUsuario.Text;
