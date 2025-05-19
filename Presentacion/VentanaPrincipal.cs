@@ -47,7 +47,7 @@ namespace Presentacion
             consultaMiembroBtn.Click += (s, e) => panelManager.MostrarPanel(consultaMiembroPanel);
             EditarMembresiaPanel editarMembresiaPanel = new EditarMembresiaPanel();
             tiposMembresiaBtn.Click += (s, e) => panelManager.MostrarPanel(editarMembresiaPanel);
-
+            entradaBtn.Click += (s, e) => panelManager.MostrarPanel(panelManager.AccesoPanel());
         }
         private void InicializarComponentes()
         {

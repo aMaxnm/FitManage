@@ -116,10 +116,10 @@
     <Content Include="Recursos\fondoSide.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Recursos\login.PNG">
+    <Content Include="Recursos\inventario.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Recursos\inventario.png">
+    <Content Include="Recursos\login.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Recursos\logo.png">

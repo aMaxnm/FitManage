@@ -17,6 +17,7 @@ namespace AccesoDatos
             {
                 connection.Open();
                 string query = "SELECT * FROM fitmanage.membresia";
+
                 using (var command = new MySqlCommand(query, connection))
                 using (var reader = command.ExecuteReader())
                 {
@@ -34,7 +35,7 @@ namespace AccesoDatos
             return listaMembresias;
         }
 
-        // 🔹 Nuevo método para obtener una membresía específica por ID
+        // 🔹 Nuevo método para obtener un miembro específico por ID
         public Membresia ObtenerMembresiaPorId(int idMembresia)
         {
             Membresia membresia = null;
@@ -42,7 +43,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM fitmanage.membresía WHERE Id_membresia = @id";
+                string query = "SELECT * FROM fitmanage.miembresia WHERE Id_membresi = @id";
 
                 using (var command = new MySqlCommand(query, connection))
                 {

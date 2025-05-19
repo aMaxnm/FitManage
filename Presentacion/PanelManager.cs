@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -16,20 +16,19 @@ namespace Presentación
         public static PictureBox fotoMiembroPct = new PictureBox();
         public static ComboBox dispositivosCombo = new ComboBox();
         Button abrirCamara = new Button();
-        ComboBox membresiaCombo = new ComboBox();
         DateTimePicker fechaPicker = new DateTimePicker();
         ErrorProvider errorProvider = new ErrorProvider(); // se utiliza para las validaciones de los campos de texto
         Label fechaLbl = new Label();
         public static TextBox nombreTxt, apePaternoTxt, apeMaternoTxt, telefonoTxt;
         Button registrarBtn = new Button();
+        MiembroServicio miembroServicio;
 
         public PanelManager(Panel mainPanel)
         {
             this.mainPanel = mainPanel;
-            CargarMembresias();
         }
 
-        public Panel CrearPanel(string nombre, Color colorFondo)
+        public Panel PanelRegistro(string nombre, Color colorFondo)
         {
             Panel nuevoPanel = new Panel();
             nuevoPanel.Name = nombre;
@@ -38,18 +37,11 @@ namespace Presentación
             nuevoPanel.BackColor = colorFondo;
             nuevoPanel.Visible = false;
            
-
-            //Barra gris oscuro sobre el formulario
-            Panel barraGris = new Panel();
-            barraGris.BackColor = Color.Gray;
-            barraGris.Dock = DockStyle.Top;
-            nuevoPanel.Controls.Add(barraGris);
-
             //Labels necesarias para el formulario
             Label tituloLbl, subtituloLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, membresiaLbl, fotoLbl;
             Button tomarBtn, retomarBtn, importarBtn, regresarBtn,flechaBtn, cobrarBtn;
 
-            //Labels dentro de la barra gris oscuro
+            //Labels para encabezado
             tituloLbl = new Label();
             tituloLbl.Text = "Registrar nuevo cliente";
             tituloLbl.Font = new Font("Race Sport", 35);
@@ -63,8 +55,7 @@ namespace Presentación
             subtituloLbl.ForeColor = Color.Black;
             subtituloLbl.Location = new Point(460, 72);
             subtituloLbl.AutoSize = true;
-            barraGris.Controls.Add(tituloLbl);
-            barraGris.Controls.Add(subtituloLbl);
+            
 
             //Labels para el formulario
             nombreLbl = new Label();
@@ -161,6 +152,8 @@ namespace Presentación
             telefonoTxt.TextChanged += new EventHandler(telefonoTxt_TextChanged);
 
             //ComboBox para el tipo de membresía
+            ComboBox membresiaCombo = new ComboBox();
+            membresiaCombo = CargarMembresias(membresiaCombo);
             membresiaCombo.Location = new Point(37, 662);
             membresiaCombo.Size = new Size(290, 30);
             membresiaCombo.Font = new Font("Tahoma", 12);
@@ -299,7 +292,7 @@ namespace Presentación
 
             regresarBtn = new Button();
             regresarBtn.Text = "Regresar";
-            regresarBtn.BackColor = Color.DarkGray;
+            regresarBtn.BackColor = Color.WhiteSmoke;
             regresarBtn.Font = new Font("Race Sport", 16);
             regresarBtn.Location = new Point(60, 730);
             regresarBtn.Size = new Size(200, 35);
@@ -312,7 +305,7 @@ namespace Presentación
             flechaBtn.Location = new Point(27, 733);
             flechaBtn.Size = new Size(30, 35);
             flechaBtn.BackgroundImageLayout = ImageLayout.Stretch;
-            flechaBtn.BackColor = Color.DarkGray;
+            flechaBtn.BackColor = Color.WhiteSmoke;
             flechaBtn.FlatStyle = FlatStyle.Flat;
             flechaBtn.ImageAlign = ContentAlignment.MiddleCenter;
             flechaBtn.Cursor = Cursors.Hand;
@@ -329,8 +322,24 @@ namespace Presentación
             cobrarBtn.ImageAlign = ContentAlignment.MiddleCenter;
             cobrarBtn.Cursor = Cursors.Hand;
             cobrarBtn.FlatAppearance.BorderSize = 0;
+            //Muestra el panel de cobro al hacer click
+            cobrarBtn.Click += (s, e) =>
+            {
+                if (membresiaCombo.SelectedItem is Membresia membresiaSeleccionada && membresiaCombo.SelectedIndex != 0)
+                {
+                    var nombreMembresia = membresiaSeleccionada.Tipo_membresia;
+                    var precioMembresia = membresiaSeleccionada.Precio;
+
+                    var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia);
+                    ventanaCobrar.Show();
+                }
+                else
+                    MessageBox.Show("Por favor, seleccione una membresía válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
 
             //Agregar componentes a la interfaz
+            nuevoPanel.Controls.Add(tituloLbl);
+            nuevoPanel.Controls.Add(subtituloLbl);
             nuevoPanel.Controls.Add(nombreLbl);
             nuevoPanel.Controls.Add(apePaternoLbl);
             nuevoPanel.Controls.Add(apeMaternoLbl);
@@ -358,17 +367,253 @@ namespace Presentación
             return nuevoPanel;
         }
 
-        private void CargarMembresias()
+        //Panel de acceso
+        public Panel AccesoPanel()
+        {
+            bool accesoValido = false;
+            Panel nuevoPanel = new Panel();
+            nuevoPanel.Name = "AccesoPanel";
+            nuevoPanel.BackgroundImage = Image.FromFile("Recursos/laminahomegym.png");
+            nuevoPanel.BackgroundImageLayout = ImageLayout.Stretch;
+            nuevoPanel.Location = new Point(500, 150);
+            nuevoPanel.Size = new Size(800, 400);
+            nuevoPanel.BackColor = Color.WhiteSmoke;
+
+            //Label de descripción
+            Label descripcionLbl = new Label();
+            descripcionLbl.Text = "         INTRODUCIR\n NUMERO DE ACCESO";
+            descripcionLbl.Font = new Font("Race Sport", 34, FontStyle.Bold);
+            descripcionLbl.ForeColor = Color.Black;
+            descripcionLbl.BackColor = Color.Transparent;
+            descripcionLbl.Location = new Point(70, 60);
+            descripcionLbl.AutoSize = true;
+
+            //TextBox para el número de acceso
+            TextBox accesoTxt = new TextBox();
+            accesoTxt.Location = new Point(200, 220);
+            accesoTxt.Size = new Size(400, 50);
+            accesoTxt.Font = new Font("Tahoma", 22);
+            accesoTxt.ForeColor = Color.Black;
+            accesoTxt.BorderStyle = BorderStyle.FixedSingle;
+            accesoTxt.TextChanged += (s, e) =>
+            {
+                if (ValidarDatos.ValidarSoloNumeros(accesoTxt.Text)){
+                    accesoTxt.BackColor = Color.White; // Válido
+                    accesoValido = true;
+                }
+                else { 
+                    accesoTxt.BackColor = Color.LightPink; // Inválido
+                    accesoValido = false;
+                }
+            };
+
+            //Botón de acceso
+            Button accesoBtn = new Button();
+            accesoBtn.Text = "ACCEDER";
+            accesoBtn.Location = new Point(300, 300);
+            accesoBtn.Size = new Size(200, 40);
+            accesoBtn.Font = new Font("Race Sport", 18, FontStyle.Italic);
+            accesoBtn.BackColor = Color.Gray;
+            accesoBtn.ForeColor = Color.White;
+            accesoBtn.FlatStyle = FlatStyle.Flat;
+            accesoBtn.FlatAppearance.BorderSize = 0;
+            accesoBtn.Click += (s, e) =>
+            {
+                miembroServicio = new MiembroServicio();
+
+                if (ValidarDatos.ValidarSoloNumeros(accesoTxt.Text) && Int32.TryParse(accesoTxt.Text, out int id) && (miembroServicio.ObtenerMiembroPorId(id) is Miembro miembro)) { 
+                    MostrarPanel(ClienteAcceso(miembro));
+                }
+                else
+                    MessageBox.Show("Número de acceso inválido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
+
+
+            nuevoPanel.Controls.Add(descripcionLbl);
+            nuevoPanel.Controls.Add(accesoTxt);
+            nuevoPanel.Controls.Add(accesoBtn);
+
+            return nuevoPanel;
+        } 
+        //Panel de informacion de cliente con el acceso
+        public Panel ClienteAcceso(Miembro miembro)
+        {
+            Panel nuevoPanel = new Panel();
+            nuevoPanel.Text = "Acceso al cliente";
+            nuevoPanel.AutoSize = true;
+            nuevoPanel.BackColor = Color.WhiteSmoke;
+
+            //Labels para loa informacion
+            Label tituloLbl, idLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, nacimientoLbl, registroLbl ,vencimientoLbl, membresiaLbl, tipoMemLbl;
+            Label estado = new Label();
+            //Fotografia del cliente
+            PictureBox fotografia;
+            //Botones necesarios para la ventana de cobro
+            Button aceptarBtn;
+
+            tituloLbl = new Label();
+            tituloLbl.Text = "ACCESO";
+            tituloLbl.Location = new Point(700, 20);
+            tituloLbl.AutoSize = true;
+            tituloLbl.Font = new Font("Race Sport", 50, FontStyle.Bold);
+
+            idLbl = new Label();
+            idLbl.Text = " ID:\n" + miembro.IdMiembro;
+            idLbl.Location = new Point(1300, 120);
+            idLbl.AutoSize = true;
+            idLbl.Font = new Font("Tahoma", 18, FontStyle.Bold);
+
+            nombreLbl = new Label();
+            nombreLbl.Text = "Nombre(s):\n" + miembro.Nombres;
+            nombreLbl.Location = new Point(700, 120);
+            nombreLbl.AutoSize = true;
+            nombreLbl.Font = new Font("Tahoma", 18);
+
+            apePaternoLbl = new Label();
+            apePaternoLbl.Text = "Apellido Paterno:\n" + miembro.ApellidoPaterno;
+            apePaternoLbl.Location = new Point(700, 210);
+            apePaternoLbl.AutoSize = true;
+            apePaternoLbl.Font = new Font("Tahoma", 18);
+
+            apeMaternoLbl = new Label();
+            apeMaternoLbl.Text = "Apellido Materno:\n" + miembro.ApellidoMaterno;
+            apeMaternoLbl.Location = new Point(700, 280);
+            apeMaternoLbl.AutoSize = true;
+            apeMaternoLbl.Font = new Font("Tahoma", 18);
+
+            telefonoLbl = new Label();
+            telefonoLbl.Text = "Teléfono:\n" + miembro.NumeroTelefono;
+            telefonoLbl.Location = new Point(700, 360);
+            telefonoLbl.AutoSize = true;
+            telefonoLbl.Font = new Font("Tahoma", 18);
+
+            nacimientoLbl = new Label();
+            nacimientoLbl.Text = "Fecha de Nacimiento:\n" + miembro.FechaNacimiento.ToString("dd/MM/yyyy");
+            nacimientoLbl.Location = new Point(700, 440);
+            nacimientoLbl.AutoSize = true;
+            nacimientoLbl.Font = new Font("Tahoma", 18);
+
+            registroLbl = new Label();
+            registroLbl.Text = "Fecha de Registro:\n" + miembro.FechaRegistro.ToString("dd/MM/yyyy");
+            registroLbl.Location = new Point(700, 520);
+            registroLbl.AutoSize = true;
+            registroLbl.Font = new Font("Tahoma", 18);
+
+            vencimientoLbl = new Label();
+            vencimientoLbl.Text = "Fecha de Vencimiento:\n" + miembro.FechaVencimiento.ToString("dd/MM/yyyy");
+            vencimientoLbl.Location = new Point(700, 600);
+            vencimientoLbl.AutoSize = true;
+            vencimientoLbl.Font = new Font("Tahoma", 18);
+
+            membresiaLbl = new Label();
+            membresiaLbl.Text = "Tipo de membresía";
+            membresiaLbl.Location = new Point(700, 680);
+            membresiaLbl.AutoSize = true;
+            membresiaLbl.Font = new Font("Tahoma", 18);
+
+            ////Fotografía del cliente
+            //fotografia = new PictureBox();
+            ////fotografia.Image = ConvertirBytesAImagen(miembro.Fotografia);
+            //fotografia.SizeMode = PictureBoxSizeMode.StretchImage;
+            //fotografia.Size = new Size(300, 350);
+            //fotografia.Location = new Point(10, 120);
+            //fotografia.BorderStyle = BorderStyle.FixedSingle;
+
+            //Botón de aceptar
+            aceptarBtn = new Button();
+            aceptarBtn.Text = "ACEPTAR";
+            aceptarBtn.Location = new Point(1100, 700);
+            aceptarBtn.AutoSize = true;
+            aceptarBtn.Font = new Font("Race Sport", 20);
+            aceptarBtn.BackColor = Color.Gray;
+            aceptarBtn.ForeColor = Color.White;
+            aceptarBtn.FlatStyle = FlatStyle.Flat;
+            aceptarBtn.FlatAppearance.BorderSize = 0;
+
+            DateTime fechaActual = DateTime.Today;
+            if (miembro.FechaVencimiento < fechaActual)
+            {
+                //ComboBox para el tipo de membresía
+                ComboBox membresiaCombo = new ComboBox();
+                membresiaCombo = CargarMembresias(membresiaCombo);
+                membresiaCombo.Location = new Point(700, 710);
+                membresiaCombo.Size = new Size(290, 30);
+                membresiaCombo.Font = new Font("Tahoma", 12);
+                nuevoPanel.Controls.Add(membresiaCombo);
+
+                estado.Text = "VENCIDA";
+                estado.BackColor = Color.Red;
+            }
+            else
+            {
+                tipoMemLbl = new Label();
+                if (miembro.IdMembresia == 1001)
+                    tipoMemLbl.Text = "MENSUAL";
+
+                else if (miembro.IdMembresia == 1002)
+                    tipoMemLbl.Text = "SEMANA";
+
+                else
+                    tipoMemLbl.Text = "DIA";
+
+                tipoMemLbl.Location = new Point(700, 710);
+                tipoMemLbl.AutoSize = true;
+                tipoMemLbl.Font = new Font("Tahoma", 18);
+                nuevoPanel.Controls.Add(tipoMemLbl);
+
+                estado.Text = "VIGENTE";
+                estado.BackColor = Color.Green;
+
+                //Calculo de dias restantes
+                TimeSpan diasRestantes = miembro.FechaVencimiento - fechaActual;
+                Label restantesLbl = new Label();
+                restantesLbl.Text = diasRestantes.Days + " Días restantes. ";
+                restantesLbl.Location = new Point(310, 580);
+                restantesLbl.AutoSize = true;
+                restantesLbl.Font = new Font("Tahoma", 20, FontStyle.Bold);
+                if (diasRestantes.TotalDays <= 5)
+                    restantesLbl.ForeColor = Color.Red;
+                else
+                    restantesLbl.ForeColor = Color.Black;
+                
+                nuevoPanel.Controls.Add(restantesLbl);
+            }
+            estado.Location = new Point(270, 500);
+            estado.AutoSize = true;
+            estado.Font = new Font("Race Sport", 40);    
+            estado.ForeColor = Color.White;
+
+            nuevoPanel.Controls.Add(tituloLbl);
+            nuevoPanel.Controls.Add(idLbl);
+            nuevoPanel.Controls.Add(nombreLbl);
+            nuevoPanel.Controls.Add(apePaternoLbl);
+            nuevoPanel.Controls.Add(apeMaternoLbl);
+            nuevoPanel.Controls.Add(telefonoLbl);
+            nuevoPanel.Controls.Add(nacimientoLbl);
+            nuevoPanel.Controls.Add(registroLbl);
+            nuevoPanel.Controls.Add(vencimientoLbl);
+            nuevoPanel.Controls.Add(membresiaLbl);
+            nuevoPanel.Controls.Add(estado);
+            nuevoPanel.Controls.Add(aceptarBtn);
+            //nuevoPanel.Controls.Add(fotografia);
+
+            return nuevoPanel;
+        }
+
+        private ComboBox CargarMembresias(ComboBox combo)
         {
             MembresiaServicio memCombo = new MembresiaServicio();
             List<Membresia> membresias = memCombo.ObtenerMembresias();
 
-            membresias.Insert(0, new Membresia { Id = 0, Tipo = "Seleccionar membresía", Precio = 0 });
+            // Agregar opción por defecto
+            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo_membresia = "Seleccionar membresía", Precio = 0 });
 
-            // Modificar lo que se muestra en el ComboBox
-            membresiaCombo.DataSource = membresias;
-            membresiaCombo.DisplayMember = "DescripcionCompleta"; // Usamos una propiedad personalizada
-            membresiaCombo.ValueMember = "Id_membresia";
+            // Asignar propiedades al ComboBox recibido
+            combo.DataSource = membresias;
+            combo.DisplayMember = "DescripcionCompleta"; // Propiedad personalizada para mostrar
+            combo.ValueMember = "Id_membresia";
+
+            return combo;
         }
         public void MostrarPanel(Panel nuevoPanel)
         {
@@ -395,9 +640,10 @@ namespace Presentación
             {
                 nombreTxt.BackColor = Color.LightPink; // Inválido
                 registrarBtn.Enabled = false;
-                
+
             }
         }
+
         private void apePaternoTxt_TextChanged(object sender, EventArgs e)
         {
             if (ValidarDatos.ValidarTexto(apePaternoTxt.Text))
@@ -426,7 +672,7 @@ namespace Presentación
         }
         private void telefonoTxt_TextChanged(object sender, EventArgs e)
         {
-            if (ValidarDatos.ValidarTelefono(telefonoTxt.Text))
+            if (ValidarDatos.ValidarSoloNumeros(telefonoTxt.Text))
             {
                 telefonoTxt.BackColor = Color.White;
                 registrarBtn.Enabled = true;
@@ -452,6 +698,28 @@ namespace Presentación
                 registrarBtn.Enabled = false;
             }
         }
+        //private Image ConvertirBytesAImagen(byte[] bytes)
+        //{
+        //    if (bytes == null || bytes.Length == 0)
+        //    {
+        //        MessageBox.Show("La imagen está vacía o no fue encontrada.");
+        //        return null;
+        //    }
+
+        //    try
+        //    {
+        //        using (MemoryStream ms = new MemoryStream(bytes))
+        //        {
+        //            return Image.FromStream(ms);
+        //        }
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        MessageBox.Show("Error al convertir imagen: " + ex.Message);
+        //        // Opcional: guardar los bytes en un archivo para inspección
+        //        File.WriteAllBytes("imagen_debug.bin", bytes);
+        //        return null;
+        //    }
+        //}
     }
 }
-

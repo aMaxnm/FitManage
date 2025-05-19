@@ -222,7 +222,6 @@ namespace AccesoDatos
                 }
             }
         }
-
         //Actualizar Datos
         public void Actualizar(Miembro miembro)
         {
@@ -246,7 +245,42 @@ namespace AccesoDatos
                 cmd.ExecuteNonQuery();
             }
         }
+        public Miembro ObtenerMiembroPorId(int idMiembro)
+        {
+            Miembro miembro = null;
 
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM fitmanage.miembro WHERE Id_miembro = @id";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", idMiembro);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read()) // Si encuentra una membresía
+                        {
+                            miembro = new Miembro
+                            {
+                                IdMiembro = reader.GetInt32("Id_miembro"),
+                                IdMembresia = reader.GetInt32("Id_membresia"),
+                                Nombres = reader.GetString("Nombre"),
+                                ApellidoPaterno = reader.GetString("Ap_paterno"),
+                                ApellidoMaterno = reader.GetString("Ap_materno"),
+                                FechaNacimiento = reader.GetDateTime("Fecha_nacimiento"),
+                                NumeroTelefono = reader.GetString("Num_celular"),
+                                FechaRegistro = reader.GetDateTime("FechaRegistro"),
+                                FechaVencimiento = reader.GetDateTime("Fecha_Vencimiento"),
+                                Fotografia = reader["Foto"] as byte[]
+                            };
+                        }
+                    }
+                }
+            }
+            return miembro; // Retorna la membresía encontrada o null si no existe
+        }
     }
 }
 

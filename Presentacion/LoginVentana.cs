@@ -43,9 +43,9 @@ namespace Presentacion
             lblUsuario.Text = "Usuario:";
             lblUsuario.ForeColor = Color.Black;
             lblUsuario.BackColor = Color.Transparent;
-            lblUsuario.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblUsuario.Font = new Font("Race sport", 7, FontStyle.Bold);
             lblUsuario.Location = new Point(300, 260);
-            lblUsuario.Size = new Size(80, 25);
+            lblUsuario.Size = new Size(110, 25);
             this.Controls.Add(lblUsuario);
 
             // TextBox Usuario
@@ -59,9 +59,9 @@ namespace Presentacion
             lblContraseña.Text = "Contraseña:";
             lblContraseña.ForeColor = Color.Black;
             lblContraseña.BackColor = Color.Transparent;
-            lblContraseña.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblContraseña.Font = new Font("Race sport", 7, FontStyle.Bold);
             lblContraseña.Location = new Point(290, 300);
-            lblContraseña.Size = new Size(90, 25);
+            lblContraseña.Size = new Size(110, 25);
             this.Controls.Add(lblContraseña);
 
             // TextBox Contraseña
@@ -99,26 +99,34 @@ namespace Presentacion
             string usuario = txtUsuario.Text;
             string contraseña = txtContraseña.Text;
 
+            bool vacios = String.IsNullOrEmpty(usuario) || String.IsNullOrEmpty(contraseña);
+
             try
             {
                 bool verificar = new UsuarioServicio().VerificarUsuario(usuario, contraseña);
-                if (verificar)
+                if (!vacios)
                 {
-                    VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
-                    ventanaPrincipal.Show();
-                    this.Hide();
+                    if (verificar)
+                    {
+                        VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+                        ventanaPrincipal.Show();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        lblMensaje.Text = "Usuario o contraseña incorrectos.";
+                    }
                 }
                 else
                 {
-                    lblMensaje.Text = "Usuario o contraseña incorrectos.";
+                    lblMensaje.Text = "Complete todos los Campos.";
                 }
+                
             }
             catch (Exception ex)
             {
                 lblMensaje.Text = "Error de conexión: " + ex.Message;
             }
         }
-
-
     }
 }

@@ -16,8 +16,6 @@ namespace Negocio
         {
             return miembroDAO.ObtenerMiembros();
         }
-
-
         public int RegistrarMiembro(
             int idMembresia,
             string nombres,
@@ -113,8 +111,10 @@ namespace Negocio
             // Llama al DAO para hacer el update real
             miembroDAO.Actualizar(miembro);
         }
-
-
+        public Miembro ObtenerMiembroPorId(int idMembresia)
+        {
+            return miembroDAO.ObtenerMiembroPorId(idMembresia);
+        }
     }
 
 }
