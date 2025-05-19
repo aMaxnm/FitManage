@@ -11,7 +11,8 @@ namespace Negocio
     public class MiembroServicio
     {
        private MiembroDAO miembroDAO = new MiembroDAO();
-
+       private MembresiaDAO membresiaDAO = new MembresiaDAO();
+        Membresia mem;
         public List<Miembro> ObtenerTodos()
         {
             return miembroDAO.ObtenerMiembros();
@@ -53,8 +54,7 @@ namespace Negocio
                 return -1;
             }
             //Crear objeto Miembro
-            MembresiaDAO membresiaSeleccionada = new MembresiaDAO();
-            Membresia mem = membresiaSeleccionada.ObtenerMembresiaPorId(idMembresia); // Método para obtener la membresía
+            mem = membresiaDAO.ObtenerMembresiaPorId(idMembresia); // Método para obtener la membresía
             if (mem == null)
             {
                 Console.WriteLine("Error: No se encontró la membresía con el ID: " + idMembresia);
@@ -114,6 +114,23 @@ namespace Negocio
         public Miembro ObtenerMiembroPorId(int idMembresia)
         {
             return miembroDAO.ObtenerMiembroPorId(idMembresia);
+        }
+        public bool RenovarMembresia(int id, Decimal precio, string nombre)
+        {
+            DateTime fechaVencimiento;
+            int idMembresia=membresiaDAO.ObtenerIdMembresia(precio, nombre);
+            mem = membresiaDAO.ObtenerMembresiaPorId(idMembresia); // Método para obtener la membresía
+            if (mem != null)
+            {
+                fechaVencimiento = DateTime.Now.AddDays(mem.Duracion);
+                return miembroDAO.RenovarMembresia(id, idMembresia, fechaVencimiento);
+
+            }
+            else
+            {
+                Console.WriteLine("Error: No se encontró la membresía con el ID: " + idMembresia);
+                return false;
+            }
         }
     }
 

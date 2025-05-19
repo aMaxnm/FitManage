@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="loginAutenticasion.cs" />
     <Compile Include="MembresiaServicio.cs" />
     <Compile Include="MiembroServicio.cs" />
     <Compile Include="UsuarioServicio.cs" />

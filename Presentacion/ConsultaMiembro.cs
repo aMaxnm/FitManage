@@ -95,8 +95,6 @@ namespace Presentacion
                 Membresía = memDict[m.IdMembresia],
             }).ToList();
         }
-
-
         private void ListaMiembro_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -253,7 +251,6 @@ namespace Presentacion
 
             tarjetaMiembro.Controls.Add(btnGuardar);
         }
-
         private TextBox CrearTextBox(string texto, int x, int y, int width)
         {
             return new TextBox

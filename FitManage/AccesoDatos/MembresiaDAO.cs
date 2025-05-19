@@ -16,7 +16,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM fitmanage.membresia";
+                string query = "SELECT * FROM fitmanage.membresía";
 
                 using (var command = new MySqlCommand(query, connection))
                 using (var reader = command.ExecuteReader())
@@ -43,7 +43,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM fitmanage.miembresia WHERE Id_membresi = @id";
+                string query = "SELECT * FROM fitmanage.membresía WHERE Id_membresia = @id";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
@@ -72,7 +72,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"UPDATE fitmanage.membresia 
+                string query = @"UPDATE fitmanage.membresía 
                              SET
                              Precio = @precio, 
                              Tipo_Membresia = @tipo 
@@ -89,6 +89,38 @@ namespace AccesoDatos
                 }
             }
         }
+        public int ObtenerIdMembresia(decimal precioMembresia, string nombreMembresia)
+        {
+            int idMembresia = -1; // Valor por defecto si no se encuentra
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT Id_membresia FROM fitmanage.membresía WHERE Tipo_Membresia = @Tipo_Membresia AND Precio = @Precio";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Tipo_Membresia", nombreMembresia);
+                        command.Parameters.AddWithValue("@Precio", precioMembresia);
+
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            idMembresia = Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener ID de membresía: " + ex.Message);
+            }
+
+            return idMembresia;
+        }
+
     }
 }
 
