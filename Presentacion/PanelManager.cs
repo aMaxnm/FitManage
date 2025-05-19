@@ -162,7 +162,7 @@ namespace Presentación
             //Panel para la foto
             fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
             fotoMiembroPct.SizeMode = PictureBoxSizeMode.StretchImage;
-            fotoMiembroPct.Size = new Size(300, 350);
+            fotoMiembroPct.Size = new Size(380, 350);
             fotoMiembroPct.Location = new Point(750, 180);
             fotoMiembroPct.BorderStyle = BorderStyle.FixedSingle;
 
@@ -177,14 +177,15 @@ namespace Presentación
             abrirCamara.Click += Fotografia.AbrirCamara_Click;
 
             //Botones para el formulario
+            int anchoBtn = fotoMiembroPct.Size.Width / 3 - 15;
             tomarBtn = new Button();
             tomarBtn.BackgroundImage = Image.FromFile("Recursos/photo.png");
             tomarBtn.BackgroundImageLayout = ImageLayout.Stretch;
             tomarBtn.BackColor = Color.Gray;
             tomarBtn.FlatStyle = FlatStyle.Flat;
             tomarBtn.ImageAlign = ContentAlignment.MiddleCenter;
-            tomarBtn.Location = new Point(750, 550);
-            tomarBtn.Size = new Size(80, 50);
+            tomarBtn.Location = new Point(fotoMiembroPct.Location.X, 550);
+            tomarBtn.Size = new Size(anchoBtn, 55);
             tomarBtn.Cursor = Cursors.Hand;
             tomarBtn.FlatAppearance.BorderSize = 0;
             tomarBtn.Click += Fotografia.TomarBtn_Click;
@@ -195,8 +196,8 @@ namespace Presentación
             retomarBtn.BackColor = Color.Gray;
             retomarBtn.FlatStyle = FlatStyle.Flat;
             retomarBtn.ImageAlign = ContentAlignment.MiddleCenter;
-            retomarBtn.Location = new Point(860, 550);
-            retomarBtn.Size = new Size(80, 50);
+            retomarBtn.Location = new Point(tomarBtn.Location.X + tomarBtn.Size.Width + 23, 550);
+            retomarBtn.Size = new Size(anchoBtn, 55);
             retomarBtn.Cursor = Cursors.Hand;
             retomarBtn.FlatAppearance.BorderSize = 0;
             retomarBtn.Click += Fotografia.RetomarBtn_Click;
@@ -207,8 +208,8 @@ namespace Presentación
             importarBtn.BackColor = Color.Gray;
             importarBtn.FlatStyle = FlatStyle.Flat;
             importarBtn.ImageAlign = ContentAlignment.MiddleCenter;
-            importarBtn.Location = new Point(970, 550);
-            importarBtn.Size = new Size(80, 50);
+            importarBtn.Location = new Point(fotoMiembroPct.Location.X + fotoMiembroPct.Size.Width - anchoBtn, 550);
+            importarBtn.Size = new Size(anchoBtn, 55);
             importarBtn.Cursor = Cursors.Hand;
             importarBtn.FlatAppearance.BorderSize = 0;
             importarBtn.Click += Fotografia.ImportarBtn_Click;

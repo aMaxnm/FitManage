@@ -42,7 +42,7 @@ namespace Presentacion
             SubBotones();
             panelManager = new PanelManager(mainPanel);
             ConsultaMiembro consultaMiembroPanel = new ConsultaMiembro();
-            Panel panelRegistro = panelManager.PanelRegistro("Registro", Color.DarkGray);
+            Panel panelRegistro = panelManager.PanelRegistro("Registro", Color.WhiteSmoke);
             registroClienteBtn.Click += (s, e) => panelManager.MostrarPanel(panelRegistro);
             consultaMiembroBtn.Click += (s, e) => panelManager.MostrarPanel(consultaMiembroPanel);
             EditarMembresiaPanel editarMembresiaPanel = new EditarMembresiaPanel();
