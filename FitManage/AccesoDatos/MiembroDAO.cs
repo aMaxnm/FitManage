@@ -207,6 +207,39 @@ namespace AccesoDatos
             }
         }
 
+        public bool RenovarMembresia(int idMiembro, int nuevaMembresiaId, DateTime FV)
+        {
+            bool actualizado = false;
+            DateTime nuevaFechaRegistro = DateTime.Now.Date;
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "UPDATE fitmanage.miembro " +
+                                   "SET Id_membresia = @Id_membresia, FechaRegistro = @FechaRegistro, Fecha_Vencimiento = @Fecha_Vencimiento " + 
+                                   "WHERE Id_miembro = @Id_miembro";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id_miembro", idMiembro);
+                        command.Parameters.AddWithValue("@Id_membresia", nuevaMembresiaId);
+                        command.Parameters.AddWithValue("@FechaRegistro", nuevaFechaRegistro);
+                        command.Parameters.AddWithValue("@Fecha_Vencimiento", FV);
+
+                        int filasAfectadas = command.ExecuteNonQuery();
+                        actualizado = filasAfectadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al renovar membresía: " + ex.Message);
+            }
+
+            return actualizado; // 🔹 Retorna `true` si la actualización fue exitosa
+        }
+
         // Eliminar un miembro
         public void EliminarMiembro(int idMiembro)
         {

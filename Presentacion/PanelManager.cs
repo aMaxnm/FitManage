@@ -330,7 +330,7 @@ namespace Presentación
                     var nombreMembresia = membresiaSeleccionada.Tipo;
                     var precioMembresia = membresiaSeleccionada.Precio;
 
-                    var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia);
+                    var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia, 0);
                     ventanaCobrar.Show();
                 }
                 else
@@ -443,6 +443,7 @@ namespace Presentación
             nuevoPanel.BackColor = Color.WhiteSmoke;
 
             //Labels para loa informacion
+            ComboBox membresiaCombo = new ComboBox();
             Label tituloLbl, idLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, nacimientoLbl, registroLbl ,vencimientoLbl, membresiaLbl, tipoMemLbl;
             Label estado = new Label();
             //Fotografia del cliente
@@ -460,6 +461,7 @@ namespace Presentación
             renovarBtn.ForeColor = Color.White;
             renovarBtn.FlatStyle = FlatStyle.Flat;
             renovarBtn.FlatAppearance.BorderSize = 0;
+
 
             tituloLbl = new Label();
             tituloLbl.Text = "ACCESO";
@@ -549,7 +551,7 @@ namespace Presentación
                 nuevoPanel.Controls.Add(renovarBtn);
 
                 //ComboBox para el tipo de membresía
-                ComboBox membresiaCombo = new ComboBox();
+                //ComboBox membresiaCombo = new ComboBox();
                 membresiaCombo = CargarMembresias(membresiaCombo);
                 membresiaCombo.Location = new Point(700, 710);
                 membresiaCombo.Size = new Size(290, 30);
@@ -593,6 +595,25 @@ namespace Presentación
                 
                 nuevoPanel.Controls.Add(restantesLbl);
             }
+            renovarBtn.Click += (s, e) =>
+            {
+                if (membresiaCombo.SelectedItem is Membresia membresiaSeleccionada && membresiaCombo.SelectedIndex != 0)
+                {
+                    var nombreMembresia = membresiaSeleccionada.Tipo;
+                    var precioMembresia = membresiaSeleccionada.Precio;
+
+                    var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia, miembro.IdMiembro);
+                    ventanaCobrar.FormClosed += (a, E) =>
+                    {
+                        // 🔹 Recargar contenido de `ClienteAcceso` después del pago
+                        MostrarPanel(ClienteAcceso(miembro));
+                    };
+
+                    ventanaCobrar.Show();
+                }
+                else
+                    MessageBox.Show("Por favor, seleccione una membresía válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
             estado.Location = new Point(270, 500);
             estado.AutoSize = true;
             estado.Font = new Font("Race Sport", 40);    

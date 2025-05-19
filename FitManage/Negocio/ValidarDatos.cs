@@ -21,7 +21,10 @@ namespace Negocio
             {
                 return fechaSeleccionada.Date <= DateTime.Now.Date; // Debe ser hoy o anterior
             }
-
+            public static bool ValidarCobro(float precio, float cantidad)
+            {
+            return true;
+            }
         public static bool ValidarImagen(object imagen)
             {
                 return imagen != null;

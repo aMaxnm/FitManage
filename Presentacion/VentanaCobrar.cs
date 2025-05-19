@@ -6,16 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Negocio;
 
 namespace Presentacion
 {
     internal class VentanaCobrar : Form
     {
-        public VentanaCobrar(String nombreMembresia, Decimal precioMembresia)
+        public VentanaCobrar(String nombreMembresia, Decimal precioMembresia, int id)
         {
             this.Text = "Cobro";
             this.Size = new Size(700, 400);
-            //this.StartPosition = FormStartPosition.CenterParent;
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.DarkGray;
 
 
@@ -25,6 +26,7 @@ namespace Presentacion
             TextBox costoTxt, recibidoTxt, cambioTxt;
             //Botones necesarios para la ventana de cobro
             Button confirmarBtn, cancelarBtn;
+            decimal cambio;
 
             //Configuracion de las labels
             membresiaLbl = new Label();
@@ -100,16 +102,41 @@ namespace Presentacion
             confirmarBtn.Cursor = Cursors.Hand;
             confirmarBtn.Click += (s, e) =>
             {
-                if (string.IsNullOrWhiteSpace(costoTxt.Text) || string.IsNullOrWhiteSpace(recibidoTxt.Text))
+                if (string.IsNullOrEmpty(recibidoTxt.Text))
                 {
-                    MessageBox.Show("Por favor, complete todos los campos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Debe ingresar un monto para continuar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
-                else
+
+                decimal efectivoRecibido;
+                if (!decimal.TryParse(recibidoTxt.Text, out efectivoRecibido))
                 {
-                    validarCobro(cambioTxt.Text);
-                    this.Close();
+                    MessageBox.Show("Ingrese un valor numérico válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                cambio = efectivoRecibido - precioMembresia;
+
+                if (cambio < 0)
+                {
+                    MessageBox.Show("El monto ingresado no cubre el costo de la membresía.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }else if(id == 0)
+                {
+                    cambioTxt.Text = cambio.ToString("F2"); // Muestra el cambio con 2 decimales
+
+                    MessageBox.Show("Pago realizado correctamente. Cambio: $" + cambioTxt.Text, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if(id != 0)
+                {
+                    MiembroServicio miembro = new MiembroServicio();
+                    miembro.RenovarMembresia(id, precioMembresia, nombreMembresia);
+                    cambioTxt.Text = cambio.ToString("F2"); // Muestra el cambio con 2 decimales
+                    MessageBox.Show("Pago realizado correctamente. Cambio: $" + cambioTxt.Text, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Dispose();
                 }
             };
+
 
             cancelarBtn = new Button();
             cancelarBtn.Text = "CANCELAR";
@@ -136,26 +163,7 @@ namespace Presentacion
             this.Controls.Add(cancelarBtn);
 
             //El TextBox de cambio se calcula automaticamente
-            recibidoTxt.TextChanged += (s, e) =>
-            {
-                if (float.TryParse(recibidoTxt.Text, out float recibido) && float.TryParse(costoTxt.Text, out float costo))
-                {
-                    float cambio = recibido - costo;
-                    cambioTxt.Text = cambio.ToString("0.00");
-                }
-                else
-                {
-                    cambioTxt.Text = "0.00";
-                }
-            };
-        }
-        public void validarCobro(String cambio)
-        {
-            float validar = float.Parse(cambio);
-            if (validar > 0.00)
-            {
-                MessageBox.Show("Cobro realizado con exito", "Cobro", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+          
         }
     }
 }
