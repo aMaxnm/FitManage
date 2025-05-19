@@ -35,7 +35,7 @@ namespace Negocio
                 return -1;
             }
 
-            if (!ValidarDatos.ValidarTelefono(numeroTelefono))
+            if (!ValidarDatos.ValidarSoloNumeros(numeroTelefono))
             {
                 Console.WriteLine("Teléfono inválido.");
                 return -1;

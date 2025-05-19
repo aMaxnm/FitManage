@@ -327,7 +327,7 @@ namespace Presentación
             {
                 if (membresiaCombo.SelectedItem is Membresia membresiaSeleccionada && membresiaCombo.SelectedIndex != 0)
                 {
-                    var nombreMembresia = membresiaSeleccionada.Tipo_membresia;
+                    var nombreMembresia = membresiaSeleccionada.Tipo;
                     var precioMembresia = membresiaSeleccionada.Precio;
 
                     var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia);
@@ -366,7 +366,6 @@ namespace Presentación
 
             return nuevoPanel;
         }
-
         //Panel de acceso
         public Panel AccesoPanel()
         {
@@ -451,6 +450,17 @@ namespace Presentación
             //Botones necesarios para la ventana de cobro
             Button aceptarBtn;
 
+            // Botón de renovar
+            Button renovarBtn = new Button();
+            renovarBtn.Text = "RENOVAR";
+            renovarBtn.Location = new Point(1100, 700);
+            renovarBtn.AutoSize = true;
+            renovarBtn.Font = new Font("Race Sport", 20);
+            renovarBtn.BackColor = Color.Gray;
+            renovarBtn.ForeColor = Color.White;
+            renovarBtn.FlatStyle = FlatStyle.Flat;
+            renovarBtn.FlatAppearance.BorderSize = 0;
+
             tituloLbl = new Label();
             tituloLbl.Text = "ACCESO";
             tituloLbl.Location = new Point(700, 20);
@@ -529,10 +539,15 @@ namespace Presentación
             aceptarBtn.ForeColor = Color.White;
             aceptarBtn.FlatStyle = FlatStyle.Flat;
             aceptarBtn.FlatAppearance.BorderSize = 0;
+            aceptarBtn.Click += (s, e) => { nuevoPanel.Dispose();
+                MostrarPanel(AccesoPanel());
+            };
 
             DateTime fechaActual = DateTime.Today;
             if (miembro.FechaVencimiento < fechaActual)
             {
+                nuevoPanel.Controls.Add(renovarBtn);
+
                 //ComboBox para el tipo de membresía
                 ComboBox membresiaCombo = new ComboBox();
                 membresiaCombo = CargarMembresias(membresiaCombo);
@@ -599,14 +614,13 @@ namespace Presentación
 
             return nuevoPanel;
         }
-
         private ComboBox CargarMembresias(ComboBox combo)
         {
             MembresiaServicio memCombo = new MembresiaServicio();
             List<Membresia> membresias = memCombo.ObtenerMembresias();
 
             // Agregar opción por defecto
-            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo_membresia = "Seleccionar membresía", Precio = 0 });
+            membresias.Insert(0, new Membresia { Id = 0, Tipo = "Seleccionar membresía", Precio = 0 });
 
             // Asignar propiedades al ComboBox recibido
             combo.DataSource = membresias;
@@ -643,7 +657,6 @@ namespace Presentación
 
             }
         }
-
         private void apePaternoTxt_TextChanged(object sender, EventArgs e)
         {
             if (ValidarDatos.ValidarTexto(apePaternoTxt.Text))

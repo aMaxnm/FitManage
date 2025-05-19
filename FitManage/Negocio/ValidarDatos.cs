@@ -12,7 +12,6 @@ namespace Negocio
             {
                 return !string.IsNullOrEmpty(texto) && System.Text.RegularExpressions.Regex.IsMatch(texto, "^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$");
             }
-
             public static bool ValidarSoloNumeros(string telefono)
             {
                 return !string.IsNullOrEmpty(telefono) && System.Text.RegularExpressions.Regex.IsMatch(telefono, "^[0-9]+$");

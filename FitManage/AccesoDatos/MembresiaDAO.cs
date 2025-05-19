@@ -16,7 +16,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM fitmanage.membresia";
+                string query = "SELECT * FROM fitmanage.membresía";
 
                 using (var command = new MySqlCommand(query, connection))
                 using (var reader = command.ExecuteReader())
@@ -43,7 +43,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM fitmanage.miembresia WHERE Id_membresi = @id";
+                string query = "SELECT * FROM fitmanage.miembresía WHERE Id_membresi = @id";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
@@ -72,7 +72,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"UPDATE fitmanage.membresia 
+                string query = @"UPDATE fitmanage.membresía 
                              SET
                              Precio = @precio, 
                              Tipo_Membresia = @tipo 

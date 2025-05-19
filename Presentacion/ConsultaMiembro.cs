@@ -252,7 +252,6 @@ namespace Presentacion
 
             tarjetaMiembro.Controls.Add(btnGuardar);
         }
-
         private TextBox CrearTextBox(string texto, int x, int y, int width)
         {
             return new TextBox
