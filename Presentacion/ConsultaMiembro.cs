@@ -69,7 +69,7 @@ namespace Presentacion
             // Tarjeta detalle
             tarjetaMiembro = new Panel();
             tarjetaMiembro.Location = new Point(350, 350);
-            tarjetaMiembro.Size = new Size(1000, 400);
+            tarjetaMiembro.Size = new Size(1000, 500);
             tarjetaMiembro.BorderStyle = BorderStyle.FixedSingle;
             tarjetaMiembro.Visible = false;
             this.Controls.Add(tarjetaMiembro);
@@ -121,7 +121,7 @@ namespace Presentacion
                     editarLbl.Font = new Font("Futura", 22, FontStyle.Underline);
                     editarLbl.ForeColor = Color.Blue;
                     editarLbl.AutoSize = true;
-                    editarLbl.Location = new Point(1100, 20);
+                    editarLbl.Location = new Point(800, 20);
                     editarLbl.Cursor = Cursors.Hand;
                     editarLbl.Click += (s, ev) => ActivarModoEdicion(miembro);
                     tarjetaMiembro.Controls.Add(editarLbl);
@@ -173,7 +173,7 @@ namespace Presentacion
         {
             tarjetaMiembro.Controls.Clear();
             PictureBox foto = new PictureBox();
-            foto.Size = new Size(500, 500);
+            foto.Size = new Size(400, 400);
             foto.Location = new Point(20, 20);
             foto.SizeMode = PictureBoxSizeMode.StretchImage;
 
@@ -186,25 +186,24 @@ namespace Presentacion
             }
 
             tarjetaMiembro.Controls.Add(foto);
-
-            int baseX = 580;
+            int baseX = 450; // posición a la derecha de la imagen
             int baseY = 20;
-            int salto = 90;
+            int salto = 65;
 
             tarjetaMiembro.Controls.Add(CrearLabel("ID:", baseX, baseY, 55));
             tarjetaMiembro.Controls.Add(CrearLabel(miembro.IdMiembro.ToString(), baseX + 55, baseY, 300));
 
             // TextBoxes editables
-            tarjetaMiembro.Controls.Add(CrearLabel("Nombre(s):", baseX, baseY += salto, 180));
-            TextBox nomTxt = CrearTextBox(miembro.Nombres, baseX + 175, baseY, 300);
+            tarjetaMiembro.Controls.Add(CrearLabel("Nombre(s):", baseX, baseY += salto, 170));
+            TextBox nomTxt = CrearTextBox(miembro.Nombres, baseX + 175, baseY, 330);
             tarjetaMiembro.Controls.Add(nomTxt);
 
-            tarjetaMiembro.Controls.Add(CrearLabel("Apellido Paterno:", baseX, baseY += salto, 265));
-            TextBox apePaternoTxt = CrearTextBox(miembro.ApellidoPaterno, baseX + 265, baseY, 300);
+            tarjetaMiembro.Controls.Add(CrearLabel("Apellido Paterno:", baseX, baseY += salto, 237));
+            TextBox apePaternoTxt = CrearTextBox(miembro.ApellidoPaterno, baseX + 235, baseY, 285);
             tarjetaMiembro.Controls.Add(apePaternoTxt);
 
-            tarjetaMiembro.Controls.Add(CrearLabel("Apellido Materno:", baseX, baseY += salto, 270));
-            TextBox apeMaternoTxt = CrearTextBox(miembro.ApellidoMaterno, baseX + 265, baseY, 300);
+            tarjetaMiembro.Controls.Add(CrearLabel("Apellido Materno:", baseX, baseY += salto, 241));
+            TextBox apeMaternoTxt = CrearTextBox(miembro.ApellidoMaterno, baseX + 238, baseY, 282);
             tarjetaMiembro.Controls.Add(apeMaternoTxt);
 
             tarjetaMiembro.Controls.Add(CrearLabel("Teléfono:", baseX, baseY += salto, 148));
@@ -219,7 +218,7 @@ namespace Presentacion
             btnGuardar.Text = "Guardar";
             btnGuardar.Font = new Font("Race Sport", 16, FontStyle.Bold);
             btnGuardar.Size = new Size(180, 50);
-            btnGuardar.Location = new Point(1100, 20);
+            btnGuardar.Location = new Point(foto.Location.X + 100,foto.Location.Y + foto.Size.Height + 15);
             btnGuardar.BackColor = Color.ForestGreen;
             btnGuardar.ForeColor = Color.White;
             btnGuardar.Click += (s, ev) =>
