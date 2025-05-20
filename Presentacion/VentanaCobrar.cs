@@ -12,6 +12,8 @@ namespace Presentacion
 {
     internal class VentanaCobrar : Form
     {
+        public bool confirmacion { get; set; }
+
         public VentanaCobrar(String nombreMembresia, Decimal precioMembresia, int id)
         {
             this.Text = "Cobro";
@@ -124,8 +126,8 @@ namespace Presentacion
                 }else if(id == 0)
                 {
                     cambioTxt.Text = cambio.ToString("F2"); // Muestra el cambio con 2 decimales
-
                     MessageBox.Show("Pago realizado correctamente. Cambio: $" + cambioTxt.Text, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    confirmacion = true;
                 }
                 else if(id != 0)
                 {
@@ -133,7 +135,11 @@ namespace Presentacion
                     miembro.RenovarMembresia(id, precioMembresia, nombreMembresia);
                     cambioTxt.Text = cambio.ToString("F2"); // Muestra el cambio con 2 decimales
                     MessageBox.Show("Pago realizado correctamente. Cambio: $" + cambioTxt.Text, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
+                    //this.Close();
+                }
+                else
+                {
+                    confirmacion = false;
                 }
             };
 

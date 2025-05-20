@@ -12,7 +12,7 @@ namespace Entidad
         public string Tipo { get; set; }
         public decimal Precio { get; set; }
 
-        public int Id { get; set; }
+        public int Id_membresia { get; set; }
 
         public int Duracion { get; set; }
 

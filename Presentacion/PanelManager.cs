@@ -22,6 +22,7 @@ namespace Presentación
         public static TextBox nombreTxt, apePaternoTxt, apeMaternoTxt, telefonoTxt;
         Button registrarBtn = new Button();
         MiembroServicio miembroServicio;
+        VentanaCobrar ventanaCobrar;
 
         public PanelManager(Panel mainPanel)
         {
@@ -223,6 +224,7 @@ namespace Presentación
             registrarBtn.FlatStyle = FlatStyle.Flat;
             registrarBtn.Cursor = Cursors.Hand;
             registrarBtn.FlatAppearance.BorderSize = 0;
+            registrarBtn.Enabled = false;
             MiembroServicio servicio = new MiembroServicio();
             DateTime FechaRegistro = DateTime.Now.Date;
 
@@ -240,12 +242,13 @@ namespace Presentación
 
                 byte[] imagenBytes = LeerImagenComoBytes($"C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos/{nombreTxt.Text}.jpg");
 
-                var idMembresia = (int)membresiaCombo.SelectedValue;
-                if (idMembresia == 0)
+                int idMembresia;
+                if (!int.TryParse(membresiaCombo.SelectedValue?.ToString(), out idMembresia))
                 {
-                    registrarBtn.Enabled = false;
+                    MessageBox.Show("El ID de la membresía no es válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+                Console.WriteLine("ID de membresía convertido: " + idMembresia);
 
                 int idAsignado = servicio.RegistrarMiembro(
                     idMembresia,
@@ -311,7 +314,6 @@ namespace Presentación
             flechaBtn.ImageAlign = ContentAlignment.MiddleCenter;
             flechaBtn.Cursor = Cursors.Hand;
             flechaBtn.FlatAppearance.BorderSize = 0;
-
             //Botón de cobrar
             cobrarBtn = new Button();
             cobrarBtn.BackgroundImage = Image.FromFile("Recursos/cobrar.png");
@@ -331,11 +333,21 @@ namespace Presentación
                     var nombreMembresia = membresiaSeleccionada.Tipo;
                     var precioMembresia = membresiaSeleccionada.Precio;
 
-                    var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia, 0);
+                    ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia, 0);
+                    ventanaCobrar.FormClosed += (a, E) =>
+                    {
+                        if (ventanaCobrar.confirmacion)
+                        {
+                            registrarBtn.Enabled = true;
+                        }
+                    };
+
                     ventanaCobrar.Show();
+                    
                 }
                 else
                     MessageBox.Show("Por favor, seleccione una membresía válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             };
 
             //Agregar componentes a la interfaz
@@ -655,7 +667,7 @@ namespace Presentación
             List<Membresia> membresias = memCombo.ObtenerMembresias();
 
             // Agregar opción por defecto
-            membresias.Insert(0, new Membresia { Id = 0, Tipo = "Seleccionar membresía", Precio = 0 });
+            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo = "Seleccionar membresía", Precio = 0 });
 
             // Asignar propiedades al ComboBox recibido
             combo.DataSource = membresias;
@@ -683,13 +695,10 @@ namespace Presentación
             if (ValidarDatos.ValidarTexto(nombreTxt.Text))
             {
                 nombreTxt.BackColor = Color.White; // Válido
-                registrarBtn.Enabled = true;
             }
             else
             {
                 nombreTxt.BackColor = Color.LightPink; // Inválido
-                registrarBtn.Enabled = false;
-
             }
         }
         private void apePaternoTxt_TextChanged(object sender, EventArgs e)
@@ -697,12 +706,10 @@ namespace Presentación
             if (ValidarDatos.ValidarTexto(apePaternoTxt.Text))
             {
                 apePaternoTxt.BackColor = Color.White; // Válido
-                registrarBtn.Enabled = true;
             }
             else
             {
                 apePaternoTxt.BackColor = Color.LightPink; // Inválido
-                registrarBtn.Enabled = false;
             }
         }
         private void apeMaternoTxt_TextChanged(object sender, EventArgs e)
@@ -710,12 +717,10 @@ namespace Presentación
             if (ValidarDatos.ValidarTexto(apeMaternoTxt.Text))
             {
                 apeMaternoTxt.BackColor = Color.White; // Válido
-                registrarBtn.Enabled = true;
             }
             else
             {
                 apeMaternoTxt.BackColor = Color.LightPink; // Inválido
-                registrarBtn.Enabled = false;
             }
         }
         private void telefonoTxt_TextChanged(object sender, EventArgs e)
@@ -723,12 +728,10 @@ namespace Presentación
             if (ValidarDatos.ValidarSoloNumeros(telefonoTxt.Text))
             {
                 telefonoTxt.BackColor = Color.White;
-                registrarBtn.Enabled = true;
             }
             else
             {
                 telefonoTxt.BackColor = Color.LightPink;
-                registrarBtn.Enabled = false;
             }
         }
         private void fechaPicker_ValueChanged(object sender, EventArgs e)
@@ -737,37 +740,12 @@ namespace Presentación
             {
                 fechaLbl.Text = "✔ Fecha válida";
                 fechaLbl.ForeColor = Color.Green;
-                registrarBtn.Enabled = true;
             }
             else
             {
                 fechaLbl.Text = "✖ Fecha inválida";
                 fechaLbl.ForeColor = Color.Red;
-                registrarBtn.Enabled = false;
             }
         }
-        //private Image ConvertirBytesAImagen(byte[] bytes)
-        //{
-        //    if (bytes == null || bytes.Length == 0)
-        //    {
-        //        MessageBox.Show("La imagen está vacía o no fue encontrada.");
-        //        return null;
-        //    }
-
-        //    try
-        //    {
-        //        using (MemoryStream ms = new MemoryStream(bytes))
-        //        {
-        //            return Image.FromStream(ms);
-        //        }
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        MessageBox.Show("Error al convertir imagen: " + ex.Message);
-        //        // Opcional: guardar los bytes en un archivo para inspección
-        //        File.WriteAllBytes("imagen_debug.bin", bytes);
-        //        return null;
-        //    }
-        //}
     }
 }

@@ -74,7 +74,7 @@ namespace Presentacion
             // Hacer filas más altas
             tablaMembresias.RowTemplate.Height = 40;
 
-            tablaMembresias.Columns.Add("Id", "Id");
+            tablaMembresias.Columns.Add("Id_membresia", "Id_membresia");
 
             // Columna de precio con formato decimal
             tablaMembresias.Columns.Add("Membresía", "Membresía");
@@ -96,7 +96,7 @@ namespace Presentacion
 
             foreach (var m in membresias)
             {
-                tablaMembresias.Rows.Add(m.Id, m.Tipo, m.Precio);
+                tablaMembresias.Rows.Add(m.Id_membresia, m.Tipo, m.Precio);
             }
 
 
@@ -160,7 +160,7 @@ namespace Presentacion
 
                     Membresia m = new Membresia
                     {
-                        Id = Convert.ToInt32(tablaMembresias.Rows[fila].Cells["Id"].Value),
+                        Id_membresia = Convert.ToInt32(tablaMembresias.Rows[fila].Cells["Id"].Value),
                         Tipo = tablaMembresias.Rows[fila].Cells["Membresía"].Value.ToString(),
                         Precio = Convert.ToDecimal(tablaMembresias.Rows[fila].Cells["Precio"].Value)
                     };

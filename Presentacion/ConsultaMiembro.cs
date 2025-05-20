@@ -194,18 +194,37 @@ namespace Presentacion
             // TextBoxes editables
             tarjetaMiembro.Controls.Add(CrearLabel("Nombre(s):", baseX, baseY += salto, 170));
             TextBox nomTxt = CrearTextBox(miembro.Nombres, baseX + 175, baseY, 330);
+            nomTxt.CharacterCasing = CharacterCasing.Upper;
+            nomTxt.TextChanged += (s, e) =>
+            {
+                ValidarDatos.ValidarTexto(nomTxt.Text);
+            };
             tarjetaMiembro.Controls.Add(nomTxt);
 
             tarjetaMiembro.Controls.Add(CrearLabel("Apellido Paterno:", baseX, baseY += salto, 237));
             TextBox apePaternoTxt = CrearTextBox(miembro.ApellidoPaterno, baseX + 235, baseY, 285);
+            apePaternoTxt.CharacterCasing = CharacterCasing.Upper;
+            apePaternoTxt.TextChanged += (s, e) =>
+            {
+                ValidarDatos.ValidarTexto(apePaternoTxt.Text);
+            };
             tarjetaMiembro.Controls.Add(apePaternoTxt);
 
             tarjetaMiembro.Controls.Add(CrearLabel("Apellido Materno:", baseX, baseY += salto, 241));
             TextBox apeMaternoTxt = CrearTextBox(miembro.ApellidoMaterno, baseX + 238, baseY, 282);
+            apeMaternoTxt.CharacterCasing = CharacterCasing.Upper;
+            apeMaternoTxt.TextChanged += (s, e) =>
+            {
+                ValidarDatos.ValidarTexto(apeMaternoTxt.Text);
+            };
             tarjetaMiembro.Controls.Add(apeMaternoTxt);
 
             tarjetaMiembro.Controls.Add(CrearLabel("Teléfono:", baseX, baseY += salto, 148));
             TextBox telefonoTxt = CrearTextBox(miembro.NumeroTelefono, baseX + 148, baseY, 300);
+            telefonoTxt.TextChanged += (s, e) =>
+            {
+                ValidarDatos.ValidarSoloNumeros(telefonoTxt.Text);
+            };
             tarjetaMiembro.Controls.Add(telefonoTxt);
 
             tarjetaMiembro.Controls.Add(CrearLabel("Fecha Nacimiento:", baseX, baseY += salto, 280));

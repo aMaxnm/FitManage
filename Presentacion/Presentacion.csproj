@@ -123,6 +123,7 @@
     <Content Include="Recursos\inventario.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Recursos\laminahomegym.png" />
     <Content Include="Recursos\login.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
