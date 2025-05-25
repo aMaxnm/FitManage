@@ -33,9 +33,10 @@ namespace Presentacion
             tituloMiembroLbl.Text = "MIEMBROS";
             tituloMiembroLbl.Font = new Font("Race Sport", 50, FontStyle.Bold);
             this.Controls.Add(tituloMiembroLbl);
-            tituloMiembroLbl.Location = new Point(600, 10);
+            tituloMiembroLbl.Location = new Point(600, 4);
             tituloMiembroLbl.AutoSize = true;
-            tituloMiembroLbl.ForeColor = Color.Black;       
+            tituloMiembroLbl.ForeColor = Color.Black;
+            tituloMiembroLbl.BackColor = Color.Transparent;
 
             // Lista de miembros
             Dictionary<int, string> memDict = new Dictionary<int, string>
@@ -52,7 +53,7 @@ namespace Presentacion
                 Materno = m.ApellidoMaterno,
                 Membresía = memDict[m.IdMembresia],
             }).ToList();
-            listaMiembro.Location = new Point(350, 130);
+            listaMiembro.Location = new Point(350, 100);
             listaMiembro.Size = new Size(1000, 200);
             listaMiembro.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             listaMiembro.ReadOnly = true;
@@ -68,8 +69,8 @@ namespace Presentacion
 
             // Tarjeta detalle
             tarjetaMiembro = new Panel();
-            tarjetaMiembro.Location = new Point(350, 350);
-            tarjetaMiembro.Size = new Size(1000, 500);
+            tarjetaMiembro.Location = new Point(350, 305);
+            tarjetaMiembro.Size = new Size(1000, 490);
             tarjetaMiembro.BorderStyle = BorderStyle.FixedSingle;
             tarjetaMiembro.Visible = false;
             this.Controls.Add(tarjetaMiembro);

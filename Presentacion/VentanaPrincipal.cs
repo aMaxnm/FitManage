@@ -22,7 +22,7 @@ namespace Presentacion
         Button entradaBtn, consultaMiembroBtn, registroClienteBtn, ventaBtn, inventarioBtn;
         LinkLabel cerrarSesionLbl = new LinkLabel();
         PanelManager panelManager;
-        Panel panelRegistro;
+        Panel panelRegistroNuevo;
 
         //panel desplegable con botones
         Panel subBotonesPanel = new Panel();
@@ -39,9 +39,9 @@ namespace Presentacion
             InicializarComponentes();
             SubBotones();
             panelManager = new PanelManager(mainPanel);
+            Panel panelRegistroNuevo = panelManager.PanelRegistro("Registro", Color.WhiteSmoke);
             registroClienteBtn.Click += (s, e) =>
             {
-                Panel panelRegistroNuevo = panelManager.PanelRegistro("Registro", Color.WhiteSmoke);
                 panelManager.MostrarPanel(panelRegistroNuevo);
             };
             consultaMiembroBtn.Click += (s, e) => panelManager.MostrarPanel(new ConsultaMiembro());
