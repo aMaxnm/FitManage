@@ -14,7 +14,6 @@ namespace Presentacion
     public partial class VentanaPrincipal : Form
     {
         Timer checarCursor; // se utiliza para manejar el despliegue de los botones de inventario
-        ErrorProvider errorProvider = new ErrorProvider(); // se utiliza para las validaciones de los campos de texto
         Panel sidePanel = new Panel(); //  barra de navegacion
         Panel mainPanel = new Panel(); // panel principal donde se muesttran las funciones
         Panel logoPanel = new Panel();
@@ -23,6 +22,7 @@ namespace Presentacion
         Button entradaBtn, consultaMiembroBtn, registroClienteBtn, ventaBtn, inventarioBtn;
         LinkLabel cerrarSesionLbl = new LinkLabel();
         PanelManager panelManager;
+        Panel panelRegistroNuevo;
 
         //panel desplegable con botones
         Panel subBotonesPanel = new Panel();
@@ -31,9 +31,7 @@ namespace Presentacion
         {
 
         }
-
         Button tiposMembresiaBtn, productosBtn, registroVentaBtn;
-
         public VentanaPrincipal()
         {
             checarCursor = new Timer();
@@ -41,19 +39,26 @@ namespace Presentacion
             InicializarComponentes();
             SubBotones();
             panelManager = new PanelManager(mainPanel);
-            ConsultaMiembro consultaMiembroPanel = new ConsultaMiembro();
-            Panel panelRegistro = panelManager.PanelRegistro("Registro", Color.DarkGray);
-
-            registroClienteBtn.Click += (s, e) => panelManager.MostrarPanel(panelRegistro);
-            consultaMiembroBtn.Click += (s, e) => panelManager.MostrarPanel(consultaMiembroPanel);
+            Panel panelRegistroNuevo = panelManager.PanelRegistro("Registro", Color.WhiteSmoke);
+            registroClienteBtn.Click += (s, e) =>
+            {
+                panelManager.MostrarPanel(panelRegistroNuevo);
+            };
+            consultaMiembroBtn.Click += (s, e) => panelManager.MostrarPanel(new ConsultaMiembro());
+            EditarMembresiaPanel editarMembresiaPanel = new EditarMembresiaPanel();
+            tiposMembresiaBtn.Click += (s, e) => panelManager.MostrarPanel(editarMembresiaPanel);
             entradaBtn.Click += (s, e) => panelManager.MostrarPanel(panelManager.AccesoPanel());
+             productosBtn.Click += (s, e) =>
+    {
+        PanelProducto panelProducto = new PanelProducto();
+        panelManager.MostrarPanel(panelProducto);
+    };
         }
         private void InicializarComponentes()
         {
             this.WindowState = FormWindowState.Maximized; // ventana completa
             this.MinimumSize = new Size(800, 600);
             this.FormBorderStyle = FormBorderStyle.Sizable;
-
             //SidePanel
             sidePanel.BackColor = Color.Gray;
             sidePanel.BackgroundImage = Image.FromFile("Recursos/fondoSide.png");
@@ -61,25 +66,21 @@ namespace Presentacion
             sidePanel.Dock = DockStyle.Left;
             sidePanel.Width = 200;
             this.Controls.Add(sidePanel);
-
             //mainPanel
             mainPanel.BackColor = Color.WhiteSmoke;
             mainPanel.Dock = DockStyle.Fill;
             this.Controls.Add(mainPanel);
-
             //logoPanel
             logoPanel.BackgroundImage = Image.FromFile("Recursos/logo.png");
             logoPanel.BackgroundImageLayout = ImageLayout.Stretch;
             logoPanel.Dock = DockStyle.Top;
             logoPanel.Height = 100;
             sidePanel.Controls.Add(logoPanel);
-
             //Panel de subBotones
             subBotonesPanel.Size = new Size(150, 150);
             subBotonesPanel.Location = new Point(sidePanel.Width + 1, 440);
             subBotonesPanel.BackColor = Color.WhiteSmoke;
             subBotonesPanel.Visible = false;
-
             //Botón de entrada
             entradaBtn = new Button();
             entradaBtn.BackColor = negro;
@@ -134,7 +135,6 @@ namespace Presentacion
             cerrarSesionLbl.BackColor = Color.Transparent;
             cerrarSesionLbl.Location = new Point(0, 600);
             cerrarSesionLbl.Size = new Size(sidePanel.Width, 65);
-
             //Agregar los componentes al sidePanel
             sidePanel.Controls.Add(entradaBtn);
             sidePanel.Controls.Add(consultaMiembroBtn);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using Entidad;
+using System.Data.SqlClient;
 
 namespace AccesoDatos
 {
@@ -38,7 +39,6 @@ namespace AccesoDatos
                             FechaRegistro = reader.GetDateTime("FechaRegistro"),
                             FechaVencimiento = reader.GetDateTime("Fecha_Vencimiento"),
                             Fotografia = reader["Foto"] as byte[]
-
                         });
                     }
                 }
@@ -51,7 +51,6 @@ namespace AccesoDatos
         {
             try
             {
-
                 using (var connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
@@ -122,17 +121,19 @@ namespace AccesoDatos
 
         public int AgregarMiembro(Miembro miembro)
         {
+            int idGenerado = -1;
             try
             {
                 using (var connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = "INSERT INTO fitmanage.miembro (Id_miembro, Id_membresia, Nombre, Ap_paterno, Ap_materno, Fecha_nacimiento, Num_celular, FechaRegistro, Fecha_vencimiento, Foto) " +
-                                   "VALUES (@Id_miembro, @Id_membresia, @Nombre, @Ap_paterno, @Ap_materno, @Fecha_nacimiento, @Num_celular, @FechaRegistro, @Fecha_vencimiento, @Foto);";
+                    string query = "INSERT INTO fitmanage.miembro (Id_membresia, Nombre, Ap_paterno, Ap_materno, Fecha_nacimiento, Num_celular, FechaRegistro, Fecha_vencimiento, Foto) " +
+                                   "VALUES (@Id_membresia, @Nombre, @Ap_paterno, @Ap_materno, @Fecha_nacimiento, @Num_celular, @FechaRegistro, @Fecha_vencimiento, @Foto);";
+
+                    string lastIdQuery = "SELECT LAST_INSERT_ID();";
 
                     using (var command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@Id_miembro", miembro.IdMiembro);
                         command.Parameters.AddWithValue("@Id_membresia", miembro.IdMembresia);
                         command.Parameters.AddWithValue("@Nombre", miembro.Nombres);
                         command.Parameters.AddWithValue("@Ap_paterno", miembro.ApellidoPaterno);
@@ -146,15 +147,21 @@ namespace AccesoDatos
                         int filasAfectadas = command.ExecuteNonQuery();
                         if (filasAfectadas > 0)
                         {
-                            Console.WriteLine($"Miembro registrado correctamente con ID: {miembro.IdMiembro}");
-                            return miembro.IdMiembro; // 🔹 Retorna el ID generado
+                            using (var lastIdCommand = new MySqlCommand(lastIdQuery, connection))
+                            {
+                                idGenerado = Convert.ToInt32(lastIdCommand.ExecuteScalar());
+                            }
+
+                            Console.WriteLine($"Miembro registrado correctamente con ID: {idGenerado}");
+                            return idGenerado;
                         }
                         else
                         {
                             Console.WriteLine("Error: No se insertaron datos.");
-                            return -1; // 🔹 Retorna -1 en caso de error
+                            return -1;
                         }
                     }
+
                 }
             }
             catch (Exception ex)
@@ -200,6 +207,39 @@ namespace AccesoDatos
             }
         }
 
+        public bool RenovarMembresia(int idMiembro, int nuevaMembresiaId, DateTime FV)
+        {
+            bool actualizado = false;
+            DateTime nuevaFechaRegistro = DateTime.Now.Date;
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "UPDATE fitmanage.miembro " +
+                                   "SET Id_membresia = @Id_membresia, FechaRegistro = @FechaRegistro, Fecha_Vencimiento = @Fecha_Vencimiento " + 
+                                   "WHERE Id_miembro = @Id_miembro";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id_miembro", idMiembro);
+                        command.Parameters.AddWithValue("@Id_membresia", nuevaMembresiaId);
+                        command.Parameters.AddWithValue("@FechaRegistro", nuevaFechaRegistro);
+                        command.Parameters.AddWithValue("@Fecha_Vencimiento", FV);
+
+                        int filasAfectadas = command.ExecuteNonQuery();
+                        actualizado = filasAfectadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al renovar membresía: " + ex.Message);
+            }
+
+            return actualizado; // 🔹 Retorna `true` si la actualización fue exitosa
+        }
+
         // Eliminar un miembro
         public void EliminarMiembro(int idMiembro)
         {
@@ -213,6 +253,29 @@ namespace AccesoDatos
                     command.Parameters.AddWithValue("@Id_miembro", idMiembro);
                     command.ExecuteNonQuery();
                 }
+            }
+        }
+        //Actualizar Datos
+        public void Actualizar(Miembro miembro)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                string query = @"UPDATE Miembro
+                         SET Nombre = @Nombres,
+                             Ap_paterno = @ApellidoPaterno,
+                             Ap_materno = @ApellidoMaterno,
+                             Num_celular = @NumeroTelefono
+                         WHERE Id_miembro = @IdMiembro";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Nombres", miembro.Nombres);
+                cmd.Parameters.AddWithValue("@ApellidoPaterno", miembro.ApellidoPaterno);
+                cmd.Parameters.AddWithValue("@ApellidoMaterno", miembro.ApellidoMaterno);
+                cmd.Parameters.AddWithValue("@NumeroTelefono", miembro.NumeroTelefono);
+                cmd.Parameters.AddWithValue("@IdMiembro", miembro.IdMiembro);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
         public Miembro ObtenerMiembroPorId(int idMiembro)
@@ -253,3 +316,4 @@ namespace AccesoDatos
         }
     }
 }
+

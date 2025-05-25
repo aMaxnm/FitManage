@@ -16,9 +16,9 @@ namespace Negocio
         {
             return membresiaDAO.ObtenerMembresias();
         }
-        public Membresia ObtenerMembresiaPorId(int idMembresia)
+        public void EditarMembresia(Membresia m)
         {
-            return membresiaDAO.ObtenerMembresiaPorId(idMembresia);
+            new MembresiaDAO().EditarMembresia(m);
         }
     }
 }

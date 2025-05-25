@@ -50,11 +50,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgregarMiembro.cs" />
+    <Compile Include="loginAutenticasion.cs" />
     <Compile Include="MembresiaServicio.cs" />
     <Compile Include="MiembroServicio.cs" />
+    <Compile Include="ProductoServicio.cs" />
+    <Compile Include="UsuarioServicio.cs" />
     <Compile Include="ValidarDatos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

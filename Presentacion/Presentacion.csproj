@@ -58,8 +58,18 @@
     <Compile Include="ConsultaMiembro.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EditarMembresiaPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Fotografia.cs" />
+    <Compile Include="loginPanel.cs" />
+    <Compile Include="LoginVentana.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PanelManager.cs" />
+    <Compile Include="PanelProducto.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="VentanaCobrar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,7 +126,8 @@
     <Content Include="Recursos\inventario.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Recursos\laminahomegym.png">
+    <Content Include="Recursos\laminahomegym.png" />
+    <Content Include="Recursos\login.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Recursos\logo.png">

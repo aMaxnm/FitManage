@@ -12,7 +12,6 @@ namespace Negocio
             {
                 return !string.IsNullOrEmpty(texto) && System.Text.RegularExpressions.Regex.IsMatch(texto, "^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$");
             }
-
             public static bool ValidarSoloNumeros(string telefono)
             {
                 return !string.IsNullOrEmpty(telefono) && System.Text.RegularExpressions.Regex.IsMatch(telefono, "^[0-9]+$");
@@ -22,7 +21,10 @@ namespace Negocio
             {
                 return fechaSeleccionada.Date <= DateTime.Now.Date; // Debe ser hoy o anterior
             }
-
+            public static bool ValidarCobro(float precio, float cantidad)
+            {
+            return true;
+            }
         public static bool ValidarImagen(object imagen)
             {
                 return imagen != null;

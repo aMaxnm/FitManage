@@ -22,6 +22,7 @@ namespace Presentación
         public static TextBox nombreTxt, apePaternoTxt, apeMaternoTxt, telefonoTxt;
         Button registrarBtn = new Button();
         MiembroServicio miembroServicio;
+        VentanaCobrar ventanaCobrar;
 
         public PanelManager(Panel mainPanel)
         {
@@ -162,7 +163,7 @@ namespace Presentación
             //Panel para la foto
             fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
             fotoMiembroPct.SizeMode = PictureBoxSizeMode.StretchImage;
-            fotoMiembroPct.Size = new Size(300, 350);
+            fotoMiembroPct.Size = new Size(380, 350);
             fotoMiembroPct.Location = new Point(750, 180);
             fotoMiembroPct.BorderStyle = BorderStyle.FixedSingle;
 
@@ -177,14 +178,15 @@ namespace Presentación
             abrirCamara.Click += Fotografia.AbrirCamara_Click;
 
             //Botones para el formulario
+            int anchoBtn = fotoMiembroPct.Size.Width / 3 - 15;
             tomarBtn = new Button();
             tomarBtn.BackgroundImage = Image.FromFile("Recursos/photo.png");
             tomarBtn.BackgroundImageLayout = ImageLayout.Stretch;
             tomarBtn.BackColor = Color.Gray;
             tomarBtn.FlatStyle = FlatStyle.Flat;
             tomarBtn.ImageAlign = ContentAlignment.MiddleCenter;
-            tomarBtn.Location = new Point(750, 550);
-            tomarBtn.Size = new Size(80, 50);
+            tomarBtn.Location = new Point(fotoMiembroPct.Location.X, 550);
+            tomarBtn.Size = new Size(anchoBtn, 55);
             tomarBtn.Cursor = Cursors.Hand;
             tomarBtn.FlatAppearance.BorderSize = 0;
             tomarBtn.Click += Fotografia.TomarBtn_Click;
@@ -195,8 +197,8 @@ namespace Presentación
             retomarBtn.BackColor = Color.Gray;
             retomarBtn.FlatStyle = FlatStyle.Flat;
             retomarBtn.ImageAlign = ContentAlignment.MiddleCenter;
-            retomarBtn.Location = new Point(860, 550);
-            retomarBtn.Size = new Size(80, 50);
+            retomarBtn.Location = new Point(tomarBtn.Location.X + tomarBtn.Size.Width + 23, 550);
+            retomarBtn.Size = new Size(anchoBtn, 55);
             retomarBtn.Cursor = Cursors.Hand;
             retomarBtn.FlatAppearance.BorderSize = 0;
             retomarBtn.Click += Fotografia.RetomarBtn_Click;
@@ -207,8 +209,8 @@ namespace Presentación
             importarBtn.BackColor = Color.Gray;
             importarBtn.FlatStyle = FlatStyle.Flat;
             importarBtn.ImageAlign = ContentAlignment.MiddleCenter;
-            importarBtn.Location = new Point(970, 550);
-            importarBtn.Size = new Size(80, 50);
+            importarBtn.Location = new Point(fotoMiembroPct.Location.X + fotoMiembroPct.Size.Width - anchoBtn, 550);
+            importarBtn.Size = new Size(anchoBtn, 55);
             importarBtn.Cursor = Cursors.Hand;
             importarBtn.FlatAppearance.BorderSize = 0;
             importarBtn.Click += Fotografia.ImportarBtn_Click;
@@ -222,9 +224,10 @@ namespace Presentación
             registrarBtn.FlatStyle = FlatStyle.Flat;
             registrarBtn.Cursor = Cursors.Hand;
             registrarBtn.FlatAppearance.BorderSize = 0;
-            AgregarMiembro servicio = new AgregarMiembro();
+            registrarBtn.Enabled = false;
+            MiembroServicio servicio = new MiembroServicio();
             DateTime FechaRegistro = DateTime.Now.Date;
-          
+
             registrarBtn.Click += (s, e) =>
             {
                 nombreTxt.TextChanged -= nombreTxt_TextChanged;
@@ -237,22 +240,42 @@ namespace Presentación
                     return File.ReadAllBytes(ruta);
                 }
 
-                // Uso:
                 byte[] imagenBytes = LeerImagenComoBytes($"C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos/{nombreTxt.Text}.jpg");
-                var idMembresia = (int)membresiaCombo.SelectedValue;
-                int idAsignado = servicio.RegistrarMiembro(
-                        idMembresia,
-                        nombreTxt.Text,
-                        apePaternoTxt.Text,
-                        apeMaternoTxt.Text,
-                        DateTime.Parse(fechaPicker.Text),
-                        telefonoTxt.Text,
-                        FechaRegistro,
-                        imagenBytes
-                    );
 
-                //Mostrar el ID retornado en un MessageBox
-                if (idAsignado > 0)
+                int idMembresia;
+                if (!int.TryParse(membresiaCombo.SelectedValue?.ToString(), out idMembresia))
+                {
+                    MessageBox.Show("El ID de la membresía no es válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                Console.WriteLine("ID de membresía convertido: " + idMembresia);
+
+                int idAsignado = servicio.RegistrarMiembro(
+                    idMembresia,
+                    nombreTxt.Text.Trim(),
+                    apePaternoTxt.Text.Trim(),
+                    apeMaternoTxt.Text.Trim(),
+                    DateTime.Parse(fechaPicker.Text),
+                    telefonoTxt.Text.Trim(),
+                    FechaRegistro,
+                    imagenBytes
+                );
+
+                if (idAsignado == -2)
+                {
+                    MessageBox.Show("Ya existe un miembro con esos datos.", "Registro duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    nombreTxt.Text = "";
+                    apeMaternoTxt.Text = "";
+                    apePaternoTxt.Text = "";
+                    fechaPicker.Value = DateTime.Now;
+                    telefonoTxt.Text = "";
+                    fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
+                }
+                else if (idAsignado == -1)
+                {
+                    MessageBox.Show("Ocurrió un error al registrar el miembro.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
                 {
                     MessageBox.Show($"Cliente registrado correctamente.\nID asignado: {idAsignado}", "Registro exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     nombreTxt.Text = "";
@@ -261,21 +284,15 @@ namespace Presentación
                     fechaPicker.Value = DateTime.Now;
                     telefonoTxt.Text = "";
                     fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
-                    nombreTxt.TextChanged += nombreTxt_TextChanged;
-                    apePaternoTxt.TextChanged += apePaternoTxt_TextChanged;
-                    apeMaternoTxt.TextChanged += apeMaternoTxt_TextChanged;
-                    telefonoTxt.TextChanged += telefonoTxt_TextChanged;
-                }
-                else if (idMembresia == -1)
-                {
-                    MessageBox.Show("Registro duplicado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show("Error en el registro.", "Campos faltantes.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+                nombreTxt.TextChanged += nombreTxt_TextChanged;
+                apePaternoTxt.TextChanged += apePaternoTxt_TextChanged;
+                apeMaternoTxt.TextChanged += apeMaternoTxt_TextChanged;
+                telefonoTxt.TextChanged += telefonoTxt_TextChanged;
+                fechaLbl.Text = "Fecha de nacimiento";
             };
+
 
             regresarBtn = new Button();
             regresarBtn.Text = "Regresar";
@@ -297,7 +314,6 @@ namespace Presentación
             flechaBtn.ImageAlign = ContentAlignment.MiddleCenter;
             flechaBtn.Cursor = Cursors.Hand;
             flechaBtn.FlatAppearance.BorderSize = 0;
-
             //Botón de cobrar
             cobrarBtn = new Button();
             cobrarBtn.BackgroundImage = Image.FromFile("Recursos/cobrar.png");
@@ -314,14 +330,24 @@ namespace Presentación
             {
                 if (membresiaCombo.SelectedItem is Membresia membresiaSeleccionada && membresiaCombo.SelectedIndex != 0)
                 {
-                    var nombreMembresia = membresiaSeleccionada.Tipo_membresia;
+                    var nombreMembresia = membresiaSeleccionada.Tipo;
                     var precioMembresia = membresiaSeleccionada.Precio;
 
-                    var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia);
+                    ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia, 0);
+                    ventanaCobrar.FormClosed += (a, E) =>
+                    {
+                        if (ventanaCobrar.confirmacion)
+                        {
+                            registrarBtn.Enabled = true;
+                        }
+                    };
+
                     ventanaCobrar.Show();
+                    
                 }
                 else
                     MessageBox.Show("Por favor, seleccione una membresía válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             };
 
             //Agregar componentes a la interfaz
@@ -353,7 +379,6 @@ namespace Presentación
 
             return nuevoPanel;
         }
-
         //Panel de acceso
         public Panel AccesoPanel()
         {
@@ -431,12 +456,25 @@ namespace Presentación
             nuevoPanel.BackColor = Color.WhiteSmoke;
 
             //Labels para loa informacion
+            ComboBox membresiaCombo = new ComboBox();
             Label tituloLbl, idLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, nacimientoLbl, registroLbl ,vencimientoLbl, membresiaLbl, tipoMemLbl;
             Label estado = new Label();
             //Fotografia del cliente
-            PictureBox fotografia;
+            PictureBox fotografia = new PictureBox();
             //Botones necesarios para la ventana de cobro
             Button aceptarBtn;
+
+            // Botón de renovar
+            Button renovarBtn = new Button();
+            renovarBtn.Text = "RENOVAR";
+            renovarBtn.Location = new Point(1100, 700);
+            renovarBtn.AutoSize = true;
+            renovarBtn.Font = new Font("Race Sport", 20);
+            renovarBtn.BackColor = Color.Gray;
+            renovarBtn.ForeColor = Color.White;
+            renovarBtn.FlatStyle = FlatStyle.Flat;
+            renovarBtn.FlatAppearance.BorderSize = 0;
+
 
             tituloLbl = new Label();
             tituloLbl.Text = "ACCESO";
@@ -498,13 +536,22 @@ namespace Presentación
             membresiaLbl.AutoSize = true;
             membresiaLbl.Font = new Font("Tahoma", 18);
 
-            ////Fotografía del cliente
-            //fotografia = new PictureBox();
-            ////fotografia.Image = ConvertirBytesAImagen(miembro.Fotografia);
-            //fotografia.SizeMode = PictureBoxSizeMode.StretchImage;
-            //fotografia.Size = new Size(300, 350);
-            //fotografia.Location = new Point(10, 120);
-            //fotografia.BorderStyle = BorderStyle.FixedSingle;
+            if (miembro.Fotografia != null)
+            {
+                using (var ms = new System.IO.MemoryStream(miembro.Fotografia))
+                {
+                    fotografia.Image = Image.FromStream(ms);
+                }
+            }
+            else
+            {
+                fotografia.Image = Image.FromFile("Recursos/placeholder.jpg");
+            }
+
+            fotografia.SizeMode = PictureBoxSizeMode.StretchImage;
+            fotografia.Size = new Size(280, 350);
+            fotografia.Location = new Point(300, 120);
+            fotografia.BorderStyle = BorderStyle.FixedSingle;
 
             //Botón de aceptar
             aceptarBtn = new Button();
@@ -516,12 +563,17 @@ namespace Presentación
             aceptarBtn.ForeColor = Color.White;
             aceptarBtn.FlatStyle = FlatStyle.Flat;
             aceptarBtn.FlatAppearance.BorderSize = 0;
+            aceptarBtn.Click += (s, e) => { nuevoPanel.Dispose();
+                MostrarPanel(AccesoPanel());
+            };
 
             DateTime fechaActual = DateTime.Today;
             if (miembro.FechaVencimiento < fechaActual)
             {
+                nuevoPanel.Controls.Add(renovarBtn);
+
                 //ComboBox para el tipo de membresía
-                ComboBox membresiaCombo = new ComboBox();
+                //ComboBox membresiaCombo = new ComboBox();
                 membresiaCombo = CargarMembresias(membresiaCombo);
                 membresiaCombo.Location = new Point(700, 710);
                 membresiaCombo.Size = new Size(290, 30);
@@ -565,6 +617,28 @@ namespace Presentación
                 
                 nuevoPanel.Controls.Add(restantesLbl);
             }
+            renovarBtn.Click += (s, e) =>
+            {
+                if (membresiaCombo.SelectedItem is Membresia membresiaSeleccionada && membresiaCombo.SelectedIndex != 0)
+                {
+                    var nombreMembresia = membresiaSeleccionada.Tipo;
+                    var precioMembresia = membresiaSeleccionada.Precio;
+
+                    var ventanaCobrar = new VentanaCobrar(nombreMembresia, precioMembresia, miembro.IdMiembro);
+                    ventanaCobrar.FormClosed += (a, E) =>
+                    {
+                        Console.WriteLine("VentanaCobrar se cerró. Recargando ClienteAcceso...");
+
+                        //Recargar contenido de `ClienteAcceso` después del pago
+                        miembro = miembroServicio.ObtenerMiembroPorId(miembro.IdMiembro);
+                        MostrarPanel(ClienteAcceso(miembro));
+                    };
+
+                    ventanaCobrar.Show();
+                }
+                else
+                    MessageBox.Show("Por favor, seleccione una membresía válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
             estado.Location = new Point(270, 500);
             estado.AutoSize = true;
             estado.Font = new Font("Race Sport", 40);    
@@ -582,18 +656,18 @@ namespace Presentación
             nuevoPanel.Controls.Add(membresiaLbl);
             nuevoPanel.Controls.Add(estado);
             nuevoPanel.Controls.Add(aceptarBtn);
+            nuevoPanel.Controls.Add(fotografia);
             //nuevoPanel.Controls.Add(fotografia);
 
             return nuevoPanel;
         }
-
         private ComboBox CargarMembresias(ComboBox combo)
         {
             MembresiaServicio memCombo = new MembresiaServicio();
             List<Membresia> membresias = memCombo.ObtenerMembresias();
 
             // Agregar opción por defecto
-            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo_membresia = "Seleccionar membresía", Precio = 0 });
+            membresias.Insert(0, new Membresia { Id_membresia = 0, Tipo = "Seleccionar membresía", Precio = 0 });
 
             // Asignar propiedades al ComboBox recibido
             combo.DataSource = membresias;
@@ -602,19 +676,18 @@ namespace Presentación
 
             return combo;
         }
-
-
-        public void MostrarPanel(Panel panel)
+        public void MostrarPanel(Panel nuevoPanel)
         {
             if (panelConsulta != null)
             {
-                panelConsulta.Visible = false;
                 mainPanel.Controls.Remove(panelConsulta);
-            } // Oculta el panel anterior
+                panelConsulta.Controls.Remove(panelConsulta); // 🔸 Libera recursos y destruye el panel viejo
+                panelConsulta = null;
+            }
 
-            panelConsulta = panel;
-            panelConsulta.Visible = true; // Muestra el nuevo panel
-            mainPanel.Controls.Add(panelConsulta); // Agrega el panel al mainPanel
+            panelConsulta = nuevoPanel;
+            panelConsulta.Visible = true;
+            mainPanel.Controls.Add(panelConsulta);
             panelConsulta.BringToFront();
         }
         private void nombreTxt_TextChanged(object sender, EventArgs e)
@@ -622,27 +695,21 @@ namespace Presentación
             if (ValidarDatos.ValidarTexto(nombreTxt.Text))
             {
                 nombreTxt.BackColor = Color.White; // Válido
-                registrarBtn.Enabled = true;
             }
             else
             {
                 nombreTxt.BackColor = Color.LightPink; // Inválido
-                registrarBtn.Enabled = false;
-
             }
         }
-
         private void apePaternoTxt_TextChanged(object sender, EventArgs e)
         {
             if (ValidarDatos.ValidarTexto(apePaternoTxt.Text))
             {
                 apePaternoTxt.BackColor = Color.White; // Válido
-                registrarBtn.Enabled = true;
             }
             else
             {
                 apePaternoTxt.BackColor = Color.LightPink; // Inválido
-                registrarBtn.Enabled = false;
             }
         }
         private void apeMaternoTxt_TextChanged(object sender, EventArgs e)
@@ -650,12 +717,10 @@ namespace Presentación
             if (ValidarDatos.ValidarTexto(apeMaternoTxt.Text))
             {
                 apeMaternoTxt.BackColor = Color.White; // Válido
-                registrarBtn.Enabled = true;
             }
             else
             {
                 apeMaternoTxt.BackColor = Color.LightPink; // Inválido
-                registrarBtn.Enabled = false;
             }
         }
         private void telefonoTxt_TextChanged(object sender, EventArgs e)
@@ -663,12 +728,10 @@ namespace Presentación
             if (ValidarDatos.ValidarSoloNumeros(telefonoTxt.Text))
             {
                 telefonoTxt.BackColor = Color.White;
-                registrarBtn.Enabled = true;
             }
             else
             {
                 telefonoTxt.BackColor = Color.LightPink;
-                registrarBtn.Enabled = false;
             }
         }
         private void fechaPicker_ValueChanged(object sender, EventArgs e)
@@ -677,37 +740,12 @@ namespace Presentación
             {
                 fechaLbl.Text = "✔ Fecha válida";
                 fechaLbl.ForeColor = Color.Green;
-                registrarBtn.Enabled = true;
             }
             else
             {
                 fechaLbl.Text = "✖ Fecha inválida";
                 fechaLbl.ForeColor = Color.Red;
-                registrarBtn.Enabled = false;
             }
         }
-        //private Image ConvertirBytesAImagen(byte[] bytes)
-        //{
-        //    if (bytes == null || bytes.Length == 0)
-        //    {
-        //        MessageBox.Show("La imagen está vacía o no fue encontrada.");
-        //        return null;
-        //    }
-
-        //    try
-        //    {
-        //        using (MemoryStream ms = new MemoryStream(bytes))
-        //        {
-        //            return Image.FromStream(ms);
-        //        }
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        MessageBox.Show("Error al convertir imagen: " + ex.Message);
-        //        // Opcional: guardar los bytes en un archivo para inspección
-        //        File.WriteAllBytes("imagen_debug.bin", bytes);
-        //        return null;
-        //    }
-        //}
     }
 }
