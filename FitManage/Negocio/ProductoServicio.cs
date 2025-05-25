@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AccesoDatos;
 using Entidad;
 
@@ -16,6 +17,13 @@ namespace Negocio
         public List<Producto> ObtenerTodos()
         {
             return productoDAO.ObtenerProductos();
+        }
+        public void Guardar(Producto producto)
+        {
+            if (producto == null)
+                throw new ArgumentNullException(nameof(producto));
+
+                productoDAO.Insertar(producto);
         }
 
         // Puedes agregar más métodos según sea necesario, por ejemplo:

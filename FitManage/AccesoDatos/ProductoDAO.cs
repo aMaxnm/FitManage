@@ -8,7 +8,7 @@ namespace AccesoDatos
 {
     public class ProductoDAO
     {
-        private string connectionString = "server=localhost;port=8000;user=root;password=root;database=fitmanage;";
+        private string connectionString = "server=localhost;user=root;password=root;database=fitmanage;";
 
         public List<Producto> ObtenerProductos()
         {
@@ -36,6 +36,37 @@ namespace AccesoDatos
                 }
             }
             return productos;
+        }
+        public bool Insertar(Producto producto)
+        {
+            bool insertado = false;
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "INSERT INTO productos (Nom_producto, Descripcion, Cantidad, Precio) " +
+                                   "VALUES (@Nom_producto, @Descripcion, @Cantidad, @Precio)";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nom_producto", producto.Nombre);
+                        cmd.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
+                        cmd.Parameters.AddWithValue("@Cantidad", producto.Cantidad);
+                        cmd.Parameters.AddWithValue("@Precio", producto.Precio);
+
+                        int filasAfectadas = cmd.ExecuteNonQuery();
+                        insertado = filasAfectadas > 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error al insertar producto: " + ex.Message);
+                }
+            }
+
+            return insertado; 
         }
     }
 }
