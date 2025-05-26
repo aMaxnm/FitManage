@@ -41,7 +41,7 @@ namespace Presentacion
             agregarBtn = new Button();
             agregarBtn.Text = "Agregar";
             agregarBtn.Font = new Font("Race Sport", 16, FontStyle.Bold); 
-            agregarBtn.ForeColor = Color.White;
+            agregarBtn.ForeColor = Color.DarkGray;
             agregarBtn.Size = new Size(250, 50);
             agregarBtn.Location = new Point(1100, 350); 
             agregarBtn.BackColor = Color.DarkGray;
@@ -60,15 +60,14 @@ namespace Presentacion
             dgvProductos.RowTemplate.Height = 50;
             dgvProductos.ColumnHeadersHeight = 40;
             dgvProductos.DataSource = productos
-    .OrderBy(p => p.Nombre) // Ordenar por nombre
-    .Select(p => new
-    {
-        Cantidad = p.Cantidad,
-        Nombre = p.Nombre,
-        Descripción = p.Descripcion,
-        Precio = $"${p.Precio:N2}"
-    })
-    .ToList();
+            .OrderBy(p => p.Nombre) // Ordenar por nombre
+            .Select(p => new
+            {
+            Cantidad = p.Cantidad,
+            Nombre = p.Nombre,
+            Descripción = p.Descripcion,
+            Precio = $"${p.Precio:N2}"
+            }).ToList();
 
             dgvProductos.CellClick += DgvProductos_CellClick;
             this.Controls.Add(dgvProductos);

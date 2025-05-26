@@ -49,10 +49,11 @@ namespace Presentacion
             tiposMembresiaBtn.Click += (s, e) => panelManager.MostrarPanel(editarMembresiaPanel);
             entradaBtn.Click += (s, e) => panelManager.MostrarPanel(panelManager.AccesoPanel());
              productosBtn.Click += (s, e) =>
-    {
-        PanelProducto panelProducto = new PanelProducto();
-        panelManager.MostrarPanel(panelProducto);
-    };
+             {
+                 PanelProducto panelProducto = new PanelProducto();
+                   panelManager.MostrarPanel(panelProducto);
+             };
+            ventaBtn.Click += (s, e) => panelManager.MostrarPanel(new PanelRegistroVenta());
         }
         private void InicializarComponentes()
         {
