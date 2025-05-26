@@ -38,7 +38,7 @@ namespace Presentacion
             Label titulo = new Label
             {
                 Text = "TIPOS DE MEMBRESÍAS",
-                Font = new Font("Arial Black", 20, FontStyle.Bold),
+                Font = new Font("Race sport", 20, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
                 Location = new Point(460, 100)
@@ -78,7 +78,7 @@ namespace Presentacion
 
             // Columna de precio con formato decimal
             tablaMembresias.Columns.Add("Membresía", "Membresía");
-
+            
 
             DataGridViewTextBoxColumn precioCol = new DataGridViewTextBoxColumn
             {
@@ -160,12 +160,15 @@ namespace Presentacion
 
                     Membresia m = new Membresia
                     {
-                        Id_membresia = Convert.ToInt32(tablaMembresias.Rows[fila].Cells["Id"].Value),
+                        Id_membresia = Convert.ToInt32(tablaMembresias.Rows[fila].Cells["Id_membresia"].Value),
                         Tipo = tablaMembresias.Rows[fila].Cells["Membresía"].Value.ToString(),
                         Precio = Convert.ToDecimal(tablaMembresias.Rows[fila].Cells["Precio"].Value)
                     };
 
                     crud.EditarMembresia(m);
+
+                    MessageBox.Show("Cambios guardados correctamente.");
+
                 }
                 else
                 {
@@ -193,6 +196,13 @@ namespace Presentacion
                 guardarBtn.Visible = false;
                 cancelarBtn.Visible = false;
                 MessageBox.Show("Cambios cancelados.");
+
+                tablaMembresias.Rows.Clear();
+                foreach (var m in membresias)
+                {
+                    tablaMembresias.Rows.Add(m.Id_membresia, m.Tipo, m.Precio);
+                }
+
             };
 
             // Agregar controles al panel
