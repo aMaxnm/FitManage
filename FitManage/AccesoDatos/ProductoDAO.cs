@@ -37,6 +37,7 @@ namespace AccesoDatos
             }
             return productos;
         }
+
         public bool Insertar(Producto producto)
         {
             bool insertado = false;
@@ -68,5 +69,11 @@ namespace AccesoDatos
 
             return insertado; 
         }
+
+        public void EditarProducto(Producto p)
+        {
+        
+        }
+
     }
 }

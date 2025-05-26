@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -14,6 +15,9 @@ namespace Presentacion
         private DataGridView dgvProductos;
         private Panel tarjetaProducto, agregarProducto;
         private Button agregarBtn;
+        private Button editarBtn;
+        private Button guardarBtn;
+        private Button cancelarBtn;
 
         public PanelProducto()
         {
@@ -76,6 +80,102 @@ namespace Presentacion
             tarjetaProducto.BorderStyle = BorderStyle.FixedSingle;
             tarjetaProducto.Visible = false;
             this.Controls.Add(tarjetaProducto);
+
+
+            // Botón editar
+            editarBtn = new Button
+            {
+                Text = "editar",
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Location = new Point(1100, 500),
+                Size = new Size(100, 40),
+                BackColor = Color.Gray,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+
+            editarBtn.Click += (s, e) =>
+            {
+                dgvProductos.ReadOnly = false;
+                
+
+                guardarBtn.Visible = true;
+                cancelarBtn.Visible = true;
+                editarBtn.Visible = false;
+            };
+            this.Controls.Add(editarBtn);
+
+            // Botón guardar
+            guardarBtn = new Button
+            {
+                Text = "guardar",
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Location = new Point(780, 500),
+                Size = new Size(100, 40),
+                BackColor = Color.Green,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Visible = false
+            };
+
+            guardarBtn.Click += (s, e) =>
+            {
+                dgvProductos.ReadOnly = true;
+                editarBtn.Visible = true;
+                guardarBtn.Visible = false;
+                cancelarBtn.Visible = false;
+                if (dgvProductos.CurrentRow != null)
+                {
+                    int fila = dgvProductos.CurrentCell.RowIndex;
+
+                    Producto p = new Producto
+                    {
+                        IdProducto = Convert.ToInt32(dgvProductos.Rows[fila].Cells["IdProducto"].Value),
+                        Nombre = dgvProductos.Rows[fila].Cells["Nombre"].Value.ToString(),
+                        Descripcion = dgvProductos.Rows[fila].Cells["Descripcion"].Value.ToString(),
+                        Precio = Convert.ToDecimal(dgvProductos.Rows[fila].Cells["Precio"].Value),
+                        Cantidad = Convert.ToInt32(dgvProductos.Rows[fila].Cells["Precio"].Value)
+                    };
+
+                    productoServicio.EditarProducto(p);
+
+                    MessageBox.Show("Cambios guardados correctamente.");
+
+                }
+                else
+                {
+                    MessageBox.Show("No se ha seleccionado ninguna fila.");
+                }
+            };
+            this.Controls.Add(guardarBtn);
+
+            //boton cancelar
+            cancelarBtn = new Button
+            {
+                Text = "cancelar",
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Location = new Point(960, 500),
+                Size = new Size(100, 40),
+                BackColor = Color.Red,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Visible = false
+            };
+
+            cancelarBtn.Click += (s, e) =>
+            {
+                dgvProductos.ReadOnly = true;
+                editarBtn.Visible = true;
+                guardarBtn.Visible = false;
+                cancelarBtn.Visible = false;
+                MessageBox.Show("Cambios cancelados.");
+
+                dgvProductos.Rows.Clear();
+                dgvProductos.DataSource = productos;
+                dgvProductos.Refresh();
+
+            };
+            this.Controls.Add(cancelarBtn);
         }
         private void DgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -135,6 +235,7 @@ namespace Presentacion
                 Font = new Font("Tahoma", 18, FontStyle.Bold),
                 ForeColor = Color.Black
             };
+
         }
         private void agregarBtn_Click(object sender, System.EventArgs e)
         {
