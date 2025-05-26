@@ -26,6 +26,11 @@ namespace Negocio
                 productoDAO.Insertar(producto);
         }
 
+        public void EliminarStock(List<Producto> carrito)
+        {
+            productoDAO.EliminarStock(carrito);
+        }
+
         // Puedes agregar más métodos según sea necesario, por ejemplo:
         // BuscarPorNombre, ActualizarProducto, EliminarProducto, etc.
     }
