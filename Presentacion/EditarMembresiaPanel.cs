@@ -117,10 +117,10 @@ namespace Presentacion
             editarBtn = new Button
             {
                 Text = "editar",
-                Font = new Font("Arial", 10, FontStyle.Bold),
+                Font = new Font("Race Sport", 12, FontStyle.Bold),
                 Location = new Point(850, 500),
-                Size = new Size(100, 40),
-                BackColor = Color.Gray,
+                Size = new Size(150, 40),
+                BackColor = Color.DarkGray,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
@@ -139,10 +139,10 @@ namespace Presentacion
             guardarBtn = new Button
             {
                 Text = "guardar",
-                Font = new Font("Arial", 10, FontStyle.Bold),
-                Location = new Point(780, 500),
-                Size = new Size(100, 40),
-                BackColor = Color.Green,
+                Font = new Font("Race Sport", 12, FontStyle.Bold),
+                Location = new Point(720, 500),
+                Size = new Size(150, 40),
+                BackColor = Color.ForestGreen,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Visible = false
@@ -180,10 +180,10 @@ namespace Presentacion
             cancelarBtn = new Button
             {
                 Text = "cancelar",
-                Font = new Font("Arial", 10, FontStyle.Bold),
-                Location = new Point(960, 500),
-                Size = new Size(100, 40),
-                BackColor = Color.Red,
+                Font = new Font("Race Sport", 12, FontStyle.Bold),
+                Location = new Point(900, 500),
+                Size = new Size(150, 40),
+                BackColor = Color.DarkRed,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Visible = false
