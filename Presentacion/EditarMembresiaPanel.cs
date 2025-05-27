@@ -121,7 +121,7 @@ namespace Presentacion
                 Font = new Font("Race Sport", 12, FontStyle.Bold),
                 Location = new Point(850, 350),
                 Size = new Size(150, 40),
-                BackColor = Color.DarkGray,
+                BackColor = Color.Orange,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Enabled = false  // Inicialmente deshabilitado porque no hay selección
