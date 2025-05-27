@@ -13,3 +13,18 @@ Subtotal: $15.00
 
 TOTAL: $60.00
 --------------------------
+--- TICKET DE COMPRA ---
+Fecha: 26/05/2025 09:41:14 p. m.
+
+-Producto: monster
+Cantidad: 3
+Precio unitario: $50.00
+Subtotal: $150.00
+
+-Producto: monster 2 el regreso del monster
+Cantidad: 2
+Precio unitario: $150.00
+Subtotal: $300.00
+
+TOTAL: $450.00
+--------------------------

@@ -99,12 +99,12 @@ namespace Presentacion
             string usuario = txtUsuario.Text;
             string contraseña = txtContraseña.Text;
 
-            bool vacios = String.IsNullOrEmpty(usuario) || String.IsNullOrEmpty(contraseña);
+            bool isVacios = String.IsNullOrEmpty(usuario) || String.IsNullOrEmpty(contraseña);
 
             try
             {
                 bool verificar = new UsuarioServicio().VerificarUsuario(usuario, contraseña);
-                if (!vacios)
+                if (!isVacios)
                 {
                     if (verificar)
                     {

@@ -45,7 +45,7 @@ namespace Presentacion
             agregarBtn.Size = new Size(250, 50);
             agregarBtn.Location = new Point(1100, 350); 
             agregarBtn.BackColor = Color.DarkGray;
-            agregarBtn.Click += agregarBtn_Click;
+            agregarBtn.Click += AgregarBtn_Click;
             this.Controls.Add(agregarBtn);
 
             // Tabla de productos
@@ -236,7 +236,7 @@ namespace Presentacion
             };
 
         }
-        private void agregarBtn_Click(object sender, System.EventArgs e)
+        private void AgregarBtn_Click(object sender, System.EventArgs e)
         {
             MostrarPanelAgregar();
         }

@@ -226,7 +226,6 @@ namespace Presentacion
             this.Controls.Add(dgvProductos);
             this.Controls.Add(dgvCarrito);
         }
-
         private void DgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)

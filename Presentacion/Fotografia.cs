@@ -18,7 +18,7 @@ namespace Presentacion
     internal class Fotografia
     { 
         public static string Ruta = "C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos";
-        private static bool hayDispositivos;
+        private static bool isHayDispositivos;
         public static FilterInfoCollection misDispositivos;
         public static VideoCaptureDevice miCamara;
         
@@ -27,7 +27,7 @@ namespace Presentacion
             misDispositivos = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             if (misDispositivos.Count > 0)
             {
-                hayDispositivos = true;
+                isHayDispositivos = true;
                 for (int i = 0; i < misDispositivos.Count; i++)
                 {
                     PanelManager.dispositivosCombo.Items.Add(misDispositivos[i].Name.ToString());
@@ -36,7 +36,7 @@ namespace Presentacion
             }
             else
             {
-                hayDispositivos = false;
+                isHayDispositivos = false;
             }
         }
         public static void AbrirCamara_Click(object sender, EventArgs e)

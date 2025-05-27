@@ -73,6 +73,9 @@
     <Compile Include="PanelRegistroVenta.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="RegistroVentas.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="VentanaCobrar.cs">
       <SubType>Form</SubType>
     </Compile>

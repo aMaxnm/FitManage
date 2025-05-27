@@ -34,7 +34,6 @@ namespace AccesoDatos
                 }
             }
         }
-
         public bool VerificarUsuario(string usuario, string contraseña)
         {
 
@@ -61,8 +60,5 @@ namespace AccesoDatos
                 }
             }
         }
-
-
-
     }
 }

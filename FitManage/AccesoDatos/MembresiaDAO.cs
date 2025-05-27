@@ -8,7 +8,6 @@ namespace AccesoDatos
     public class MembresiaDAO
     {
         private string connectionString = "server=localhost;user=root;password=root;database=fitmanage";
-
         public List<Membresia> ObtenerMembresias()
         {
             List<Membresia> listaMembresias = new List<Membresia>();
@@ -34,8 +33,6 @@ namespace AccesoDatos
             }
             return listaMembresias;
         }
-
-        // 🔹 Nuevo método para obtener un miembro específico por ID
         public Membresia ObtenerMembresiaPorId(int idMembresia)
         {
             Membresia membresia = null;
@@ -66,7 +63,6 @@ namespace AccesoDatos
             }
             return membresia; // Retorna la membresía encontrada o null si no existe
         }
-
         public void EditarMembresia(Membresia mem)
         {
             using (var connection = new MySqlConnection(connectionString))
@@ -120,7 +116,6 @@ namespace AccesoDatos
 
             return idMembresia;
         }
-
     }
 }
 

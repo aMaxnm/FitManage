@@ -8,10 +8,7 @@ namespace AccesoDatos
 {
     public class MiembroDAO
     {
-
         private string connectionString = "server=localhost;user=root;password=root;database=fitmanage;";
-
-
         // Obtener todos los miembros
         public List<Miembro> ObtenerMiembros()
         {
@@ -45,49 +42,6 @@ namespace AccesoDatos
             }
             return listaMiembros;
         }
-
-        // Agregar un nuevo miembro
-        /*public void AgregarMiembro(Miembro miembro)
-        {
-            try
-            {
-                using (var connection = new MySqlConnection(connectionString))
-                {
-                    connection.Open();
-                    string query = "INSERT INTO fitmanage.miembro (Id_miembro, Id_membresia, Nombre, Ap_paterno, Ap_materno, Fecha_nacimiento, Num_celular, FechaRegistro, Fecha_vencimiento, Foto) VALUES (@Id_miembro, @Id_membresia, @Nombre, @Ap_paterno, @Ap_materno, @Fecha_nacimiento, @Num_celular, @FechaRegistro, @Fecha_vencimiento, @Foto)";
-
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Id_miembro", miembro.IdMiembro);
-                        command.Parameters.AddWithValue("@Id_membresia", miembro.IdMembresia);
-                        command.Parameters.AddWithValue("@Nombre", miembro.Nombre);
-                        command.Parameters.AddWithValue("@Ap_paterno", miembro.ApellidoPaterno);
-                        command.Parameters.AddWithValue("@Ap_materno", miembro.ApellidoMaterno);
-                        command.Parameters.AddWithValue("@Fecha_nacimiento", miembro.FechaNacimiento);
-                        command.Parameters.AddWithValue("@Num_celular", miembro.NumeroCelular);
-                        command.Parameters.AddWithValue("@FechaRegistro", miembro.FechaRegistro);
-                        command.Parameters.AddWithValue("@Fecha_Vencimiento", miembro.FechaVencimiento);
-                        command.Parameters.AddWithValue("@Foto", miembro.Foto);
-
-                        int filasAfectadas = command.ExecuteNonQuery();
-                        if (filasAfectadas > 0)
-                        {
-                            Console.WriteLine("Miembro registrado correctamente.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Error: No se insertaron datos.");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error al insertar el miembro: " + ex.Message);
-            }
-
-        }*/
-        //Método para verificar si el cliente ya existe antes de registrarlo
         public bool MiembroExiste(string nombre, string apellidoPaterno, string apellidoMaterno, string telefono)
         {
             bool existe = false;
@@ -118,7 +72,6 @@ namespace AccesoDatos
 
             return existe; //Retorna `true` si el cliente ya existe, `false` si no
         }
-
         public int AgregarMiembro(Miembro miembro)
         {
             int idGenerado = -1;
@@ -170,8 +123,6 @@ namespace AccesoDatos
                 return -1; // Retorna -1 en caso de excepción
             }
         }
-
-
         // Actualizar información de un miembro
         public void ModificarMiembro(Miembro miembro)
         {
@@ -206,7 +157,6 @@ namespace AccesoDatos
                 }
             }
         }
-
         public bool RenovarMembresia(int idMiembro, int nuevaMembresiaId, DateTime FV)
         {
             bool actualizado = false;
@@ -239,7 +189,6 @@ namespace AccesoDatos
 
             return actualizado; // 🔹 Retorna `true` si la actualización fue exitosa
         }
-
         // Eliminar un miembro
         public void EliminarMiembro(int idMiembro)
         {

@@ -12,7 +12,7 @@ namespace Presentacion
 {
     internal class VentanaCobrar : Form
     {
-        public bool confirmacion { get; set; }
+        public bool isConfirmacion { get; set; }
 
         public VentanaCobrar(String nombreMembresia, Decimal precioMembresia, int id)
         {
@@ -127,7 +127,7 @@ namespace Presentacion
                 {
                     cambioTxt.Text = cambio.ToString("F2"); // Muestra el cambio con 2 decimales
                     MessageBox.Show("Pago realizado correctamente. Cambio: $" + cambioTxt.Text, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    confirmacion = true;
+                    isConfirmacion = true;
                 }
                 else if(id != 0)
                 {
@@ -139,7 +139,7 @@ namespace Presentacion
                 }
                 else
                 {
-                    confirmacion = false;
+                    isConfirmacion = false;
                 }
             };
 

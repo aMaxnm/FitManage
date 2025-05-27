@@ -36,7 +36,6 @@ namespace AccesoDatos
             }
             return productos;
         }
-
         public bool Insertar(Producto producto)
         {
             bool insertado = false;
@@ -67,7 +66,6 @@ namespace AccesoDatos
             }
             return insertado; 
         }
-
         public void EliminarStock(List<Producto> carrito)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -101,6 +99,5 @@ namespace AccesoDatos
             }
 
         }
-
     }
 }

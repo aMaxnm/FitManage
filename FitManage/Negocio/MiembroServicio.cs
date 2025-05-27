@@ -95,7 +95,6 @@ namespace Negocio
                 }
             }
         }
-
         public void Actualizar(Miembro miembro)
         {
             // Validaciones de negocio

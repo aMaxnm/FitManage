@@ -280,3 +280,4 @@ C:\Users\Edgar\source\repos\FitManage\Presentacion\obj\Debug\Presentacion.csproj
 C:\Users\Edgar\source\repos\FitManage\Presentacion\obj\Debug\Presentacion.exe.config
 C:\Users\Edgar\source\repos\FitManage\Presentacion\obj\Debug\Presenta.BC77CD05.Up2Date
 C:\Users\Edgar\source\repos\FitManage\Presentacion\bin\Debug\Recursos\CARRITO.png
+C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Recursos\CARRITO.png
