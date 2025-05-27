@@ -1,5 +1,4 @@
-﻿// Capa AccesoDatos
-using System;
+﻿using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using Entidad;
@@ -66,13 +65,41 @@ namespace AccesoDatos
                     Console.WriteLine("Error al insertar producto: " + ex.Message);
                 }
             }
-
             return insertado; 
         }
 
-        public void EditarProducto(Producto p)
+        public void EliminarStock(List<Producto> carrito)
         {
-        
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (MySqlTransaction transaccion = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var producto in carrito)
+                        {
+                            string query = "UPDATE productos SET Cantidad = Cantidad - @cantidad WHERE Id_producto = @id";
+
+                            using (MySqlCommand cmd = new MySqlCommand(query, conn, transaccion))
+                            {
+                                cmd.Parameters.AddWithValue("@cantidad", producto.Cantidad);
+                                cmd.Parameters.AddWithValue("@id", producto.IdProducto);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        transaccion.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaccion.Rollback();
+                        //MessageBox.Show("Error al actualizar el stock: " + ex.Message);
+                    }
+                }
+            }
+
         }
 
     }

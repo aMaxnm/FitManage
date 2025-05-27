@@ -70,7 +70,7 @@
     <Compile Include="PanelProducto.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="RegistroVentas.cs">
+    <Compile Include="PanelRegistroVenta.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="VentanaCobrar.cs">
@@ -111,10 +111,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ArchivoTxt\" />
     <Folder Include="Recursos\Fotos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Recursos\agregarMiembro.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\CARRITO.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Recursos\cobrar.png">

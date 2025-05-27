@@ -1,0 +1,15 @@
+--- TICKET DE COMPRA ---
+Fecha: 5/26/2025 8:43:10 PM
+
+-Producto: Proteina
+Cantidad: 1
+Precio unitario: $45.00
+Subtotal: $45.00
+
+-Producto: Agua
+Cantidad: 1
+Precio unitario: $15.00
+Subtotal: $15.00
+
+TOTAL: $60.00
+--------------------------

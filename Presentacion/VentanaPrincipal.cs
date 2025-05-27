@@ -58,6 +58,7 @@ namespace Presentacion
                 RegistroVentas panelVentas = new RegistroVentas();
                 panelManager.MostrarPanel(panelVentas);
             };
+            ventaBtn.Click += (s, e) => panelManager.MostrarPanel(new PanelRegistroVenta());
         }
         private void InicializarComponentes()
         {
