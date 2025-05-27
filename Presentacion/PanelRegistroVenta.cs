@@ -106,7 +106,6 @@ namespace Presentacion
                 ActualizarTotal();
             };
 
-
             cobrarBtn = new Button();
             cobrarBtn.BackgroundImage = Image.FromFile("Recursos/cobrar.png");
             cobrarBtn.Location = new Point(435, 630);
@@ -149,9 +148,6 @@ namespace Presentacion
 
                     // Si el archivo existe, se agrega contenido; si no, se crea
                     File.AppendAllText(rutaArchivo, contenido);
-
-
-
 
                     // Actualizar el stock de los productos
                     productoServicio.EliminarStock(carrito);

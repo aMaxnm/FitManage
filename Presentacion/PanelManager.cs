@@ -17,13 +17,11 @@ namespace Presentación
         public static ComboBox dispositivosCombo = new ComboBox();
         Button abrirCamara = new Button();
         DateTimePicker fechaPicker = new DateTimePicker();
-        ErrorProvider errorProvider = new ErrorProvider(); // se utiliza para las validaciones de los campos de texto
         Label fechaLbl = new Label();
         public static TextBox nombreTxt, apePaternoTxt, apeMaternoTxt, telefonoTxt;
         Button registrarBtn = new Button();
         MiembroServicio miembroServicio;
         VentanaCobrar ventanaCobrar;
-
         public PanelManager(Panel mainPanel)
         {
             this.mainPanel = mainPanel;
@@ -56,7 +54,6 @@ namespace Presentación
             subtituloLbl.Location = new Point(460, 72);
             subtituloLbl.AutoSize = true;
             
-
             //Labels para el formulario
             nombreLbl = new Label();
             nombreLbl.Text = "Nombre(s)";
@@ -116,7 +113,6 @@ namespace Presentación
             nombreTxt.CharacterCasing = CharacterCasing.Upper;
             nombreTxt.TextChanged += new EventHandler(NombreTxt_TextChanged);
             
-
             apePaternoTxt = new TextBox();
             apePaternoTxt.Location = new Point(37, 262);
             apePaternoTxt.Size = new Size(360, 30);
@@ -292,7 +288,6 @@ namespace Presentación
                 fechaLbl.Text = "Fecha de nacimiento";
             };
 
-
             regresarBtn = new Button();
             regresarBtn.Text = "Regresar";
             regresarBtn.BackColor = Color.WhiteSmoke;
@@ -439,7 +434,6 @@ namespace Presentación
                     MessageBox.Show("Número de acceso inválido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             };
 
-
             nuevoPanel.Controls.Add(descripcionLbl);
             nuevoPanel.Controls.Add(accesoTxt);
             nuevoPanel.Controls.Add(accesoBtn);
@@ -473,7 +467,6 @@ namespace Presentación
             renovarBtn.ForeColor = Color.White;
             renovarBtn.FlatStyle = FlatStyle.Flat;
             renovarBtn.FlatAppearance.BorderSize = 0;
-
 
             tituloLbl = new Label();
             tituloLbl.Text = "ACCESO";
@@ -578,7 +571,6 @@ namespace Presentación
                 membresiaCombo.Size = new Size(290, 30);
                 membresiaCombo.Font = new Font("Tahoma", 12);
                 nuevoPanel.Controls.Add(membresiaCombo);
-
                 estado.Text = "VENCIDA";
                 estado.BackColor = Color.Red;
             }

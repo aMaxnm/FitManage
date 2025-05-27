@@ -13,14 +13,12 @@ namespace Presentacion
     internal class VentanaCobrar : Form
     {
         public bool isConfirmacion { get; set; }
-
         public VentanaCobrar(String nombreMembresia, Decimal precioMembresia, int id)
         {
             this.Text = "Cobro";
             this.Size = new Size(700, 400);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.DarkGray;
-
 
             //Labels necesarias para la ventana de cobro
             Label membresiaLbl, mesLbl, costoLbl, recibidoLbl, cambioLbl;
@@ -143,7 +141,6 @@ namespace Presentacion
                 }
             };
 
-
             cancelarBtn = new Button();
             cancelarBtn.Text = "CANCELAR";
             cancelarBtn.Font = new Font("Tahoma", 14, FontStyle.Bold);
@@ -167,9 +164,7 @@ namespace Presentacion
             this.Controls.Add(cambioTxt);
             this.Controls.Add(confirmarBtn);
             this.Controls.Add(cancelarBtn);
-
             //El TextBox de cambio se calcula automaticamente
-          
         }
     }
 }

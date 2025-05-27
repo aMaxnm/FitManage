@@ -18,7 +18,6 @@ namespace Presentacion
         private Button editarBtn;
         private Button guardarBtn;
         private Button cancelarBtn;
-
         public PanelProducto()
         {
             productos = productoServicio.ObtenerTodos();
@@ -80,7 +79,6 @@ namespace Presentacion
             tarjetaProducto.Visible = false;
             this.Controls.Add(tarjetaProducto);
 
-
             // Botón editar
             editarBtn = new Button
             {
@@ -96,8 +94,6 @@ namespace Presentacion
             editarBtn.Click += (s, e) =>
             {
                 dgvProductos.ReadOnly = false;
-                
-
                 guardarBtn.Visible = true;
                 cancelarBtn.Visible = true;
                 editarBtn.Visible = false;
@@ -147,7 +143,6 @@ namespace Presentacion
                 }
             };
             this.Controls.Add(guardarBtn);
-
             //boton cancelar
             cancelarBtn = new Button
             {
@@ -326,6 +321,5 @@ namespace Presentacion
 
             this.Controls.Add(agregarProducto);
         }
-
     }
 }
