@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Entidad;
@@ -120,9 +121,42 @@ namespace Presentacion
             {
                 if (carrito.Any()) {
                     MessageBox.Show("Recuerde cobrar.\n" + totalLbl.Text, "Cobrar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    //Codigo de archivo .txt
+                    // Ruta a la carpeta (solo la carpeta)
+                    string carpeta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\ArchivoTxt");
+
+                    // Asegura que la carpeta exista
+                    Directory.CreateDirectory(carpeta);
+
+                    // Ruta completa al archivo (archivo .txt dentro de la carpeta)
+                    string rutaArchivo = Path.Combine(carpeta, "ventas.txt");
+
+                    // Construir contenido del ticket
+                    string contenido = $"--- TICKET DE COMPRA ---\nFecha: {DateTime.Now}\n\n";
+
+                    foreach (var producto in carrito)
+                    {
+                        contenido += $"-Producto: {producto.Nombre}\n";
+                        contenido += $"Cantidad: {producto.Cantidad}\n";
+                        contenido += $"Precio unitario: ${producto.Precio}\n";
+                        contenido += $"Subtotal: ${producto.Precio * producto.Cantidad}\n\n";
+                    }
+
+                    decimal total = carrito.Sum(p => p.Precio * p.Cantidad);
+                    contenido += $"TOTAL: ${total}\n";
+                    contenido += "--------------------------\n";
+
+                    // Si el archivo existe, se agrega contenido; si no, se crea
+                    File.AppendAllText(rutaArchivo, contenido);
+
+
+
+
                     // Actualizar el stock de los productos
                     productoServicio.EliminarStock(carrito);
                     productos = productoServicio.ObtenerTodos();
+
                     // Vaciar el carrito
                     carrito.Clear();
                     // Refrescar dgvCarrito

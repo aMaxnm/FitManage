@@ -136,7 +136,7 @@ namespace Presentacion
                         Cantidad = Convert.ToInt32(dgvProductos.Rows[fila].Cells["Precio"].Value)
                     };
 
-                    productoServicio.EditarProducto(p);
+                    //productoServicio.EditarProducto(p);
 
                     MessageBox.Show("Cambios guardados correctamente.");
 

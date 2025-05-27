@@ -111,6 +111,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ArchivoTxt\" />
     <Folder Include="Recursos\Fotos\" />
   </ItemGroup>
   <ItemGroup>
