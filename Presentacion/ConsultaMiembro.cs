@@ -114,16 +114,21 @@ namespace Presentacion
                     foto.SizeMode = PictureBoxSizeMode.StretchImage;
 
 
-                    // Botón editar (como Label clickeable)
-                    Label editarLbl = new Label();
-                    editarLbl.Text = "Editar";
-                    editarLbl.Font = new Font("Futura", 22, FontStyle.Underline);
-                    editarLbl.ForeColor = Color.Blue;
-                    editarLbl.AutoSize = true;
-                    editarLbl.Location = new Point(800, 20);
-                    editarLbl.Cursor = Cursors.Hand;
-                    editarLbl.Click += (s, ev) => ActivarModoEdicion(miembro);
-                    tarjetaMiembro.Controls.Add(editarLbl);
+                    // Botón editar 
+                    Button btnEditar = new Button
+                    {
+                        Text = "Editar",
+                        Font = new Font("Race Sport", 14, FontStyle.Bold),
+                        Size = new Size(150, 50),
+                        BackColor = Color.Orange,
+                        ForeColor = Color.White,
+                        Location = new Point(800, 20),
+                        FlatStyle = FlatStyle.Flat,
+                        Cursor = Cursors.Hand
+                    };
+                    btnEditar.FlatAppearance.BorderSize = 0;
+                    btnEditar.Click += (s, ev) => ActivarModoEdicion(miembro);
+                    tarjetaMiembro.Controls.Add(btnEditar);
 
 
                     if (miembro.Fotografia != null)
