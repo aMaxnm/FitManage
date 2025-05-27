@@ -13,11 +13,20 @@ namespace Presentacion
         private List<Producto> productos;
         private ProductoServicio productoServicio = new ProductoServicio();
         private DataGridView dgvProductos;
-        private Panel tarjetaProducto, agregarProducto;
+        private Panel tarjetaProducto, agregarProducto, contenidoPanel;
         private Button agregarBtn;
         private Button editarBtn;
         private Button guardarBtn;
         private Button cancelarBtn;
+        private TextBox txtNombreEdicion;
+        private TextBox txtPrecioEdicion;
+        private TextBox txtDescripcionEdicion;
+        private TextBox txtCantidadEdicion;
+        private bool modoEdicion = false;
+        private Producto producto;
+        private Producto productoEditar;
+
+
 
         public PanelProducto()
         {
@@ -28,6 +37,9 @@ namespace Presentacion
         {
             this.Size = new Size(2000, 1010);
             this.BackColor = Color.WhiteSmoke;
+            contenidoPanel = new Panel();
+            contenidoPanel.Visible = true;
+            this.Controls.Add(contenidoPanel);
 
             // Título
             Label tituloLbl = new Label();
@@ -37,16 +49,115 @@ namespace Presentacion
             tituloLbl.Location = new Point(600, 10);
             this.Controls.Add(tituloLbl);
 
-            //Boton
+            //Boton Agregar
             agregarBtn = new Button();
             agregarBtn.Text = "Agregar";
-            agregarBtn.Font = new Font("Race Sport", 16, FontStyle.Bold); 
-            agregarBtn.ForeColor = Color.DarkGray;
-            agregarBtn.Size = new Size(250, 50);
+
+            agregarBtn.Font = new Font("Arial", 10, FontStyle.Bold); 
+            agregarBtn.ForeColor = Color.White;
+            agregarBtn.Size = new Size(100, 40);
             agregarBtn.Location = new Point(1100, 350); 
             agregarBtn.BackColor = Color.DarkGray;
             agregarBtn.Click += agregarBtn_Click;
             this.Controls.Add(agregarBtn);
+
+            //AQUI
+            guardarBtn = new Button
+            {
+                Text = "Guardar",
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Size = new Size(100, 40),
+                BackColor = Color.Green,
+                ForeColor = Color.White,
+                Location = new Point(650, 250),
+                Visible = false
+            };
+            guardarBtn.Click += (s, ev) =>
+            {
+                if (producto != null)
+                {
+                    productoEditar = new Producto
+                    {
+                        IdProducto = producto.IdProducto, // Aquí obtienes el ID
+                        Nombre = txtNombreEdicion.Text,
+                        Descripcion = txtDescripcionEdicion.Text,
+                        Precio = Convert.ToDecimal(txtPrecioEdicion.Text),
+                        Cantidad = Convert.ToInt32(txtCantidadEdicion.Text)
+                    };
+
+                    productoServicio.EditarProducto(productoEditar);
+
+                    // Refrescar lista y tabla
+                    productos = productoServicio.ObtenerTodos();
+                    dgvProductos.DataSource = productos.OrderBy(p => p.Nombre).Select(p => new
+                    {
+                        Id = p.IdProducto,
+                        Cantidad = p.Cantidad,
+                        Nombre = p.Nombre,
+                        Descripción = p.Descripcion,
+                        Precio = $"${p.Precio:N2}"
+                    }).ToList();
+
+                    // Volver a la vista principal
+                    contenidoPanel.Visible = false;
+                    editarBtn.Visible = true;
+                    modoEdicion = false;
+                }
+                else
+                {
+                    MessageBox.Show("No se ha seleccionado ningún producto.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            };
+
+            cancelarBtn = new Button
+            {
+                Text = "Cancelar",
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Size = new Size(100, 40),
+                BackColor = Color.Red,
+                ForeColor = Color.White,
+                Location = new Point(770, 250),
+                Visible = false
+            };
+
+            // Botón editar
+            editarBtn = new Button
+            {
+                Text = "editar",
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Location = new Point(agregarBtn.Location.X + agregarBtn.Width + 20, agregarBtn.Location.Y),
+                Size = new Size(100, 40),
+                BackColor = Color.Gray,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+
+            editarBtn.Click += (s, ev) =>
+            {
+                modoEdicion = true; // Activar modo edición
+                tarjetaProducto.Controls.Clear();
+
+                Label lblInstruccion = new Label
+                {
+                    Text = "Selecciona el producto a editar",
+                    Font = new Font("Arial", 16, FontStyle.Bold),
+                    ForeColor = Color.DarkBlue,
+                    AutoSize = true,
+                    Location = new Point(20, 20)
+                };
+
+                tarjetaProducto.Controls.Add(lblInstruccion);
+
+              
+                this.Controls.Remove(contenidoPanel);
+                contenidoPanel = tarjetaProducto;
+                contenidoPanel.Refresh();
+                contenidoPanel.Visible = true;
+                this.Controls.Add(contenidoPanel);
+            };
+
+
+            this.Controls.Add(editarBtn);
 
             // Tabla de productos
             dgvProductos = new DataGridView();
@@ -60,22 +171,25 @@ namespace Presentacion
             dgvProductos.RowTemplate.Height = 50;
             dgvProductos.ColumnHeadersHeight = 40;
             dgvProductos.DataSource = productos
-            .OrderBy(p => p.Nombre) // Ordenar por nombre
-            .Select(p => new
-            {
-            Cantidad = p.Cantidad,
-            Nombre = p.Nombre,
-            Descripción = p.Descripcion,
-            Precio = $"${p.Precio:N2}"
-            }).ToList();
+
+                .OrderBy(p => p.Nombre) // Ordenar por nombre
+                .Select(p => new
+                {
+                    Id = p.IdProducto,
+                    Cantidad = p.Cantidad,
+                    Nombre = p.Nombre,
+                    Descripción = p.Descripcion,
+                    Precio = $"${p.Precio:N2}"
+                })
+                .ToList();
 
             dgvProductos.CellClick += DgvProductos_CellClick;
             this.Controls.Add(dgvProductos);
 
             // Tarjeta
             tarjetaProducto = new Panel();
-            tarjetaProducto.Location = new Point(350, 450);
-            tarjetaProducto.Size = new Size(1000, 300);
+            tarjetaProducto.Location = new Point(dgvProductos.Location.X, dgvProductos.Location.Y + 70 + dgvProductos.Size.Height);
+            tarjetaProducto.Size = new Size(dgvProductos.Width, 350);
             tarjetaProducto.BorderStyle = BorderStyle.FixedSingle;
             tarjetaProducto.Visible = false;
             this.Controls.Add(tarjetaProducto);
@@ -181,7 +295,7 @@ namespace Presentacion
             if (e.RowIndex >= 0)
             {
                 string nombre = dgvProductos.Rows[e.RowIndex].Cells["Nombre"].Value.ToString();
-                Producto producto = productos.FirstOrDefault(p => p.Nombre == nombre);
+                producto = productos.FirstOrDefault(p => p.Nombre == nombre);
 
                 if (producto != null)
                 {
@@ -192,27 +306,50 @@ namespace Presentacion
                     int y = 20;
                     int espacio = 100;
 
-                    //Nombre
+                    // Crear campos
                     tarjetaProducto.Controls.Add(CrearTituloLabel("Nombre", xIzq, y));
-                    tarjetaProducto.Controls.Add(CrearValorLabel(producto.Nombre, xIzq, y + 45));
+                    txtNombreEdicion = CrearValorTextBox(producto.Nombre, xIzq, y + 45);
+                    tarjetaProducto.Controls.Add(txtNombreEdicion);
 
-                    //Precio
                     tarjetaProducto.Controls.Add(CrearTituloLabel("Precio (MXN)", xDer, y));
-                    tarjetaProducto.Controls.Add(CrearValorLabel(producto.Precio.ToString("C"), xDer, y + 45));
+                    txtPrecioEdicion = CrearValorTextBox(producto.Precio.ToString(), xDer, y + 45);
+                    tarjetaProducto.Controls.Add(txtPrecioEdicion);
 
-                    //Descripción
                     y += espacio;
                     tarjetaProducto.Controls.Add(CrearTituloLabel("Descripción", xIzq, y));
-                    tarjetaProducto.Controls.Add(CrearValorLabel(producto.Descripcion, xIzq, y + 45));
+                    txtDescripcionEdicion = CrearValorTextBox(producto.Descripcion, xIzq, y + 45);
+                    tarjetaProducto.Controls.Add(txtDescripcionEdicion);
 
-                    //Cantidad
                     tarjetaProducto.Controls.Add(CrearTituloLabel("Cantidad", xDer, y));
-                    tarjetaProducto.Controls.Add(CrearValorLabel(producto.Cantidad.ToString(), xDer, y + 45));
+                    txtCantidadEdicion = CrearValorTextBox(producto.Cantidad.ToString(), xDer, y + 45);
+                    tarjetaProducto.Controls.Add(txtCantidadEdicion);
 
-                    tarjetaProducto.Visible = true;
+                    // Solo habilitar campos si está en modo edición
+                    if (modoEdicion)
+                    {
+                        txtNombreEdicion.Enabled = true;
+                        txtPrecioEdicion.Enabled = true;
+                        txtDescripcionEdicion.Enabled = true;
+                        txtCantidadEdicion.Enabled = true;
+
+                        // Mostrar botones
+                        guardarBtn.Visible = true;
+                        cancelarBtn.Visible = true;
+                        editarBtn.Visible = false;
+                    }
+
+                    tarjetaProducto.Controls.Add(guardarBtn);
+                    tarjetaProducto.Controls.Add(cancelarBtn);
+
+                    this.Controls.Remove(contenidoPanel);
+                    contenidoPanel = tarjetaProducto;
+                    contenidoPanel.Refresh();
+                    contenidoPanel.Visible = true;
+                    this.Controls.Add(contenidoPanel);
                 }
             }
         }
+
         private Label CrearValorLabel(string texto, int x, int y)
         {
             return new Label
@@ -222,6 +359,20 @@ namespace Presentacion
                 AutoSize = true,
                 Font = new Font("Futura", 18, FontStyle.Regular),
                 ForeColor = Color.Black
+            };
+        }
+
+        private TextBox CrearValorTextBox(string texto, int x, int y)
+        {
+            return new TextBox
+            {
+                Text = texto,
+                Location = new Point(x, y),
+                Width = 400,
+                AutoSize = true,
+                Font = new Font("Futura", 18, FontStyle.Regular),
+                ForeColor = Color.Black,
+                Enabled = false
             };
         }
         private Label CrearTituloLabel(string texto, int x, int y)
@@ -240,13 +391,9 @@ namespace Presentacion
         {
             MostrarPanelAgregar();
         }
+
         private void MostrarPanelAgregar()
         {
-            if (agregarProducto != null)
-            {
-                agregarProducto.Visible = true;
-                return;
-            }
 
             agregarProducto = new Panel();
             agregarProducto.Location = new Point(350, 420);
@@ -285,8 +432,8 @@ namespace Presentacion
             Button btnGuardar = new Button
             {
                 Text = "Guardar",
-                Font = new Font("Race Sport", 14, FontStyle.Bold),
-                Size = new Size(200, 50),
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Size = new Size(100, 40),
                 ForeColor = Color.White,
                 BackColor = Color.Green,
                 Location = new Point(xIzq+600, y + 50)
@@ -309,22 +456,42 @@ namespace Presentacion
                     productos = productoServicio.ObtenerTodos(); // Refrescar lista
                     dgvProductos.DataSource = productos.OrderBy(p => p.Nombre).Select(p => new
                     {
+                        Id_producto = p.IdProducto,
                         Cantidad = p.Cantidad,
-                        Nombre = p.Nombre,
+                        Nom_producto = p.Nombre,
                         Descripción = p.Descripcion,
                         Precio = $"${p.Precio:N2}"
                     }).ToList();
 
-                    agregarProducto.Visible = false;
+                    contenidoPanel.Visible = false;
                 }
                 else
                 {
                     MessageBox.Show("Precio o cantidad inválidos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             };
-            agregarProducto.Controls.Add(btnGuardar);
 
-            this.Controls.Add(agregarProducto);
+            Button cancelarBtn = new Button
+            {
+                Text = "Cancelar",
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Size = new Size(100, 40),
+                ForeColor = Color.White,
+                BackColor = Color.Red,
+                Location = new Point(xIzq + 750, y + 50)
+            };
+
+
+            btnGuardar.BringToFront();
+            cancelarBtn.BringToFront();
+            agregarProducto.Controls.Add(btnGuardar);
+            agregarProducto.Controls.Add(cancelarBtn);
+
+            this.Controls.Remove(contenidoPanel);
+            contenidoPanel = agregarProducto;
+            contenidoPanel.Refresh();
+            contenidoPanel.Visible = true;
+            this.Controls.Add(contenidoPanel);
         }
 
     }

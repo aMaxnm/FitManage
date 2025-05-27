@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using Entidad;
+using K4os.Compression.LZ4.Internal;
 
 namespace AccesoDatos
 {
@@ -98,9 +99,39 @@ namespace AccesoDatos
                         //MessageBox.Show("Error al actualizar el stock: " + ex.Message);
                     }
                 }
+ 
             }
 
         }
+public void EditarProducto(Producto p){
+               using (var connection = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = @"UPDATE fitmanage.productos
+                             SET
+                             Precio = @Precio, 
+                             Nom_producto = @Nom_producto,
+                             Descripcion = @Descripcion,
+                             Cantidad = @Cantidad
+                         WHERE Id_producto = @id_producto";
 
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id_producto", p.IdProducto);
+                        command.Parameters.AddWithValue("@Nom_producto", p.Nombre);
+                        command.Parameters.AddWithValue("@Descripcion", p.Descripcion);
+                        command.Parameters.AddWithValue("Cantidad", p.Cantidad);
+                        command.Parameters.AddWithValue("@Precio", p.Precio);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error al editar producto: " + ex.Message);
+
+                }
+}
     }
 }

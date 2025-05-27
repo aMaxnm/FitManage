@@ -34,5 +34,7 @@ namespace Negocio
 
         // Puedes agregar más métodos según sea necesario, por ejemplo:
         // BuscarPorNombre, ActualizarProducto, EliminarProducto, etc.
+
+
     }
 }
