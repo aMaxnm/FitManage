@@ -58,7 +58,7 @@ namespace Presentacion
             agregarBtn.Size = new Size(250, 50);
             agregarBtn.Location = new Point(1100, 350); 
             agregarBtn.BackColor = Color.DarkGray;
-            agregarBtn.Click += AgregarBtn_Click;
+            agregarBtn.Click += agregarBtn_Click;
             this.Controls.Add(agregarBtn);
 
             // Tabla de productos
