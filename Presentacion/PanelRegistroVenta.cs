@@ -17,6 +17,7 @@ namespace Presentacion
         private DataGridView dgvProductos, dgvCarrito;
         private ProductoServicio productoServicio = new ProductoServicio();
         private Label totalLbl;
+        private VentaServicio ventaServicio = new VentaServicio();
         public PanelRegistroVenta()
         {
             productos = productoServicio.ObtenerTodos();
@@ -118,57 +119,60 @@ namespace Presentacion
             cobrarBtn.FlatAppearance.BorderSize = 0;
             cobrarBtn.Click += (s, e) =>
             {
-                if (carrito.Any()) {
-                    MessageBox.Show("Recuerde cobrar.\n" + totalLbl.Text, "Cobrar", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    //Codigo de archivo .txt
-                    // Ruta a la carpeta (solo la carpeta)
-                    string carpeta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\ArchivoTxt");
-
-                    // Asegura que la carpeta exista
-                    Directory.CreateDirectory(carpeta);
-
-                    // Ruta completa al archivo (archivo .txt dentro de la carpeta)
-                    string rutaArchivo = Path.Combine(carpeta, "ventas.txt");
-
-                    // Construir contenido del ticket
-                    string contenido = $"--- TICKET DE COMPRA ---\nFecha: {DateTime.Now}\n\n";
-
-                    foreach (var producto in carrito)
+                if (carrito.Any())
+                {
+                    Venta nuevaVenta = new Venta
                     {
-                        contenido += $"-Producto: {producto.Nombre}\n";
-                        contenido += $"Cantidad: {producto.Cantidad}\n";
-                        contenido += $"Precio unitario: ${producto.Precio}\n";
-                        contenido += $"Subtotal: ${producto.Precio * producto.Cantidad}\n\n";
-                    }
+                        Fecha = DateTime.Now,
+                        TipoVenta = "Mostrador",
+                        IdMembresia = 0, // O el ID si aplica
+                        Detalles = carrito.Select(p => new DetalleVenta
+                        {
+                            IdProducto = p.IdProducto,
+                            Cantidad = p.Cantidad
+                        }).ToList()
+                    };
 
-                    decimal total = carrito.Sum(p => p.Precio * p.Cantidad);
-                    contenido += $"TOTAL: ${total}\n";
-                    contenido += "--------------------------\n";
+                    // Enviar la venta a la base de datos a través de la capa negocio
+                    int idVenta = ventaServicio.RegistrarVenta(nuevaVenta);
 
-                    // Si el archivo existe, se agrega contenido; si no, se crea
-                    File.AppendAllText(rutaArchivo, contenido);
+                    if (idVenta > 0)
+                    {
+                        MessageBox.Show("Venta registrada exitosamente.", "Cobrar", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Actualizar el stock de los productos
-                    productoServicio.EliminarStock(carrito);
-                    productos = productoServicio.ObtenerTodos();
-
-                    // Vaciar el carrito
-                    carrito.Clear();
-                    // Refrescar dgvCarrito
-                    dgvCarrito.DataSource = null;
-                    dgvCarrito.DataSource = carrito
-                        .Select(p => new
+                        // Vaciar el carrito y actualizar tablas
+                        carrito.Clear();
+                        dgvCarrito.DataSource = null;
+                        dgvCarrito.DataSource = carrito.Select(p => new
                         {
                             p.IdProducto,
                             p.Nombre,
                             p.Precio,
                             p.Cantidad
                         }).ToList();
+
+                        // Actualizar productos en pantalla
+                        productos = productoServicio.ObtenerTodos();
+                        dgvProductos.DataSource = null;
+                        dgvProductos.DataSource = productos.Select(p => new
+                        {
+                            p.IdProducto,
+                            p.Nombre,
+                            p.Descripcion,
+                            p.Precio,
+                            p.Cantidad
+                        }).ToList();
+
+                        ActualizarTotal();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error al registrar la venta.", "Cobrar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("No hay productos en el carrito.", "Cobrar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("No hay productos en el carrito.", "Cobrar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             };
 

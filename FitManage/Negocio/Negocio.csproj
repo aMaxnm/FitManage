@@ -57,6 +57,7 @@
     <Compile Include="UsuarioServicio.cs" />
     <Compile Include="ValidarDatos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VentaServicio.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TextFile1.txt" />
