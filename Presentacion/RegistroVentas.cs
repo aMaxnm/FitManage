@@ -35,7 +35,6 @@ namespace Presentacion
             CargarRegistroVentas(registroTxt);
             this.Controls.Add(registroTxt);
         }
-
         private void CargarRegistroVentas(TextBox registroTxt)
         {
             var ventas = ventaServicio.ObtenerTodasLasVentas(); // Método en capa negocio

@@ -22,7 +22,6 @@ namespace Presentacion
         Button entradaBtn, consultaMiembroBtn, registroClienteBtn, ventaBtn, inventarioBtn;
         LinkLabel cerrarSesionLbl = new LinkLabel();
         PanelManager panelManager;
-        Panel panelRegistroNuevo;
         //panel desplegable con botones
         Panel subBotonesPanel = new Panel();
         private void VentanaPrincipal_Load(object sender, EventArgs e)
