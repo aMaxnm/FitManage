@@ -8,7 +8,6 @@ namespace Presentacion
     internal class RegistroVentas : Panel
     {
         private VentaServicio ventaServicio = new VentaServicio();
-        private TextBox reporteVentas;
         public RegistroVentas()
         {
             InicializarComponentes();
@@ -40,6 +39,11 @@ namespace Presentacion
         private void CargarRegistroVentas(TextBox registroTxt)
         {
             var ventas = ventaServicio.ObtenerTodasLasVentas(); // Método en capa negocio
+            if (ventas == null || ventas.Count == 0)
+            {
+                MessageBox.Show("No hay registros de ventas disponibles.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             StringBuilder sb = new StringBuilder();
             foreach (var venta in ventas)
@@ -50,15 +54,21 @@ namespace Presentacion
                 sb.AppendLine($"Membresía: {(venta.IdMembresia > 0 ? venta.IdMembresia.ToString() : "Sin membresía")}");
                 sb.AppendLine("Productos vendidos:");
 
+                decimal totalVenta = 0;
+
                 foreach (var detalle in venta.Detalles)
                 {
-                    sb.AppendLine($"  - ID Producto: {detalle.IdProducto}, Cantidad: {detalle.Cantidad}");
+                    decimal subtotal = detalle.Cantidad * detalle.PrecioUnitario;
+                    totalVenta += subtotal;
+                    sb.AppendLine($"  - Producto: {detalle.NombreProducto}, Cantidad: {detalle.Cantidad}, Precio: ${detalle.PrecioUnitario}, Subtotal: ${subtotal}");
                 }
 
+                sb.AppendLine($"TOTAL: ${totalVenta}");
                 sb.AppendLine("------------------------------\n");
             }
 
             registroTxt.Text = sb.ToString();
         }
+
     }
 }

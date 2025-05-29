@@ -53,10 +53,15 @@ namespace AccesoDatos
             using (var conn = new MySqlConnection("server=localhost;user=root;password=root;database=fitmanage;"))
             {
                 conn.Open();
-                string query = @" SELECT v.Id_Venta, v.Fecha, v.Tipo_Venta, v.Id_membresia, 
-                   d.Id_producto, d.Cantidad 
-                   FROM venta v 
-                   LEFT JOIN detalles d ON v.Id_Venta = d.Id_Venta";
+                string query = @"
+                    SELECT 
+                    v.Id_Venta, v.Fecha, v.Tipo_Venta, v.Id_membresia,
+                    d.Id_producto, d.Cantidad,
+                    p.Nom_producto,
+                    p.Precio
+                    FROM venta v
+                    LEFT JOIN detalles d ON v.Id_Venta = d.Id_Venta
+                    LEFT JOIN productos p ON d.Id_producto = p.Id_Producto;";
                 using (var cmd = new MySqlCommand(query, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -84,7 +89,9 @@ namespace AccesoDatos
                             venta.Detalles.Add(new DetalleVenta
                             {
                                 IdProducto = reader.GetInt32(4),
-                                Cantidad = reader.GetInt32(5)
+                                Cantidad = reader.GetInt32(5),
+                                NombreProducto = reader["Nom_producto"].ToString(),
+                                PrecioUnitario = Convert.ToDecimal(reader["Precio"])
                             });
                         }
                     }
