@@ -8,7 +8,7 @@ namespace AccesoDatos
 {
     public class ProductoDAO
     {
-        private string connectionString = "server=localhost;port=8000;user=root;password=root;database=fitmanage;";
+        private string connectionString = "server=localhost;user=root;password=root;database=fitmanage;";
 
         public List<Producto> ObtenerProductos()
         {
@@ -115,7 +115,7 @@ namespace AccesoDatos
                         command.Parameters.AddWithValue("@id_producto", p.IdProducto);
                         command.Parameters.AddWithValue("@Nom_producto", p.Nombre);
                         command.Parameters.AddWithValue("@Descripcion", p.Descripcion);
-                        command.Parameters.AddWithValue("@Cantidad", p.Cantidad);  // aquí estaba el error
+                        command.Parameters.AddWithValue("@Cantidad", p.Cantidad);
                         command.Parameters.AddWithValue("@Precio", p.Precio);
 
                         command.ExecuteNonQuery();

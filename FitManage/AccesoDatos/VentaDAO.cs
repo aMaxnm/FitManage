@@ -13,7 +13,7 @@ namespace AccesoDatos
         public int InsertarVenta(Venta venta)
             {
                 int idVenta = 0;
-                using (var conn = new MySqlConnection("server=localhost;port=8000;user=root;password=root;database=fitmanage;"))
+                using (var conn = new MySqlConnection("server=localhost;user=root;password=root;database=fitmanage;"))
                 {
                     conn.Open();
                     using (var tran = conn.BeginTransaction())
@@ -50,7 +50,7 @@ namespace AccesoDatos
         {
             var ventas = new List<Venta>();
 
-            using (var conn = new MySqlConnection("server=localhost;port=8000;user=root;password=root;database=fitmanage;"))
+            using (var conn = new MySqlConnection("server=localhost;user=root;password=root;database=fitmanage;"))
             {
                 conn.Open();
                 string query = @"

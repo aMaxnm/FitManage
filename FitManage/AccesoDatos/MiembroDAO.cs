@@ -8,7 +8,7 @@ namespace AccesoDatos
 {
     public class MiembroDAO
     {
-        private string connectionString = "server=localhost;port=8000;user=root;password=root;database=fitmanage;";
+        private string connectionString = "server=localhost;user=root;password=root;database=fitmanage;";
         // Obtener todos los miembros
         public List<Miembro> ObtenerMiembros()
         {

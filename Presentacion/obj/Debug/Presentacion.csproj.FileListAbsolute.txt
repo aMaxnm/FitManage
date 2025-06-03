@@ -282,3 +282,4 @@ C:\Users\Edgar\source\repos\FitManage\Presentacion\obj\Debug\Presenta.BC77CD05.U
 C:\Users\Edgar\source\repos\FitManage\Presentacion\bin\Debug\Recursos\CARRITO.png
 C:\Users\ramir\Documents\FitManage\Presentacion\bin\Debug\Recursos\CARRITO.png
 C:\Users\amnm0\OneDrive\Documents\GitHub\FitManage\Presentacion\bin\Debug\Recursos\CARRITO.png
+C:\Users\yulir\OneDrive\Documentos\GitHub\FitManage\Presentacion\bin\Debug\Recursos\CARRITO.png
