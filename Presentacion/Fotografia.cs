@@ -11,13 +11,14 @@ using System.Drawing;
 using AForge.Video;
 using System.Windows.Forms;
 using Presentación;
+using Application = System.Windows.Forms.Application;
 
 
 namespace Presentacion
 {
     internal class Fotografia
-    { 
-        public static string Ruta = "C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos";
+    {
+        public static string Ruta = Path.Combine(Application.StartupPath, @"..\..\..\Recursos\Fotos");
         private static bool isHayDispositivos;
         public static FilterInfoCollection misDispositivos;
         public static VideoCaptureDevice miCamara;

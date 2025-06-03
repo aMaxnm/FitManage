@@ -37,7 +37,7 @@ namespace Presentación
            
             //Labels necesarias para el formulario
             Label tituloLbl, subtituloLbl, nombreLbl, apePaternoLbl, apeMaternoLbl, telefonoLbl, membresiaLbl, fotoLbl;
-            Button tomarBtn, retomarBtn, importarBtn, regresarBtn,flechaBtn, cobrarBtn;
+            Button tomarBtn, retomarBtn, importarBtn, cobrarBtn;
 
             //Labels para encabezado
             tituloLbl = new Label();
@@ -235,7 +235,11 @@ namespace Presentación
                     return File.ReadAllBytes(ruta);
                 }
 
-                byte[] imagenBytes = LeerImagenComoBytes($"C:/Users/amnm0/OneDrive/Documents/GitHub/FitManage/Presentacion/Recursos/Fotos/{nombreTxt.Text}.jpg");
+                string rutaBase = Application.StartupPath; // Carpeta donde está el .exe
+                string rutaCompleta = Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\..\Recursos\Fotos", $"{nombreTxt.Text}.jpg"));
+
+                byte[] imagenBytes = LeerImagenComoBytes(rutaCompleta);
+
 
                 int idMembresia;
                 if (!int.TryParse(membresiaCombo.SelectedValue?.ToString(), out idMembresia))
@@ -288,26 +292,6 @@ namespace Presentación
                 fechaLbl.Text = "Fecha de nacimiento";
             };
 
-            regresarBtn = new Button();
-            regresarBtn.Text = "Regresar";
-            regresarBtn.BackColor = Color.WhiteSmoke;
-            regresarBtn.Font = new Font("Race Sport", 16);
-            regresarBtn.Location = new Point(60, 730);
-            regresarBtn.Size = new Size(200, 35);
-            regresarBtn.FlatStyle = FlatStyle.Flat;
-            regresarBtn.Cursor = Cursors.Hand;
-            regresarBtn.FlatAppearance.BorderSize = 0;
-
-            flechaBtn = new Button();
-            flechaBtn.BackgroundImage = Image.FromFile("Recursos/regresar.png");
-            flechaBtn.Location = new Point(27, 733);
-            flechaBtn.Size = new Size(30, 35);
-            flechaBtn.BackgroundImageLayout = ImageLayout.Stretch;
-            flechaBtn.BackColor = Color.WhiteSmoke;
-            flechaBtn.FlatStyle = FlatStyle.Flat;
-            flechaBtn.ImageAlign = ContentAlignment.MiddleCenter;
-            flechaBtn.Cursor = Cursors.Hand;
-            flechaBtn.FlatAppearance.BorderSize = 0;
             //Botón de cobrar
             cobrarBtn = new Button();
             cobrarBtn.BackgroundImage = Image.FromFile("Recursos/cobrar.png");
@@ -365,8 +349,6 @@ namespace Presentación
             nuevoPanel.Controls.Add(importarBtn);
             nuevoPanel.Controls.Add(registrarBtn);
             nuevoPanel.Controls.Add(fechaPicker);
-            nuevoPanel.Controls.Add(regresarBtn);
-            nuevoPanel.Controls.Add(flechaBtn);
             nuevoPanel.Controls.Add(cobrarBtn);
             nuevoPanel.Controls.Add(dispositivosCombo);
             nuevoPanel.Controls.Add(abrirCamara);
