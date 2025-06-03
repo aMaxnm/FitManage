@@ -18,6 +18,7 @@ namespace Presentacion
         private Button editarBtn;
         private Button guardarBtn;
         private Button cancelarBtn;
+        private Button btnCancelar;
         private Producto productoSeleccionado;
 
         public PanelProducto()
@@ -82,6 +83,16 @@ namespace Presentacion
             }).ToList();
             dgvProductos.CellClick += DgvProductos_CellClick;
             this.Controls.Add(dgvProductos);
+
+            Label lblSelecciona = new Label();
+            lblSelecciona.Text = "Selecciona una celda para editar";
+            lblSelecciona.Font = new Font("Race Sport", 12, FontStyle.Bold);
+            lblSelecciona.ForeColor = Color.Black;
+            lblSelecciona.AutoSize = true;
+
+            lblSelecciona.Location = new Point(dgvProductos.Location.X, dgvProductos.Location.Y + dgvProductos.Height + 10);
+
+            this.Controls.Add(lblSelecciona);
 
             // Tarjeta Producto
             tarjetaProducto = new Panel();
@@ -178,17 +189,53 @@ namespace Presentacion
                 Location = new Point(800, 250)
             };
 
+
+            Button btCancelar = new Button
+            {
+                Text = "Cancel",
+                Font = new Font("Race Sport", 14, FontStyle.Bold),
+                Size = new Size(200, 50),
+                ForeColor = Color.White,
+                BackColor = Color.Red,
+                Location = new Point(555, 250)
+            };
+
+            btCancelar.Click += (s, e) =>
+            {
+                tarjetaProducto.Visible = false;
+                MessageBox.Show("Cambios cancelados.", "Cancelar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+
+            tarjetaProducto.Controls.Add(btCancelar);
+
             btnGuardar.Click += (s, e) =>
             {
-                if (decimal.TryParse(txtPrecio.Text, out decimal precio) &&
-                    int.TryParse(txtCantidad.Text, out int cantidad))
+                try
                 {
-                    productoSeleccionado.Nombre = txtNombre.Text.Trim();
-                    productoSeleccionado.Precio = precio;
-                    productoSeleccionado.Descripcion = txtDesc.Text.Trim();
-                    productoSeleccionado.Cantidad = cantidad;
 
-                    productoServicio.Actualizar(productoSeleccionado);
+                    if (!decimal.TryParse(txtPrecio.Text, out var precio))
+                        throw new ArgumentException("campo precio no válido");
+
+                    if (!int.TryParse(txtCantidad.Text, out var cantidad))
+                    {
+                        if (decimal.TryParse(txtCantidad.Text, out var cantDecimal) && cantDecimal % 1 != 0)
+                            throw new ArgumentException("no se permiten decimales");
+                        else
+                            throw new ArgumentException("campo precio no válido");
+                    }
+
+                    Producto actualizado = new Producto
+                    {
+                        IdProducto = productoSeleccionado.IdProducto,
+                        Nombre = txtNombre.Text.Trim(),
+                        Descripcion = txtDesc.Text.Trim(),
+                        Precio = precio,
+                        Cantidad = cantidad
+                    };
+
+                    productoServicio.ValidarProducto(actualizado);
+                    productoServicio.Actualizar(actualizado);
+
                     MessageBox.Show("Producto actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     productos = productoServicio.ObtenerTodos();
@@ -202,9 +249,9 @@ namespace Presentacion
 
                     tarjetaProducto.Visible = false;
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Verifique los valores de precio y cantidad.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Error: " + ex.Message, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             };
 
@@ -303,17 +350,17 @@ namespace Presentacion
             {
                 try
                 {
-                    if (decimal.TryParse(txtPrecio.Text, out decimal precio) &&
-                        int.TryParse(txtCantidad.Text, out int cantidad))
+                    try
                     {
                         Producto nuevo = new Producto
                         {
-                            Nombre = txtNombre.Text,
-                            Descripcion = txtDescripcion.Text,
-                            Precio = precio,
-                            Cantidad = cantidad
+                            Nombre = txtNombre.Text.Trim(),
+                            Descripcion = txtDescripcion.Text.Trim(),
+                            Precio = decimal.TryParse(txtPrecio.Text, out var precio) ? precio : 0,
+                            Cantidad = int.TryParse(txtCantidad.Text, out var cantidad) ? cantidad : 0
                         };
 
+                        productoServicio.ValidarProducto(nuevo);
                         productoServicio.Guardar(nuevo);
 
                         productos = productoServicio.ObtenerTodos();
@@ -328,17 +375,19 @@ namespace Presentacion
                         agregarProducto.Visible = false;
                         MessageBox.Show("Producto agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Precio o cantidad inválidos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Error: " + ex.Message, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
+
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error al guardar producto: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            };
 
+
+            };
 
             agregarProducto.Controls.Add(btnGuardar);
             this.Controls.Add(agregarProducto);

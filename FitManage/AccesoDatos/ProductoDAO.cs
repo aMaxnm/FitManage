@@ -115,7 +115,7 @@ namespace AccesoDatos
                         command.Parameters.AddWithValue("@id_producto", p.IdProducto);
                         command.Parameters.AddWithValue("@Nom_producto", p.Nombre);
                         command.Parameters.AddWithValue("@Descripcion", p.Descripcion);
-                        command.Parameters.AddWithValue("@Cantidad", p.Cantidad);  // aquí estaba el error
+                        command.Parameters.AddWithValue("@Cantidad", p.Cantidad);
                         command.Parameters.AddWithValue("@Precio", p.Precio);
 
                         command.ExecuteNonQuery();

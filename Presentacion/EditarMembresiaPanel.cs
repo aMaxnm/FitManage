@@ -80,6 +80,18 @@ namespace Presentacion
             tablaMembresias.Columns.Add("Id_membresia", "Id_membresia");
             tablaMembresias.Columns.Add("Membresía", "Membresía");
 
+            Label lblSelecciona = new Label();
+            lblSelecciona.Text = "Selecciona una celda para editar";
+            lblSelecciona.Font = new Font("Race Sport", 12, FontStyle.Bold);
+            lblSelecciona.ForeColor = Color.Black;
+            lblSelecciona.AutoSize = true;
+
+            // Posición justo debajo del DataGridView (ajústala si es necesario)
+            lblSelecciona.Location = new Point(tablaMembresias.Location.X, tablaMembresias.Location.Y + tablaMembresias.Height + 10);
+
+            // Agrega al formulario o al contenedor donde está la tabla
+            this.Controls.Add(lblSelecciona); 
+
             DataGridViewTextBoxColumn precioCol = new DataGridViewTextBoxColumn
             {
                 Name = "Precio",
