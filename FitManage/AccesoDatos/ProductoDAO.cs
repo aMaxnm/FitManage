@@ -8,7 +8,7 @@ namespace AccesoDatos
 {
     public class ProductoDAO
     {
-        private string connectionString = "server=localhost;port=8000;user=root;password=root;database=fitmanage;";
+        private string connectionString = "server=localhost;user=root;password=root;database=fitmanage;";
 
         public List<Producto> ObtenerProductos()
         {

@@ -230,16 +230,10 @@ namespace Presentación
                 apeMaternoTxt.TextChanged -= ApeMaternoTxt_TextChanged;
                 telefonoTxt.TextChanged -= TelefonoTxt_TextChanged;
 
-                byte[] LeerImagenComoBytes(string ruta)
-                {
-                    return File.ReadAllBytes(ruta);
-                }
-
-                string rutaBase = Application.StartupPath; // Carpeta donde está el .exe
+                string rutaBase = Application.StartupPath;
                 string rutaCompleta = Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\..\Recursos\Fotos", $"{nombreTxt.Text}.jpg"));
 
-                byte[] imagenBytes = LeerImagenComoBytes(rutaCompleta);
-
+                byte[] imagenBytes = File.Exists(rutaCompleta) ? File.ReadAllBytes(rutaCompleta) : new byte[0];
 
                 int idMembresia;
                 if (!int.TryParse(membresiaCombo.SelectedValue?.ToString(), out idMembresia))
@@ -247,7 +241,6 @@ namespace Presentación
                     MessageBox.Show("El ID de la membresía no es válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                Console.WriteLine("ID de membresía convertido: " + idMembresia);
 
                 int idAsignado = servicio.RegistrarMiembro(
                     idMembresia,
@@ -256,40 +249,29 @@ namespace Presentación
                     apeMaternoTxt.Text.Trim(),
                     DateTime.Parse(fechaPicker.Text),
                     telefonoTxt.Text.Trim(),
-                    FechaRegistro,
+                    DateTime.Now.Date,
                     imagenBytes
                 );
 
-                if (idAsignado == -2)
+                if (idAsignado > 0) // Si el miembro se registró con éxito
                 {
-                    MessageBox.Show("Ya existe un miembro con esos datos.", "Registro duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    nombreTxt.Text = "";
-                    apeMaternoTxt.Text = "";
-                    apePaternoTxt.Text = "";
-                    fechaPicker.Value = DateTime.Now;
-                    telefonoTxt.Text = "";
-                    fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
-                }
-                else if (idAsignado == -1)
-                {
-                    MessageBox.Show("Ocurrió un error al registrar el miembro.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    VentaServicio ventaServicio = new VentaServicio();
+
+                    Venta nuevaVenta = new Venta
+                    {
+                        Fecha = DateTime.Now,
+                        TipoVenta = "Registro de Membresía",
+                        IdMembresia = idMembresia
+                    };
+
+                    int idVenta = ventaServicio.RegistrarVenta(nuevaVenta);
+
+                    MessageBox.Show($"Miembro registrado.\nID asignado: {idAsignado}", "Registro exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show($"Cliente registrado correctamente.\nID asignado: {idAsignado}", "Registro exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    nombreTxt.Text = "";
-                    apeMaternoTxt.Text = "";
-                    apePaternoTxt.Text = "";
-                    fechaPicker.Value = DateTime.Now;
-                    telefonoTxt.Text = "";
-                    fotoMiembroPct.Image = Image.FromFile("Recursos/placeholder.jpg");
+                    MessageBox.Show("Ocurrió un error al registrar el miembro.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
-                nombreTxt.TextChanged += NombreTxt_TextChanged;
-                apePaternoTxt.TextChanged += ApePaternoTxt_TextChanged;
-                apeMaternoTxt.TextChanged += ApeMaternoTxt_TextChanged;
-                telefonoTxt.TextChanged += TelefonoTxt_TextChanged;
-                fechaLbl.Text = "Fecha de nacimiento";
             };
 
             //Botón de cobrar

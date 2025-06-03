@@ -50,16 +50,26 @@ namespace Presentacion
                 sb.AppendLine($"--- Ticket #{venta.IdVenta} ---");
                 sb.AppendLine($"Fecha: {venta.Fecha}");
                 sb.AppendLine($"Tipo: {venta.TipoVenta}");
-                sb.AppendLine($"Membresía: {(venta.IdMembresia > 0 ? venta.IdMembresia.ToString() : "Sin membresía")}");
-                sb.AppendLine("Productos vendidos:");
+                sb.AppendLine($"Membresía: {venta.TipoMembresia}");
 
                 decimal totalVenta = 0;
 
-                foreach (var detalle in venta.Detalles)
+                if (venta.TipoVenta == "Registro de Membresía")
                 {
-                    decimal subtotal = detalle.Cantidad * detalle.PrecioUnitario;
-                    totalVenta += subtotal;
-                    sb.AppendLine($"  - Producto: {detalle.NombreProducto}, Cantidad: {detalle.Cantidad}, Precio: ${detalle.PrecioUnitario}, Subtotal: ${subtotal}");
+                    // Si la venta es una membresía, mostrar solo su precio
+                    totalVenta = venta.PrecioMembresia; // Asegúrate de que esta propiedad existe en Venta
+                    sb.AppendLine($"Precio de la membresía: ${totalVenta}");
+                }
+                else
+                {
+                    // Si la venta es de productos, mostrar detalles
+                    sb.AppendLine("Productos vendidos:");
+                    foreach (var detalle in venta.Detalles)
+                    {
+                        decimal subtotal = detalle.Cantidad * detalle.PrecioUnitario;
+                        totalVenta += subtotal;
+                        sb.AppendLine($"  - Producto: {detalle.NombreProducto}, Cantidad: {detalle.Cantidad}, Precio: ${detalle.PrecioUnitario}, Subtotal: ${subtotal}");
+                    }
                 }
 
                 sb.AppendLine($"TOTAL: ${totalVenta}");

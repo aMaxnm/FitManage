@@ -9,6 +9,8 @@ namespace Entidad
         public DateTime Fecha { get; set; }
         public string TipoVenta { get; set; }
         public int IdMembresia { get; set; }
+        public string TipoMembresia { get; set; }
+        public Decimal PrecioMembresia { get; set; }
 
         // Agregar lista de detalles
         public List<DetalleVenta> Detalles { get; set; }
