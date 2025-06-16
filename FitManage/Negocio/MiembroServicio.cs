@@ -15,5 +15,9 @@ namespace Negocio
         {
             return miembroDAO.ObtenerMiembros();
         }
+        public Miembro ObtenerMiembroPorId(int idMembresia)
+        {
+            return miembroDAO.ObtenerMiembroPorId(idMembresia);
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace AccesoDatos
             return listaMembresias;
         }
 
-        // 🔹 Nuevo método para obtener una membresía específica por ID
+        // 🔹 Nuevo método para obtener un miembro específico por ID
         public Membresia ObtenerMembresiaPorId(int idMembresia)
         {
             Membresia membresia = null;
@@ -44,7 +44,7 @@ namespace AccesoDatos
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM fitmanage.membresía WHERE Id_membresia = @id";
+                string query = "SELECT * FROM fitmanage.miembresia WHERE Id_membresi = @id";
 
                 using (var command = new MySqlCommand(query, connection))
                 {
@@ -56,8 +56,8 @@ namespace AccesoDatos
                         {
                             membresia = new Membresia
                             {
-                                Id_membresia = reader.GetInt32("Id_membresia"),
-                                Duracion = reader.GetInt32("Duración"),
+                                Id_membresia = reader.GetInt32("Id_miembro"),
+                                Duracion = reader.GetInt32("Duracion"),
                                 Precio = reader.GetDecimal("Precio"),
                                 Tipo_membresia = reader.GetString("Tipo_Membresia")
                             };
